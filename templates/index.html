@@ -1,0 +1,786 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block titulo %}
+Inicio | PH Servicios Electrónicos
+{% endblock %}
+
+
+{% block contenido %}
+
+<!-- =====================================================
+     HERO / CARRUSEL
+====================================================== -->
+
+<section class="hero">
+
+    <div class="hero-carousel">
+
+
+        <!-- SLIDE 1 -->
+
+        <article class="hero-slide active">
+
+            <img
+                src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=1800&q=85"
+                alt="Ingeniero trabajando en instalaciones eléctricas">
+
+            <div class="hero-slide-content">
+
+                <span class="tag">
+                    PH SERVICIOS ELECTRÓNICOS
+                </span>
+
+                <h1>
+                    Instalaciones eléctricas
+                    para grandes proyectos
+                </h1>
+
+                <p>
+                    Diseñamos, ejecutamos y mantenemos
+                    soluciones eléctricas confiables para
+                    proyectos comerciales e industriales.
+                </p>
+
+                <a
+                    href="{% url 'contacto' %}"
+                    class="btn">
+
+                    ⚡ Cotizar proyecto
+
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- SLIDE 2 -->
+
+        <article class="hero-slide">
+
+            <img
+                src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1800&q=85"
+                alt="Profesional trabajando en infraestructura">
+
+            <div class="hero-slide-content">
+
+                <span class="tag">
+                    INGENIERÍA Y EJECUCIÓN
+                </span>
+
+                <h1>
+                    Soluciones eléctricas
+                    seguras y eficientes
+                </h1>
+
+                <p>
+                    Ingeniería, planificación y ejecución
+                    orientadas a proyectos de alta
+                    exigencia técnica.
+                </p>
+
+                <a
+                    href="{% url 'servicios' %}"
+                    class="btn">
+
+                    Ver nuestros servicios
+
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- SLIDE 3 -->
+
+        <article class="hero-slide">
+
+            <img
+                src="https://images.unsplash.com/photo-1558008258-3256797b43f3?auto=format&fit=crop&w=1800&q=85"
+                alt="Instalaciones eléctricas industriales">
+
+            <div class="hero-slide-content">
+
+                <span class="tag">
+                    EXPERIENCIA Y COMPROMISO
+                </span>
+
+                <h1>
+                    Preparados para nuevos
+                    desafíos
+                </h1>
+
+                <p>
+                    Acompañamos cada proyecto desde
+                    la planificación hasta su puesta
+                    en marcha.
+                </p>
+
+                <a
+                    href="{% url 'proyectos' %}"
+                    class="btn">
+
+                    Ver proyectos
+
+                </a>
+
+            </div>
+
+        </article>
+
+
+        <!-- FLECHAS -->
+
+        <button
+            class="carousel-prev"
+            type="button"
+            aria-label="Imagen anterior">
+
+            ❮
+
+        </button>
+
+
+        <button
+            class="carousel-next"
+            type="button"
+            aria-label="Imagen siguiente">
+
+            ❯
+
+        </button>
+
+
+        <!-- INDICADORES -->
+
+        <div class="carousel-dots">
+
+            <button
+                type="button"
+                class="carousel-dot active"
+                data-slide="0"
+                aria-label="Ir a imagen 1">
+            </button>
+
+            <button
+                type="button"
+                class="carousel-dot"
+                data-slide="1"
+                aria-label="Ir a imagen 2">
+            </button>
+
+            <button
+                type="button"
+                class="carousel-dot"
+                data-slide="2"
+                aria-label="Ir a imagen 3">
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     BARRA DE VALORES
+====================================================== -->
+
+<section class="hero-values">
+
+    <div class="container hero-values-grid">
+
+        <div class="hero-value">
+            <span>◈</span>
+            <div>
+                <strong>Seguridad</strong>
+                <p>Procesos responsables y normativos</p>
+            </div>
+        </div>
+
+
+        <div class="hero-value">
+            <span>✓</span>
+            <div>
+                <strong>Calidad</strong>
+                <p>Materiales y procesos confiables</p>
+            </div>
+        </div>
+
+
+        <div class="hero-value">
+            <span>ϟ</span>
+            <div>
+                <strong>Eficiencia</strong>
+                <p>Soluciones orientadas al rendimiento</p>
+            </div>
+        </div>
+
+
+        <div class="hero-value">
+            <span>♧</span>
+            <div>
+                <strong>Compromiso</strong>
+                <p>Atención durante todo el proyecto</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     QUIÉNES SOMOS
+====================================================== -->
+
+<section class="about">
+
+    <div class="container about-grid">
+
+
+        <div class="about-text">
+
+            <span class="section-tag">
+                QUIÉNES SOMOS
+            </span>
+
+            <h2>
+                Ingeniería eléctrica
+                que impulsa grandes proyectos
+            </h2>
+
+            <p>
+                PH Servicios Electrónicos desarrolla
+                soluciones eléctricas y electrónicas
+                para proyectos comerciales, corporativos
+                e infraestructura.
+            </p>
+
+            <p>
+                Nuestro trabajo combina planificación,
+                ejecución y compromiso para entregar
+                soluciones seguras, eficientes y
+                adaptadas a cada cliente.
+            </p>
+
+            <a
+                href="{% url 'empresa' %}"
+                class="text-link">
+
+                Conoce más sobre PHPM →
+
+            </a>
+
+        </div>
+
+
+        <div class="about-gallery">
+
+            <img
+                src="https://images.unsplash.com/photo-1558008258-3256797b43f3?auto=format&fit=crop&w=700&q=80"
+                alt="Instalaciones eléctricas"
+                width="700"
+                height="830"
+                loading="lazy">
+
+            <img
+                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=700&q=80"
+                alt="Profesional trabajando"
+                width="700"
+                height="410"
+                loading="lazy">
+
+            <img
+                src="{% static 'img/infraestructura-industrial.jpg' %}"
+                alt="Infraestructura eléctrica industrial"
+                width="700"
+                height="410"
+                loading="lazy">
+
+        </div> <!-- about-gallery -->
+
+    </div> <!-- container about-grid -->
+
+</section>
+
+
+<!-- =====================================================
+     SERVICIOS
+====================================================== -->
+
+<section class="services">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="section-tag">
+                LO QUE HACEMOS
+            </span>
+
+            <h2>
+                Nuestros servicios
+            </h2>
+
+            <p>
+                Soluciones integrales de ingeniería eléctrica
+                para diferentes tipos de proyectos.
+            </p>
+
+        </div>
+
+
+        <div class="services-grid">
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    ⚡
+                </div>
+
+                <h3>
+                    Instalaciones eléctricas
+                </h3>
+
+                <p>
+                    Diseño y ejecución de instalaciones
+                    eléctricas de baja y media tensión.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    ⚙
+                </div>
+
+                <h3>
+                    Mantenimiento eléctrico
+                </h3>
+
+                <p>
+                    Planes preventivos y correctivos
+                    para mantener la continuidad operacional.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    ▦
+                </div>
+
+                <h3>
+                    Tableros y salas eléctricas
+                </h3>
+
+                <p>
+                    Diseño, fabricación e implementación
+                    de tableros y salas de distribución.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    ≋
+                </div>
+
+                <h3>
+                    Canalizaciones y bandejas
+                </h3>
+
+                <p>
+                    Sistemas de canalización eléctrica,
+                    bandejas, ductos y tuberías.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    🏥
+                </div>
+
+                <h3>
+                    Proyectos hospitalarios
+                </h3>
+
+                <p>
+                    Soluciones eléctricas para hospitales,
+                    clínicas y centros de salud.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+            <article class="service-card">
+
+                <div class="service-icon">
+                    🏭
+                </div>
+
+                <h3>
+                    Montaje industrial
+                </h3>
+
+                <p>
+                    Montaje e instalación eléctrica
+                    para plantas industriales.
+                </p>
+
+                <a href="{% url 'servicios' %}">
+                    Ver servicio →
+                </a>
+
+            </article>
+
+
+        </div>
+
+
+        <div class="section-button">
+
+            <a
+                href="{% url 'servicios' %}"
+                class="btn">
+
+                Ver todos los servicios
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     MERCADOS
+====================================================== -->
+
+<section class="markets">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="section-tag">
+                EXPERIENCIA
+            </span>
+
+            <h2>
+                Mercados que atendemos
+            </h2>
+
+        </div>
+
+
+        <div class="markets-grid">
+
+
+            <a href="{% url 'proyectos' %}" class="market-card">
+                <span>🏥</span>
+                <strong>Hospitales<br>y clínicas</strong>
+            </a>
+
+
+            <a href="{% url 'proyectos' %}" class="market-card">
+                <span>🏢</span>
+                <strong>Edificios<br>y oficinas</strong>
+            </a>
+
+
+            <a href="{% url 'proyectos' %}" class="market-card">
+                <span>🏭</span>
+                <strong>Plantas<br>industriales</strong>
+            </a>
+
+
+            <a href="{% url 'proyectos' %}" class="market-card">
+                <span>🛒</span>
+                <strong>Retail</strong>
+            </a>
+
+
+            <a href="{% url 'proyectos' %}" class="market-card">
+                <span>🏨</span>
+                <strong>Hoteles</strong>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROYECTOS DESTACADOS
+====================================================== -->
+
+<section class="projects">
+
+    <div class="container">
+
+
+        <div class="section-heading projects-heading">
+
+            <div>
+
+                <span class="section-tag">
+                    EXPERIENCIA
+                </span>
+
+                <h2>
+                    Proyectos destacados
+                </h2>
+
+            </div>
+
+            <a
+                href="{% url 'proyectos' %}"
+                class="text-link">
+
+                Ver todos los proyectos →
+
+            </a>
+
+        </div>
+
+
+        <div class="projects-grid">
+
+
+            <article class="project-card">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80"
+                        alt="Proyecto hospitalario">
+
+                    <span class="project-category">
+                        Hospitalario
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <span class="project-location">
+                        Santiago, Chile
+                    </span>
+
+                    <h3>
+                        Proyecto hospitalario
+                    </h3>
+
+                    <p>
+                        Soluciones eléctricas integrales
+                        para infraestructura de salud.
+                    </p>
+
+                    <a href="{% url 'proyectos' %}">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <article class="project-card">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=900&q=80"
+                        alt="Proyecto industrial">
+
+                    <span class="project-category">
+                        Industrial
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <span class="project-location">
+                        Chile
+                    </span>
+
+                    <h3>
+                        Planta industrial
+                    </h3>
+
+                    <p>
+                        Instalaciones y sistemas eléctricos
+                        para procesos industriales.
+                    </p>
+
+                    <a href="{% url 'proyectos' %}">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <article class="project-card">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80"
+                        alt="Edificio corporativo">
+
+                    <span class="project-category">
+                        Edificio
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <span class="project-location">
+                        Santiago, Chile
+                    </span>
+
+                    <h3>
+                        Edificio corporativo
+                    </h3>
+
+                    <p>
+                        Instalaciones eléctricas y
+                        tableros para infraestructura.
+                    </p>
+
+                    <a href="{% url 'proyectos' %}">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <article class="project-card">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80"
+                        alt="Proyecto hotelero">
+
+                    <span class="project-category">
+                        Hotel
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <span class="project-location">
+                        Chile
+                    </span>
+
+                    <h3>
+                        Proyecto hotelero
+                    </h3>
+
+                    <p>
+                        Instalaciones eléctricas completas
+                        para infraestructura hotelera.
+                    </p>
+
+                    <a href="{% url 'proyectos' %}">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     INDICADORES
+====================================================== -->
+
+<section class="stats">
+
+    <div class="container stats-grid">
+
+
+        <div class="stat">
+            <strong>+250</strong>
+            <span>Proyectos realizados</span>
+        </div>
+
+
+        <div class="stat">
+            <strong>+15</strong>
+            <span>Años de experiencia</span>
+        </div>
+
+
+        <div class="stat">
+            <strong>+120</strong>
+            <span>Profesionales</span>
+        </div>
+
+
+        <div class="stat">
+            <strong>Todo Chile</strong>
+            <span>Cobertura nacional</span>
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

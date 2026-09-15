@@ -1,0 +1,408 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block titulo %}
+Catálogo de productos | PH Servicios Electrónicos
+{% endblock %}
+
+{% block contenido %}
+
+<!-- =====================================================
+     MENÚ DE FAMILIAS
+====================================================== -->
+
+<nav class="catalog-menu" aria-label="Familias de productos">
+    <div class="container catalog-menu-inner">
+
+        <a
+            href="{% url 'productos' %}"
+            class="{% if not familia_activa and not categoria_activa %}active{% endif %}">
+            Todos
+        </a>
+
+        {% for familia in familias %}
+            <a
+                href="{% url 'productos' %}?familia={{ familia.slug }}"
+                class="{% if familia_activa == familia.slug %}active{% endif %}">
+                {{ familia.nombre }}
+            </a>
+        {% endfor %}
+
+    </div>
+</nav>
+
+
+{% if familia_activa %}
+    <nav class="catalog-submenu" aria-label="Categorías de productos">
+        <div class="container catalog-submenu-inner">
+
+            {% for familia in familias %}
+                {% if familia.slug == familia_activa %}
+
+                    <a
+                        href="{% url 'productos' %}?familia={{ familia.slug }}"
+                        class="{% if not categoria_activa %}active{% endif %}">
+                        Todos
+                    </a>
+
+                    {% for categoria in familia.subcategorias.all %}
+                        {% if categoria.activa %}
+                            <a
+                                href="{% url 'productos' %}?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}"
+                                class="{% if categoria_activa == categoria.slug %}active{% endif %}">
+                                {{ categoria.nombre }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </nav>
+{% endif %}
+
+
+<!-- =====================================================
+     HERO DEL CATÁLOGO
+====================================================== -->
+
+<section class="page-hero products-hero">
+
+    <div class="container page-hero-content">
+
+        <span class="section-tag section-tag-light">
+            CATÁLOGO ELÉCTRICO
+        </span>
+
+        <h1>
+            Soluciones eléctricas para cada proyecto
+        </h1>
+
+        <p>
+            Una selección de productos para instalaciones
+            residenciales, comerciales e industriales,
+            presentada en un diseño visual, moderno y ordenado.
+        </p>
+
+        <a
+            href="#catalogo-productos"
+            class="btn">
+            Explorar productos
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     INTRODUCCIÓN
+====================================================== -->
+
+<section class="catalog-intro">
+
+    <div class="container catalog-intro-grid">
+
+        <div>
+
+            <span class="section-tag">
+                CATÁLOGO DE PRODUCTOS
+            </span>
+
+            <h2>
+                Material eléctrico para instalaciones profesionales
+            </h2>
+
+        </div>
+
+        <p>
+            Protecciones, canalización, conexión y accesorios
+            para desarrollar instalaciones seguras, ordenadas
+            y preparadas para distintas exigencias de obra.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PRODUCTOS DINÁMICOS
+====================================================== -->
+
+<section
+    class="cascade-products"
+    id="catalogo-productos">
+
+    <div class="container">
+
+            {% for producto in productos %}
+
+        <article
+            class="cascade-product"
+            data-family="{% if producto.categoria.padre %}{{ producto.categoria.padre.slug }}{% else %}{{ producto.categoria.slug }}{% endif %}">
+
+            <div class="cascade-visual">
+
+                <span class="cascade-number">
+                    {{ forloop.counter|stringformat:"02d" }}
+                </span>
+
+                {% if producto.imagen %}
+                    <img
+                        class="product-photo"
+                        src="{{ producto.imagen.url }}"
+                        alt="{{ producto.alt_imagen }}"
+                        loading="lazy">
+                {% else %}
+                    <div class="electric-icon" aria-hidden="true">⚡</div>
+                {% endif %}
+
+                <span class="visual-label">
+
+                    {% if producto.marca_nueva %}
+                        {{ producto.marca_nueva.nombre|upper }} ·
+                    {% elif producto.marca %}
+                        {{ producto.marca|upper }} ·
+                    {% endif %}
+
+                    {{ producto.etiqueta_catalogo|upper }}
+
+                </span>
+
+            </div>
+
+            <div class="cascade-copy">
+
+                <div class="product-heading">
+
+                    {% if producto.marca_nueva and producto.marca_nueva.logo %}
+                        <img
+                            class="product-brand-logo"
+                            src="{{ producto.marca_nueva.logo.url }}"
+                            alt="Marca {{ producto.marca_nueva.nombre }}">
+                    {% elif producto.marca_nueva %}
+                        <span class="product-brand-name">
+                            {{ producto.marca_nueva.nombre }}
+                        </span>
+                    {% elif producto.marca %}
+                        <span class="product-brand-name">
+                            {{ producto.marca }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                <span class="product-kicker">
+                    {{ producto.subtitulo }}
+                </span>
+
+                <h2>{{ producto.nombre }}</h2>
+
+                <p class="product-description">
+                    {{ producto.descripcion }}
+                </p>
+
+                {% if producto.caracteristicas.all %}
+                    <ul class="product-features">
+                        {% for caracteristica in producto.caracteristicas.all %}
+                            <li>{{ caracteristica.texto }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                {% if producto.variantes_disponibles %}
+                    <div class="variant-summary">
+                        <span class="variant-summary-title">
+                            Presentaciones disponibles
+                        </span>
+
+                        <div class="variant-chips">
+                            {% for variante in producto.variantes_disponibles|slice:":6" %}
+                                <span>{{ variante.nombre }}</span>
+                            {% endfor %}
+
+                            {% if producto.variantes_disponibles|length > 6 %}
+                                <span class="variant-more">
+                                    +{{ producto.variantes_disponibles|length|add:"-6" }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if producto.especificaciones.all or producto.variantes_disponibles %}
+                    <details class="technical-details">
+
+                        <summary>
+                            <span>Ficha técnica y variantes</span>
+                            <span class="details-symbol" aria-hidden="true">+</span>
+                        </summary>
+
+                        <div class="technical-content">
+
+                            {% if producto.especificaciones.all %}
+                                <h3>Especificaciones generales</h3>
+
+                                <dl class="general-specifications">
+                                    {% for especificacion in producto.especificaciones.all %}
+                                        <div>
+                                            <dt>{{ especificacion.nombre }}</dt>
+                                            <dd>
+                                                {{ especificacion.valor }}
+                                                {% if especificacion.unidad %}
+                                                    {{ especificacion.unidad }}
+                                                {% endif %}
+                                            </dd>
+                                        </div>
+                                    {% endfor %}
+                                </dl>
+                            {% endif %}
+
+                            {% if producto.variantes_disponibles %}
+                                <h3>Variantes disponibles</h3>
+
+                                <div class="variant-table-wrapper">
+                                    <table class="variant-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Variante</th>
+                                                <th>Modelo</th>
+                                                <th>Especificaciones</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            {% for variante in producto.variantes_disponibles %}
+                                                <tr>
+                                                    <td>
+                                                        <strong>{{ variante.nombre }}</strong>
+                                                    </td>
+
+                                                    <td>
+                                                        {% if variante.modelo %}
+                                                            {{ variante.modelo }}
+                                                        {% elif variante.codigo %}
+                                                            {{ variante.codigo }}
+                                                        {% else %}
+                                                            Por confirmar
+                                                        {% endif %}
+                                                    </td>
+
+                                                    <td>
+                                                        {% for especificacion in variante.especificaciones.all %}
+                                                            <span class="variant-specification">
+                                                                {{ especificacion.nombre }}:
+                                                                <strong>
+                                                                    {{ especificacion.valor }}
+                                                                    {% if especificacion.unidad %}
+                                                                        {{ especificacion.unidad }}
+                                                                    {% endif %}
+                                                                </strong>
+                                                            </span>
+                                                        {% empty %}
+                                                            <span>Consultar información técnica</span>
+                                                        {% endfor %}
+                                                    </td>
+
+                                                    <td>
+                                                        <a
+                                                            class="variant-quote"
+                                                            href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}&amp;variante={{ variante.pk }}">
+                                                            Cotizar
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    </details>
+                {% endif %}
+
+                <a
+                    href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}"
+                    class="product-cta">
+                    Solicitar cotización
+                    <span aria-hidden="true">→</span>
+                </a>
+
+            </div>
+
+        </article>
+
+    {% empty %}
+
+        <p class="no-products">
+            Todavía no hay productos publicados en esta categoría.
+        </p>
+
+    {% endfor %}
+
+    </div>
+
+</section>
+
+<section class="catalog-benefits" aria-label="Beneficios del catálogo">
+    <div class="container catalog-benefits-grid">
+
+        <div class="catalog-benefit">
+            <strong>Seguridad</strong>
+            <span>Soluciones para instalaciones confiables.</span>
+        </div>
+
+        <div class="catalog-benefit">
+            <strong>Asesoría técnica</strong>
+            <span>Orientación para seleccionar cada producto.</span>
+        </div>
+
+        <div class="catalog-benefit">
+            <strong>Variedad</strong>
+            <span>Alternativas para diferentes proyectos.</span>
+        </div>
+
+        <div class="catalog-benefit">
+            <strong>Cotización personalizada</strong>
+            <span>Atención según tus requerimientos.</span>
+        </div>
+
+    </div>
+</section>
+
+<!-- =====================================================
+     BANNER FINAL
+====================================================== -->
+
+<section class="catalog-banner">
+
+    <div class="container catalog-banner-inner">
+
+        <div>
+
+            <span class="section-tag section-tag-light">
+                ¿BUSCAS OTRO PRODUCTO?
+            </span>
+
+            <h2>
+                Podemos ayudarte a cotizar más alternativas eléctricas.
+            </h2>
+
+        </div>
+
+        <a
+            href="{% url 'contacto' %}"
+            class="btn btn-light">
+            Hablar con un asesor
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,543 @@
+{% extends 'base.html' %}
+
+{% block titulo %}
+Proyectos | PH Servicios Electrónicos
+{% endblock %}
+
+{% block contenido %}
+
+
+<!-- =====================================================
+     HERO PROYECTOS
+====================================================== -->
+
+<section class="projects-hero">
+
+    <div class="projects-hero-overlay"></div>
+
+    <div class="container projects-hero-content">
+
+        <span class="section-tag projects-hero-tag">
+            EXPERIENCIA
+        </span>
+
+        <h1>
+            Nuestros proyectos
+        </h1>
+
+        <p>
+            Conoce algunas de las áreas y proyectos en los que
+            PH Servicios Electrónicos puede desarrollar soluciones
+            eléctricas, comerciales e industriales.
+        </p>
+
+        <a href="{% url 'contacto' %}" class="btn">
+            ⚡ Cotizar proyecto
+        </a>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CATEGORÍAS
+====================================================== -->
+
+<section class="project-categories">
+
+    <div class="container">
+
+        <div class="project-category-grid">
+
+            <div class="project-category-item active">
+                <span>▦</span>
+                <strong>Todos</strong>
+            </div>
+
+            <div class="project-category-item">
+                <span>🏥</span>
+                <strong>Hospitalario</strong>
+            </div>
+
+            <div class="project-category-item">
+                <span>🏢</span>
+                <strong>Edificios</strong>
+            </div>
+
+            <div class="project-category-item">
+                <span>🏭</span>
+                <strong>Industrial</strong>
+            </div>
+
+            <div class="project-category-item">
+                <span>🛒</span>
+                <strong>Retail</strong>
+            </div>
+
+            <div class="project-category-item">
+                <span>🏨</span>
+                <strong>Hoteles</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CATÁLOGO DE PROYECTOS
+====================================================== -->
+
+<section class="projects-catalog">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <span class="section-tag">
+                PORTAFOLIO
+            </span>
+
+            <h2>
+                Experiencia en distintos sectores
+            </h2>
+
+            <p>
+                Proyectos demostrativos para presentar la estructura
+                visual del portafolio. Posteriormente serán reemplazados
+                por proyectos reales de la empresa.
+            </p>
+
+        </div>
+
+
+        <div class="projects-catalog-grid">
+
+
+            <!-- PROYECTO 1 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80"
+                        alt="Edificio hospitalario">
+
+                    <span class="project-category">
+                        Hospitalario
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Infraestructura hospitalaria
+                    </h3>
+
+                    <p>
+                        Desarrollo de soluciones eléctricas para
+                        instalaciones de salud y áreas críticas.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Santiago, Región Metropolitana
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 2 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80"
+                        alt="Edificio corporativo">
+
+                    <span class="project-category">
+                        Edificios
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Edificio corporativo
+                    </h3>
+
+                    <p>
+                        Implementación de instalaciones eléctricas,
+                        tableros y distribución para oficinas.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Las Condes, Santiago
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 3 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=900&q=80"
+                        alt="Planta industrial">
+
+                    <span class="project-category">
+                        Industrial
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Planta de procesos
+                    </h3>
+
+                    <p>
+                        Montaje e implementación eléctrica
+                        para infraestructura industrial.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Región del Biobío
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 4 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=900&q=80"
+                        alt="Centro comercial">
+
+                    <span class="project-category">
+                        Retail
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Local comercial
+                    </h3>
+
+                    <p>
+                        Implementación eléctrica para espacios
+                        comerciales y nuevas sucursales.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Santiago, Chile
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 5 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80"
+                        alt="Hotel">
+
+                    <span class="project-category">
+                        Hoteles
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Proyecto hotelero
+                    </h3>
+
+                    <p>
+                        Soluciones eléctricas para áreas comunes,
+                        habitaciones y servicios generales.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Región de Valparaíso
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 6 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80"
+                        alt="Proyecto de construcción">
+
+                    <span class="project-category">
+                        Construcción
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Nueva infraestructura comercial
+                    </h3>
+
+                    <p>
+                        Instalaciones eléctricas integrales para
+                        proyectos en etapa de construcción.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Región de O'Higgins
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 7 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=900&q=80"
+                        alt="Instalación industrial">
+
+                    <span class="project-category">
+                        Industrial
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Centro de distribución
+                    </h3>
+
+                    <p>
+                        Canalizaciones, distribución y soluciones
+                        eléctricas para operación logística.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Pudahuel, Santiago
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+
+            <!-- PROYECTO 8 -->
+
+            <article class="project-card project-card-catalog">
+
+                <div class="project-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=900&q=80"
+                        alt="Oficina moderna">
+
+                    <span class="project-category">
+                        Corporativo
+                    </span>
+
+                </div>
+
+                <div class="project-info">
+
+                    <h3>
+                        Habilitación de oficinas
+                    </h3>
+
+                    <p>
+                        Implementación eléctrica para oficinas,
+                        espacios colaborativos y áreas administrativas.
+                    </p>
+
+                    <span class="project-address">
+                        📍 Providencia, Santiago
+                    </span>
+
+                    <a href="#">
+                        Ver proyecto →
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ESTADÍSTICAS
+     Datos temporales hasta recibir cifras reales
+====================================================== -->
+
+<section class="stats">
+
+    <div class="container stats-grid">
+
+        <div class="stat">
+            <strong>Experiencia</strong>
+            <span>En proyectos eléctricos</span>
+        </div>
+
+        <div class="stat">
+            <strong>Calidad</strong>
+            <span>En cada ejecución</span>
+        </div>
+
+        <div class="stat">
+            <strong>Seguridad</strong>
+            <span>Durante todo el proceso</span>
+        </div>
+
+        <div class="stat">
+            <strong>Chile</strong>
+            <span>Proyectos en distintas regiones</span>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROYECTO DESTACADO
+====================================================== -->
+
+<section class="featured-project">
+
+    <div class="container featured-project-grid">
+
+
+        <div class="featured-project-image">
+
+            <img
+                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=85"
+                alt="Proyecto destacado">
+
+        </div>
+
+
+        <div class="featured-project-content">
+
+            <span class="section-tag">
+                PROYECTO DESTACADO
+            </span>
+
+            <h2>
+                Proyecto corporativo
+            </h2>
+
+            <p>
+                Esta sección permitirá destacar uno de los principales
+                proyectos desarrollados por PH Servicios Electrónicos,
+                incluyendo información técnica, ubicación, alcance
+                y fotografías.
+            </p>
+
+            <div class="featured-project-data">
+
+                <span>
+                    🏢 Infraestructura
+                </span>
+
+                <span>
+                    📍 Santiago
+                </span>
+
+                <span>
+                    ⚡ Proyecto eléctrico
+                </span>
+
+            </div>
+
+            <a href="{% url 'contacto' %}" class="btn">
+                Consultar por un proyecto
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Empresa | PH Servicios Electrónicos{% endblock %}
+{% block meta_description %}Conoce a {{ empresa_info.razon_social }}, empresa de proyectos, montajes eléctricos y venta de materiales en Santiago.{% endblock %}
 
 {% block contenido %}
 <section class="page-hero company-hero">
@@ -16,8 +17,14 @@
         <div class="company-intro">
             <span class="section-tag">QUIÉNES SOMOS</span>
             <h2>Comprometidos con la calidad y el servicio</h2>
-            <p>En PH Servicios Electrónicos desarrollamos soluciones para proyectos comerciales, corporativos y de infraestructura. Buscamos acompañar a nuestros clientes desde el levantamiento de sus necesidades hasta la implementación, priorizando seguridad, calidad, comunicación y cumplimiento.</p>
+            <p><strong>{{ empresa_info.razon_social }}</strong> desarrolla soluciones para proyectos comerciales, corporativos y de infraestructura, junto con la venta de materiales para la construcción. Buscamos acompañar a nuestros clientes desde el levantamiento de sus necesidades hasta la implementación, priorizando seguridad, calidad, comunicación y cumplimiento.</p>
         </div>
+
+        <dl class="company-facts" aria-label="Datos de la empresa">
+            <div><dt>Razón social</dt><dd>{{ empresa_info.razon_social }}</dd></div>
+            <div><dt>RUT</dt><dd>{{ empresa_info.rut }}</dd></div>
+            <div><dt>Dirección</dt><dd><a href="{{ empresa_info.mapa_url }}" target="_blank" rel="noopener noreferrer">{{ empresa_info.direccion }}</a></dd></div>
+        </dl>
 
         <div class="values-grid">
             <article class="value-card"><span class="value-number">01</span><h3>Nuestra misión</h3><p>Entregar soluciones eléctricas y electrónicas eficientes, seguras y de calidad, adaptadas a los requerimientos de cada proyecto, aportando confianza y continuidad a las operaciones de nuestros clientes.</p></article>

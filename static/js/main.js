@@ -1,54 +1,198 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mainNavigation = document.querySelector(".main-nav");
+    const menuIcon = menuToggle?.querySelector(".menu-toggle-icon");
+
+    function closeMenu({ returnFocus = false } = {}) {
+        if (!menuToggle || !mainNavigation) return;
+
+        mainNavigation.classList.remove("open");
+        document.body.classList.remove("menu-open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "Abrir menú");
+        if (menuIcon) menuIcon.textContent = "☰";
+        if (returnFocus) menuToggle.focus();
+    }
+
+    if (menuToggle && mainNavigation) {
+        menuToggle.addEventListener("click", () => {
+            const willOpen = !mainNavigation.classList.contains("open");
+            if (!willOpen) {
+                closeMenu();
+                return;
+            }
+
+            mainNavigation.classList.add("open");
+            document.body.classList.add("menu-open");
+            menuToggle.setAttribute("aria-expanded", "true");
+            menuToggle.setAttribute("aria-label", "Cerrar menú");
+            if (menuIcon) menuIcon.textContent = "×";
+        });
+
+        mainNavigation.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => closeMenu());
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Escape" && mainNavigation.classList.contains("open")) {
+                closeMenu({ returnFocus: true });
+            }
+        });
+
+        document.addEventListener("click", (event) => {
+            const header = menuToggle.closest(".header");
+            if (
+                mainNavigation.classList.contains("open")
+                && header
+                && !header.contains(event.target)
+            ) {
+                closeMenu();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 760) closeMenu();
+        });
+    }
 
     const slides = document.querySelectorAll(".hero-slide");
     const dots = document.querySelectorAll(".carousel-dot");
     const btnNext = document.querySelector(".carousel-next");
     const btnPrev = document.querySelector(".carousel-prev");
+    const carousel = document.querySelector(".hero-carousel");
 
-    let currentSlide = 0;
-    const totalSlides = slides.length;
+    if (slides.length > 0) {
+        let currentSlide = 0;
+        let timer = null;
+        const totalSlides = slides.length;
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    function updateCarousel(index) {
+        function updateCarousel(index) {
+            slides.forEach((slide, slideIndex) => {
+                const active = slideIndex === index;
+                slide.classList.toggle("active", active);
+                slide.setAttribute("aria-hidden", active ? "false" : "true");
+            });
 
-        slides.forEach(slide => {
-            slide.classList.remove("active");
+            dots.forEach((dot, dotIndex) => {
+                const active = dotIndex === index;
+                dot.classList.toggle("active", active);
+                dot.setAttribute("aria-current", active ? "true" : "false");
+            });
+
+            currentSlide = index;
+        }
+
+        function stopAutoplay() {
+            if (timer) window.clearInterval(timer);
+            timer = null;
+        }
+
+        function startAutoplay() {
+            stopAutoplay();
+            if (reduceMotion.matches || totalSlides < 2 || document.hidden) return;
+            timer = window.setInterval(() => {
+                updateCarousel((currentSlide + 1) % totalSlides);
+            }, 6000);
+        }
+
+        btnNext?.addEventListener("click", () => {
+            updateCarousel((currentSlide + 1) % totalSlides);
+            startAutoplay();
         });
 
-        dots.forEach(dot => {
-            dot.classList.remove("active");
+        btnPrev?.addEventListener("click", () => {
+            updateCarousel((currentSlide - 1 + totalSlides) % totalSlides);
+            startAutoplay();
         });
 
-        slides[index].classList.add("active");
-        dots[index].classList.add("active");
+        dots.forEach((dot, index) => {
+            dot.addEventListener("click", () => {
+                updateCarousel(index);
+                startAutoplay();
+            });
+        });
 
-        currentSlide = index;
+        carousel?.addEventListener("mouseenter", stopAutoplay);
+        carousel?.addEventListener("mouseleave", startAutoplay);
+        carousel?.addEventListener("focusin", stopAutoplay);
+        carousel?.addEventListener("focusout", startAutoplay);
+        document.addEventListener("visibilitychange", startAutoplay);
+        reduceMotion.addEventListener?.("change", startAutoplay);
+
+        updateCarousel(0);
+        startAutoplay();
     }
 
-    if (btnNext) {
-        btnNext.addEventListener("click", () => {
-            const nextIndex = (currentSlide + 1) % totalSlides;
-            updateCarousel(nextIndex);
+    document.querySelectorAll(".catalog-card").forEach((card) => {
+        const mainImage = card.querySelector(".catalog-main-image");
+        if (!mainImage) return;
+
+        const thumbnails = card.querySelectorAll(".catalog-thumb");
+        const previewTriggers = card.querySelectorAll(
+            ".catalog-thumb, .catalog-variant-card[data-preview-src]"
+        );
+        let selectedSrc = mainImage.currentSrc || mainImage.src;
+        let selectedAlt = mainImage.alt;
+
+        function showImage(src, alt) {
+            if (!src || mainImage.src === src) return;
+            mainImage.classList.add("changing");
+            window.setTimeout(() => {
+                mainImage.src = src;
+                mainImage.alt = alt || selectedAlt;
+                mainImage.classList.remove("changing");
+            }, 90);
+        }
+
+        function restoreSelectedImage() {
+            showImage(selectedSrc, selectedAlt);
+        }
+
+        previewTriggers.forEach((trigger) => {
+            const src = trigger.dataset.previewSrc;
+            const alt = trigger.dataset.previewAlt;
+            trigger.addEventListener("mouseenter", () => showImage(src, alt));
+            trigger.addEventListener("mouseleave", restoreSelectedImage);
+            trigger.addEventListener("focusin", () => showImage(src, alt));
+            trigger.addEventListener("focusout", restoreSelectedImage);
         });
-    }
 
-    if (btnPrev) {
-        btnPrev.addEventListener("click", () => {
-            const prevIndex =
-                (currentSlide - 1 + totalSlides) % totalSlides;
-
-            updateCarousel(prevIndex);
-        });
-    }
-
-    dots.forEach((dot, index) => {
-        dot.addEventListener("click", () => {
-            updateCarousel(index);
+        thumbnails.forEach((thumbnail) => {
+            thumbnail.addEventListener("click", () => {
+                selectedSrc = thumbnail.dataset.previewSrc;
+                selectedAlt = thumbnail.dataset.previewAlt;
+                thumbnails.forEach((item) => item.classList.remove("active"));
+                thumbnail.classList.add("active");
+                showImage(selectedSrc, selectedAlt);
+            });
         });
     });
 
-    setInterval(() => {
-        const nextIndex = (currentSlide + 1) % totalSlides;
-        updateCarousel(nextIndex);
-    }, 5000);
+    const projectFilters = document.querySelectorAll("[data-project-filter]");
+    const projectCards = document.querySelectorAll("[data-project-category]");
+    projectFilters.forEach((button) => {
+        button.addEventListener("click", () => {
+            const filter = button.dataset.projectFilter;
+            projectFilters.forEach((item) => {
+                const active = item === button;
+                item.classList.toggle("active", active);
+                item.setAttribute("aria-pressed", active ? "true" : "false");
+            });
+            projectCards.forEach((card) => {
+                card.hidden = filter !== "todos"
+                    && card.dataset.projectCategory !== filter;
+            });
+        });
+    });
 
+    const quoteForm = document.querySelector(".quote-form");
+    quoteForm?.addEventListener("submit", () => {
+        const submitButton = quoteForm.querySelector("[type='submit']");
+        if (!submitButton) return;
+        submitButton.disabled = true;
+        submitButton.textContent = "Enviando solicitud…";
+    });
+
+    document.querySelector(".form-success")?.focus();
 });

@@ -1,0 +1,98 @@
+﻿familia,titulo,archivo,codigos,uso,lamina_fuente
+plafones-led,AVC 60 x 60 cm embutido,plafones-led/avc-6060-emb.png,AVC-6060-6E | AVC-6060-12E | AVC-6060-18E | AVC-6060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,AVC 60 x 60 cm sobrepuesto,plafones-led/avc-6060-sp.png,AVC-6060-6S | AVC-6060-12S | AVC-6060-18S | AVC-6060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,AVC 120 x 30 cm embutido,plafones-led/avc-12030-emb.png,AVC-12030-6E | AVC-12030-12E | AVC-12030-18E | AVC-12030-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,AVC 120 x 30 cm sobrepuesto,plafones-led/avc-12030-sp.png,AVC-12030-6S | AVC-12030-12S | AVC-12030-18S | AVC-12030-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,AVC 120 x 60 cm embutido,plafones-led/avc-12060-emb.png,AVC-12060-6E | AVC-12060-12E | AVC-12060-18E | AVC-12060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,AVC 120 x 60 cm sobrepuesto,plafones-led/avc-12060-sp.png,AVC-12060-6S | AVC-12060-12S | AVC-12060-18S | AVC-12060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 60 x 60 cm embutido,plafones-led/fls-6060-emb.png,FLS-6060-6E | FLS-6060-12E | FLS-6060-18E | FLS-6060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 60 x 60 cm sobrepuesto,plafones-led/fls-6060-sp.png,FLS-6060-6S | FLS-6060-12S | FLS-6060-18S | FLS-6060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 120 x 30 cm embutido,plafones-led/fls-12030-emb.png,FLS-12030-6E | FLS-12030-12E | FLS-12030-18E | FLS-12030-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 120 x 30 cm sobrepuesto,plafones-led/fls-12030-sp.png,FLS-12030-6S | FLS-12030-12S | FLS-12030-18S | FLS-12030-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 120 x 60 cm embutido,plafones-led/fls-12060-emb.png,FLS-12060-6E | FLS-12060-12E | FLS-12060-18E | FLS-12060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,FLS 120 x 60 cm sobrepuesto,plafones-led/fls-12060-sp.png,FLS-12060-6S | FLS-12060-12S | FLS-12060-18S | FLS-12060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 60 x 60 cm embutido,plafones-led/yellmax-6060-emb.png,YLM-6060-6E | YLM-6060-12E | YLM-6060-18E | YLM-6060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 60 x 60 cm sobrepuesto,plafones-led/yellmax-6060-sp.png,YLM-6060-6S | YLM-6060-12S | YLM-6060-18S | YLM-6060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 120 x 30 cm embutido,plafones-led/yellmax-12030-emb.png,YLM-12030-6E | YLM-12030-12E | YLM-12030-18E | YLM-12030-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 120 x 30 cm sobrepuesto,plafones-led/yellmax-12030-sp.png,YLM-12030-6S | YLM-12030-12S | YLM-12030-18S | YLM-12030-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 120 x 60 cm embutido,plafones-led/yellmax-12060-emb.png,YLM-12060-6E | YLM-12060-12E | YLM-12060-18E | YLM-12060-24E,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+plafones-led,YLM 120 x 60 cm sobrepuesto,plafones-led/yellmax-12060-sp.png,YLM-12060-6S | YLM-12060-12S | YLM-12060-18S | YLM-12060-24S,principal,Imagen_de_Codex_13_sept_2026_05_16_29_p.m._1.png
+canalizacion-electrica,Tubería EMT metálica,canalizacion-electrica/tuberia-emt.png,EMT-20 | EMT-25 | EMT-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Curva EMT 90°,canalizacion-electrica/curva-emt-90.png,CEMT-20 | CEMT-25 | CEMT-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Curva EMT 45°,canalizacion-electrica/curva-emt-45.png,CEMT45-20 | CEMT45-25 | CEMT45-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Copla EMT,canalizacion-electrica/copla-emt.png,CPL-20 | CPL-25 | CPL-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Terminal EMT,canalizacion-electrica/terminal-emt.png,TEMT-20 | TEMT-25 | TEMT-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Salida a caja EMT,canalizacion-electrica/salida-caja-emt.png,SEMT-20 | SEMT-25 | SEMT-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Tubería PVC eléctrica,canalizacion-electrica/tuberia-pvc.png,PVC-16 | PVC-20 | PVC-25 | PVC-32 | PVC-40 | PVC-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Curva PVC 90°,canalizacion-electrica/curva-pvc-90.png,CPVC-16 | CPVC-20 | CPVC-25 | CPVC-32 | CPVC-40 | CPVC-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Curva PVC 45°,canalizacion-electrica/curva-pvc-45.png,CPVC45-16 | CPVC45-20 | CPVC45-25 | CPVC45-32 | CPVC45-40 | CPVC45-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Copla PVC,canalizacion-electrica/copla-pvc.png,CP-16 | CP-20 | CP-25 | CP-32 | CP-40 | CP-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Terminal PVC,canalizacion-electrica/terminal-pvc.png,TPVC-16 | TPVC-20 | TPVC-25 | TPVC-32 | TPVC-40 | TPVC-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Salida a caja PVC,canalizacion-electrica/salida-caja-pvc.png,SPVC-16 | SPVC-20 | SPVC-25 | SPVC-32 | SPVC-40 | SPVC-50,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Flexible metálico,canalizacion-electrica/flexible-metalico.png,FLEX-20 | FLEX-25 | FLEX-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Conector recto flexible,canalizacion-electrica/conector-recto-flex.png,CMF-20 | CMF-25 | CMF-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Adaptador a caja flexible,canalizacion-electrica/adaptador-caja-flex.png,AMF-20 | AMF-25 | AMF-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Conector curvo 90°,canalizacion-electrica/conector-curvo-flex.png,CMF90-20 | CMF90-25 | CMF90-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Flexible libre de halógeno,canalizacion-electrica/flexible-libre-halogeno.png,HLF-20 | HLF-25 | HLF-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Conector libre de halógeno,canalizacion-electrica/conector-libre-halogeno.png,CHL-20 | CHL-25 | CHL-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+canalizacion-electrica,Adaptador libre de halógeno,canalizacion-electrica/adaptador-libre-halogeno.png,AHL-20 | AHL-25 | AHL-32,principal,Imagen_de_Codex_13_sept_2026_05_14_02_p.m..png
+staford-enchufes,Enchufe simple 10 A blanco,staford-enchufes/staford-simple-10a-blanco.png,STF-ES-10A-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10 A blanco,staford-enchufes/staford-doble-10a-blanco.png,STF-ED-10A-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe triple 10 A blanco,staford-enchufes/staford-triple-10a-blanco.png,STF-ET-10A-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10/16 A blanco,staford-enchufes/staford-simple-10-16a-blanco.png,STF-ES-10/16-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10/16 A blanco,staford-enchufes/staford-doble-10-16a-blanco.png,STF-ED-10/16-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10 A negro,staford-enchufes/staford-simple-10a-negro.png,STF-ES-10A-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10 A negro,staford-enchufes/staford-doble-10a-negro.png,STF-ED-10A-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe triple 10 A negro,staford-enchufes/staford-triple-10a-negro.png,STF-ET-10A-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10/16 A negro,staford-enchufes/staford-simple-10-16a-negro.png,STF-ES-10/16-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10/16 A negro,staford-enchufes/staford-doble-10-16a-negro.png,STF-ED-10/16-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10 A champagne,staford-enchufes/staford-simple-10a-champagne.png,STF-ES-10A-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10 A champagne,staford-enchufes/staford-doble-10a-champagne.png,STF-ED-10A-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe triple 10 A champagne,staford-enchufes/staford-triple-10a-champagne.png,STF-ET-10A-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10/16 A champagne,staford-enchufes/staford-simple-10-16a-champagne.png,STF-ES-10/16-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10/16 A champagne,staford-enchufes/staford-doble-10-16a-champagne.png,STF-ED-10/16-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10 A cafe,staford-enchufes/staford-simple-10a-cafe.png,STF-ES-10A-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10 A cafe,staford-enchufes/staford-doble-10a-cafe.png,STF-ED-10A-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe triple 10 A cafe,staford-enchufes/staford-triple-10a-cafe.png,STF-ET-10A-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe simple 10/16 A cafe,staford-enchufes/staford-simple-10-16a-cafe.png,STF-ES-10/16-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe doble 10/16 A cafe,staford-enchufes/staford-doble-10-16a-cafe.png,STF-ED-10/16-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-enchufes,Enchufe triple 10/16 A blanco,staford-enchufes/staford-triple-10-16a-blanco.png,STF-ET-10/16-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-modulos,Tapa ciega,staford-modulos/staford-tapa-ciega.png,STF-MC,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-modulos,Módulo TV coaxial,staford-modulos/staford-tv-coaxial.png,STF-MTV,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-modulos,Módulo teléfono RJ11,staford-modulos/staford-telefono-rj11.png,STF-MTEL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-modulos,Módulo datos RJ45,staford-modulos/staford-datos-rj45.png,STF-MDAT,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 1 puesto(s) blanco,staford-placas/staford-placa-1p-blanco.png,STF-P1-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 1 puesto(s) negro,staford-placas/staford-placa-1p-negro.png,STF-P1-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 1 puesto(s) champagne,staford-placas/staford-placa-1p-champagne.png,STF-P1-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 1 puesto(s) cafe,staford-placas/staford-placa-1p-cafe.png,STF-P1-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 2 puesto(s) blanco,staford-placas/staford-placa-2p-blanco.png,STF-P2-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 2 puesto(s) negro,staford-placas/staford-placa-2p-negro.png,STF-P2-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 2 puesto(s) champagne,staford-placas/staford-placa-2p-champagne.png,STF-P2-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 2 puesto(s) cafe,staford-placas/staford-placa-2p-cafe.png,STF-P2-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 3 puesto(s) blanco,staford-placas/staford-placa-3p-blanco.png,STF-P3-BL,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 3 puesto(s) negro,staford-placas/staford-placa-3p-negro.png,STF-P3-NE,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 3 puesto(s) champagne,staford-placas/staford-placa-3p-champagne.png,STF-P3-CH,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+staford-placas,Placa Staford 3 puesto(s) cafe,staford-placas/staford-placa-3p-cafe.png,STF-P3-CA,principal,Imagen_de_Codex_13_sept_2026_05_11_03_p.m._1.png
+fotoceldas,Fotocelda LEXO,fotoceldas/lexo-lex-fc01.png,LEX-FC01,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Fotocelda Legrand,fotoceldas/legrand-leg-412898.png,LEG-412898,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Fotocelda CHINT,fotoceldas/chint-cht-ny01.png,CHT-NY01,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Fotocelda Staford,fotoceldas/staford-stf-fc10.png,STF-FC10,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Base para fotocelda LEXO,fotoceldas/lexo-lex-bf01.png,LEX-BF01,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Base para fotocelda Legrand,fotoceldas/legrand-leg-412899.png,LEG-412899,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Base para fotocelda CHINT,fotoceldas/chint-cht-by01.png,CHT-BY01,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Base para fotocelda Staford,fotoceldas/staford-stf-bf10.png,STF-BF10,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Soporte metálico para fotocelda,fotoceldas/soporte-metalico-sop-fc01.png,SOP-FC01,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+fotoceldas,Soporte muro/poste ajustable,fotoceldas/soporte-muro-poste-sop-fc02.png,SOP-FC02,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-casquetes,Casquete Kalop 2 polos,kalop-casquetes/kalop-casquete-2p.png,KAL-2P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-casquetes,Casquete Kalop 3 polos,kalop-casquetes/kalop-casquete-3p.png,KAL-3P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-casquetes,Casquete Kalop 4 polos,kalop-casquetes/kalop-casquete-4p.png,KAL-4P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-casquetes,Casquete Kalop 6 polos,kalop-casquetes/kalop-casquete-6p.png,KAL-6P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-modulos,Módulo Kalop 2 polos,kalop-modulos/kalop-modulo-2p.png,KAL-MOD-2P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-modulos,Módulo Kalop 3 polos,kalop-modulos/kalop-modulo-3p.png,KAL-MOD-3P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-modulos,Módulo Kalop 4 polos,kalop-modulos/kalop-modulo-4p.png,KAL-MOD-4P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-modulos,Módulo Kalop 6 polos,kalop-modulos/kalop-modulo-6p.png,KAL-MOD-6P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-accesorios,Base de superficie Kalop,kalop-accesorios/kalop-base-superficie.png,KAL-BS,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-accesorios,Base inclinada Kalop,kalop-accesorios/kalop-base-inclinada.png,KAL-BI,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+kalop-accesorios,Base empotrable Kalop,kalop-accesorios/kalop-base-empotrable.png,KAL-BE,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+tableros-cnc,Tablero exterior CNC IP65 cerrado,tableros-cnc/cnc-tablero-exterior-cerrado.png,CNC-TB-2P | CNC-TB-4P | CNC-TB-6P | CNC-TB-8P | CNC-TB-12P | CNC-TB-16P | CNC-TB-18P | CNC-TB-24P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+tableros-cnc,Tablero exterior CNC IP65 abierto,tableros-cnc/cnc-tablero-exterior-abierto.png,CNC-TB-2P | CNC-TB-4P | CNC-TB-6P | CNC-TB-8P | CNC-TB-12P | CNC-TB-16P | CNC-TB-18P | CNC-TB-24P,secundaria,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png

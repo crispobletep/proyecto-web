@@ -1,146 +1,125 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Contacto y Cotizaciones | PH Servicios Electrónicos{% endblock %}
+{% block titulo %}Contacto y cotizaciones | PH Servicios Electrónicos{% endblock %}
+{% block meta_description %}Solicita una cotización a PH Servicios Electrónicos. Atención en San Diego 1325, Santiago Centro.{% endblock %}
 
 {% block contenido %}
 <section class="page-hero contact-hero">
     <div class="container">
         <span class="section-tag">CONTACTO</span>
         <h1>Solicita una cotización para tu proyecto</h1>
-        <p>Cuéntanos qué necesitas. Revisaremos los antecedentes de tu proyecto para entregarte una propuesta acorde a tus requerimientos.</p>
+        <p>Cuéntanos qué necesitas. Revisaremos los antecedentes para entregarte una propuesta acorde a tus requerimientos.</p>
     </div>
 </section>
 
 <section class="contact-section">
     <div class="container contact-grid">
-        <div class="contact-info-card">
+        <aside class="contact-info-card" aria-labelledby="contact-info-title">
             <span class="section-tag">HABLEMOS</span>
-            <h2>Estamos para ayudarte</h2>
-            <p>Completa el formulario con la mayor cantidad de información posible. Esto nos permitirá comprender mejor tu necesidad y preparar una cotización más precisa.</p>
+            <h2 id="contact-info-title">Estamos para ayudarte</h2>
+            <p>Puedes contactarnos directamente o completar el formulario con la mayor cantidad de información posible.</p>
 
-            <div class="contact-detail"><strong>📞 Teléfono</strong><span>+56 9 0000 0000</span></div>
-            <div class="contact-detail"><strong>✉ Correo</strong><span>contacto@phservicios.cl</span></div>
-            <div class="contact-detail"><strong>📍 Cobertura</strong><span>Santiago, Chile</span></div>
+            <div class="contact-detail">
+                <strong>☎ Teléfono</strong>
+                <a href="{{ empresa_info.telefono_href }}">{{ empresa_info.telefono }}</a>
+            </div>
+            <div class="contact-detail">
+                <strong>✉ Correo</strong>
+                <a href="{{ empresa_info.correo_href }}">{{ empresa_info.correo }}</a>
+            </div>
+            <div class="contact-detail">
+                <strong>● Dirección</strong>
+                <a href="{{ empresa_info.mapa_url }}" target="_blank" rel="noopener noreferrer">
+                    {{ empresa_info.direccion }}
+                </a>
+            </div>
+            <div class="contact-detail">
+                <strong>Identificación tributaria</strong>
+                <span>RUT {{ empresa_info.rut }}</span>
+            </div>
 
             <div class="contact-note">
                 <strong>¿Qué puedes cotizar?</strong>
-                <p>Instalaciones eléctricas, soluciones electrónicas, infraestructura, mantención, productos y proyectos especiales.</p>
+                <p>Instalaciones y montajes eléctricos, mantención, infraestructura, productos y requerimientos especiales.</p>
             </div>
-        </div>
+        </aside>
 
         <div class="quote-card">
             <h2>Formulario de cotización</h2>
             <p class="form-intro">Los campos marcados con * son obligatorios.</p>
+
             {% if producto_seleccionado %}
                 <div class="selected-product-card">
-
-                    <span class="selected-product-label">
-                        Producto seleccionado
-                    </span>
-
-                    <strong>
-                        {{ producto_seleccionado.nombre }}
-                    </strong>
-
+                    <span class="selected-product-label">Producto seleccionado</span>
+                    <strong>{{ producto_seleccionado.nombre }}</strong>
                     {% if producto_seleccionado.marca_nueva %}
-                        <span>
-                            Marca: {{ producto_seleccionado.marca_nueva.nombre }}
-                        </span>
+                        <span>Marca: {{ producto_seleccionado.marca_nueva.nombre }}</span>
                     {% elif producto_seleccionado.marca %}
-                        <span>
-                            Marca: {{ producto_seleccionado.marca }}
-                        </span>
+                        <span>Marca: {{ producto_seleccionado.marca }}</span>
                     {% endif %}
-
                     {% if variante_seleccionada %}
-                        <span>
-                            Variante: {{ variante_seleccionada.nombre }}
-                        </span>
+                        <span>Variante: {{ variante_seleccionada.nombre }}</span>
                     {% endif %}
-
-                    <a href="{% url 'productos' %}">
-                        Cambiar producto
-                    </a>
-
+                    <a href="{% url 'productos' %}">Cambiar producto</a>
                 </div>
             {% endif %}
-            {% if enviado %}<div class="form-success">✓ Tu solicitud fue enviada correctamente. Nos pondremos en contacto contigo.</div>{% endif %}
-            {% if error %}<div class="form-error">{{ error }}</div>{% endif %}
+
+            {% if enviado %}
+                <div class="form-success" role="status" tabindex="-1">
+                    ✓ Tu solicitud fue registrada correctamente. Nos pondremos en contacto contigo.
+                </div>
+            {% endif %}
+
+            {% if formulario.errors %}
+                <div class="form-error" role="alert">
+                    Revisa los campos indicados antes de enviar la solicitud.
+                    {% for error in formulario.non_field_errors %}<span>{{ error }}</span>{% endfor %}
+                </div>
+            {% endif %}
 
             <form method="post" class="quote-form">
                 {% csrf_token %}
+                {% if producto_seleccionado %}<input type="hidden" name="producto_id" value="{{ producto_seleccionado.pk }}">{% endif %}
+                {% if variante_seleccionada %}<input type="hidden" name="variante_id" value="{{ variante_seleccionada.pk }}">{% endif %}
 
-                {% if producto_seleccionado %}
-                    <input
-                        type="hidden"
-                        name="producto_id"
-                        value="{{ producto_seleccionado.pk }}">
-                {% endif %}
-
-                {% if variante_seleccionada %}
-                    <input
-                        type="hidden"
-                        name="variante_id"
-                        value="{{ variante_seleccionada.pk }}">
-                {% endif %}
                 <div class="form-row">
-                    <div class="form-group"><label for="nombre">Nombre y apellido *</label><input id="nombre" name="nombre" type="text" required placeholder="Tu nombre"></div>
-                    <div class="form-group"><label for="empresa">Empresa</label><input id="empresa" name="empresa" type="text" placeholder="Nombre de la empresa"></div>
+                    <div class="form-group{% if formulario.nombre.errors %} has-error{% endif %}">
+                        <label for="{{ formulario.nombre.id_for_label }}">Nombre y apellido *</label>
+                        {{ formulario.nombre }}
+                        {% for error in formulario.nombre.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="form-group{% if formulario.empresa.errors %} has-error{% endif %}">
+                        <label for="{{ formulario.empresa.id_for_label }}">Empresa</label>
+                        {{ formulario.empresa }}
+                        {% for error in formulario.empresa.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </div>
                 </div>
+
                 <div class="form-row">
-                    <div class="form-group"><label for="email">Correo electrónico *</label><input id="email" name="email" type="email" required placeholder="correo@empresa.cl"></div>
-                    <div class="form-group"><label for="telefono">Teléfono *</label><input id="telefono" name="telefono" type="tel" required placeholder="+56 9 1234 5678"></div>
+                    <div class="form-group{% if formulario.email.errors %} has-error{% endif %}">
+                        <label for="{{ formulario.email.id_for_label }}">Correo electrónico *</label>
+                        {{ formulario.email }}
+                        {% for error in formulario.email.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </div>
+                    <div class="form-group{% if formulario.telefono.errors %} has-error{% endif %}">
+                        <label for="{{ formulario.telefono.id_for_label }}">Teléfono *</label>
+                        {{ formulario.telefono }}
+                        {% for error in formulario.telefono.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="servicio">Servicio a cotizar *</label>
-                    <select id="servicio" name="servicio" required>
-                        <option value="">Selecciona una opción</option>
 
-                        <option
-                            value="Instalación eléctrica"
-                            {% if datos.servicio == "Instalación eléctrica" %}selected{% endif %}>
-                            Instalación eléctrica
-                        </option>
-
-                        <option
-                            value="Soluciones electrónicas"
-                            {% if datos.servicio == "Soluciones electrónicas" %}selected{% endif %}>
-                            Soluciones electrónicas
-                        </option>
-
-                        <option
-                            value="Infraestructura"
-                            {% if datos.servicio == "Infraestructura" %}selected{% endif %}>
-                            Infraestructura
-                        </option>
-
-                        <option
-                            value="Mantención"
-                            {% if datos.servicio == "Mantención" %}selected{% endif %}>
-                            Mantención
-                        </option>
-
-                        <option
-                            value="Productos"
-                            {% if producto_seleccionado or datos.servicio == "Productos" %}selected{% endif %}>
-                            Productos
-                        </option>
-
-                        <option
-                            value="Proyecto especial / Otro"
-                            {% if datos.servicio == "Proyecto especial / Otro" %}selected{% endif %}>
-                            Proyecto especial / Otro
-                        </option>
-                    </select>
+                <div class="form-group{% if formulario.servicio.errors %} has-error{% endif %}">
+                    <label for="{{ formulario.servicio.id_for_label }}">Servicio a cotizar *</label>
+                    {{ formulario.servicio }}
+                    {% for error in formulario.servicio.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
                 </div>
-                <div class="form-group"><label for="mensaje">Describe tu proyecto *</label>
-                    <textarea
-                        id="mensaje"
-                        name="mensaje"
-                        rows="6"
-                        required
-                        placeholder="Indica cantidades, plazos y otros antecedentes relevantes.">{% if datos.mensaje %}{{ datos.mensaje }}{% else %}{{ mensaje_sugerido }}{% endif %}
-                    </textarea>
+
+                <div class="form-group{% if formulario.mensaje.errors %} has-error{% endif %}">
+                    <label for="{{ formulario.mensaje.id_for_label }}">Describe tu proyecto *</label>
+                    {{ formulario.mensaje }}
+                    {% for error in formulario.mensaje.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
+                </div>
+
                 <button type="submit" class="btn quote-submit">Enviar solicitud de cotización →</button>
                 <small class="privacy-text">Tus datos serán utilizados únicamente para responder a tu solicitud comercial.</small>
             </form>

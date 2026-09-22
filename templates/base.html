@@ -1,309 +1,117 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html lang="es">
-
+<html lang="es-CL">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta name="description"
-          content="PH Servicios Electrónicos - Soluciones eléctricas y proyectos de infraestructura.">
-
-    <title>
-        {% block titulo %}
-        PH Servicios Electrónicos
-        {% endblock %}
-    </title>
-
-    <!-- CSS PRINCIPAL -->
+    <meta name="description" content="{% block meta_description %}PH Servicios Electrónicos: proyectos, montajes eléctricos y venta de materiales para la construcción en Santiago.{% endblock %}">
+    <meta name="theme-color" content="#071a35">
+    <title>{% block titulo %}PH Servicios Electrónicos{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
     <link rel="stylesheet" href="{% static 'css/hola.css' %}">
-
 </head>
-
 <body>
-
-    <!-- =====================================================
-         BARRA SUPERIOR
-    ====================================================== -->
+    <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
 
     <div class="topbar">
-
         <div class="container topbar-content">
-
-            <div class="topbar-left">
-
-                <span>📞 +56 9 0000 0000</span>
-
-                <span>✉ contacto@phservicios.cl</span>
-
-                <span>📍 Santiago, Chile</span>
-
+            <div class="topbar-left" aria-label="Datos de contacto">
+                <a href="{{ empresa_info.telefono_href }}" aria-label="Llamar al {{ empresa_info.telefono }}">
+                    <span aria-hidden="true">☎</span> {{ empresa_info.telefono }}
+                </a>
+                <a href="{{ empresa_info.correo_href }}">
+                    <span aria-hidden="true">✉</span> {{ empresa_info.correo }}
+                </a>
+                <a href="{{ empresa_info.mapa_url }}" target="_blank" rel="noopener noreferrer">
+                    <span aria-hidden="true">●</span> {{ empresa_info.direccion }}
+                </a>
             </div>
-
-            <div class="topbar-right">
-
-                <span>Soluciones profesionales para grandes proyectos</span>
-
-            </div>
-
+            <div class="topbar-right">Proyectos, montajes y materiales eléctricos</div>
         </div>
-
     </div>
-
-
-    <!-- =====================================================
-         NAVBAR
-    ====================================================== -->
 
     <header class="header">
-
-    <div class="container nav">
-
-        <a href="{% url 'inicio' %}" class="logo">
-            <img
-                src="{% static 'img/logo.png' %}"
-                alt="PH Servicios Electrónicos">
-        </a>
-
-        <button
-            type="button"
-            class="menu-toggle"
-            aria-label="Abrir menú"
-            aria-controls="main-navigation"
-            aria-expanded="false">
-            ☰
-        </button>
-
-        <nav class="main-nav" id="main-navigation">
-            <ul class="menu">
-
-                <li>
-                    <a href="{% url 'inicio' %}">
-                        Inicio
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'productos' %}">
-                        Productos
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'empresa' %}">
-                        Empresa
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'servicios' %}">
-                        Servicios
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'proyectos' %}">
-                        Proyectos
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{% url 'contacto' %}">
-                        Contacto
-                    </a>
-                </li>
-
-            </ul>
-        </nav>
-
-        <a
-            href="{% url 'contacto' %}"
-            class="btn btn-small">
-            Solicitar cotización
-        </a>
-
-    </div>
-
-</header>
-
-
-    <!-- =====================================================
-         CONTENIDO DE CADA PÁGINA
-    ====================================================== -->
-
-    <main>
-
-        {% block contenido %}
-
-        {% endblock %}
-
-    </main>
-
-
-    <!-- =====================================================
-         CTA
-    ====================================================== -->
-
-    <section class="cta">
-
-        <div class="container cta-content">
-
-            <div>
-
-                <span class="cta-label">
-                    ¿TIENES UN PROYECTO EN MENTE?
-                </span>
-
-                <h2>
-                    Hablemos de tu próximo proyecto.
-                </h2>
-
-                <p>
-                    Cuéntanos tus necesidades y nuestro equipo
-                    se pondrá en contacto contigo.
-                </p>
-
-            </div>
-
-            <a
-                href="{% url 'contacto' %}"
-                class="btn btn-light">
-
-                Solicitar cotización
-
+        <div class="container nav">
+            <a href="{% url 'inicio' %}" class="logo" aria-label="PH Servicios Electrónicos, inicio">
+                <img src="{% static 'img/logo.png' %}" alt="PH Servicios Electrónicos" width="85" height="45">
             </a>
 
-        </div>
+            <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-controls="main-navigation" aria-expanded="false">
+                <span class="menu-toggle-icon" aria-hidden="true">☰</span>
+            </button>
 
+            {% with pagina=request.resolver_match.url_name %}
+                <nav class="main-nav" id="main-navigation" aria-label="Navegación principal">
+                    <ul class="menu">
+                        <li><a href="{% url 'inicio' %}"{% if pagina == 'inicio' %} class="active" aria-current="page"{% endif %}>Inicio</a></li>
+                        <li><a href="{% url 'productos' %}"{% if pagina == 'productos' %} class="active" aria-current="page"{% endif %}>Productos</a></li>
+                        <li><a href="{% url 'empresa' %}"{% if pagina == 'empresa' %} class="active" aria-current="page"{% endif %}>Empresa</a></li>
+                        <li><a href="{% url 'servicios' %}"{% if pagina == 'servicios' %} class="active" aria-current="page"{% endif %}>Servicios</a></li>
+                        <li><a href="{% url 'proyectos' %}"{% if pagina == 'proyectos' %} class="active" aria-current="page"{% endif %}>Proyectos</a></li>
+                        <li><a href="{% url 'contacto' %}"{% if pagina == 'contacto' %} class="active" aria-current="page"{% endif %}>Contacto</a></li>
+                    </ul>
+                </nav>
+            {% endwith %}
+
+            <a href="{% url 'contacto' %}" class="btn btn-small">Solicitar cotización</a>
+        </div>
+    </header>
+
+    <main id="contenido-principal" tabindex="-1">
+        {% block contenido %}{% endblock %}
+    </main>
+
+    <section class="cta" aria-labelledby="cta-title">
+        <div class="container cta-content">
+            <div>
+                <span class="cta-label">¿TIENES UN PROYECTO EN MENTE?</span>
+                <h2 id="cta-title">Hablemos de tu próximo proyecto.</h2>
+                <p>Cuéntanos tus necesidades y revisaremos contigo la mejor alternativa.</p>
+            </div>
+            <a href="{% url 'contacto' %}" class="btn btn-light">Solicitar cotización</a>
+        </div>
     </section>
 
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
     <footer class="footer">
-
         <div class="container footer-grid">
-
-
-            <!-- EMPRESA -->
-
             <div class="footer-company">
-
-                <a href="{% url 'inicio' %}" class="logo footer-logo">
-                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Electrónicos">
+                <a href="{% url 'inicio' %}" class="logo footer-logo" aria-label="Volver al inicio">
+                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Electrónicos" width="85" height="45">
                 </a>
-
-                <p>
-
-                    Soluciones eléctricas y electrónicas
-                    para proyectos comerciales,
-                    corporativos e infraestructura.
-
-                </p>
-
+                <p>{{ empresa_info.razon_social }}</p>
+                <p class="footer-activity">{{ empresa_info.actividad }}</p>
             </div>
 
-
-            <!-- NAVEGACIÓN -->
-
             <div>
-
-                <h3>
-                    Navegación
-                </h3>
-
+                <h3>Navegación</h3>
                 <ul class="footer-links">
-
-                    <li>
-                        <a href="{% url 'inicio' %}">
-                            Inicio
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'productos' %}">
-                            Productos
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'empresa' %}">
-                            Empresa
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'servicios' %}">
-                            Servicios
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'proyectos' %}">
-                            Proyectos
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{% url 'contacto' %}">
-                            Contacto
-                        </a>
-                    </li>
-
+                    <li><a href="{% url 'inicio' %}">Inicio</a></li>
+                    <li><a href="{% url 'productos' %}">Productos</a></li>
+                    <li><a href="{% url 'empresa' %}">Empresa</a></li>
+                    <li><a href="{% url 'servicios' %}">Servicios</a></li>
+                    <li><a href="{% url 'proyectos' %}">Proyectos</a></li>
+                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
                 </ul>
-
             </div>
-
-
-            <!-- CONTACTO -->
 
             <div>
-
-                <h3>
-                    Contacto
-                </h3>
-
+                <h3>Contacto</h3>
                 <ul class="footer-contact">
-
-                    <li>📞 +56 9 0000 0000</li>
-
-                    <li>✉ contacto@phservicios.cl</li>
-
-                    <li>📍 Santiago, Chile</li>
-
+                    <li><a href="{{ empresa_info.telefono_href }}">☎ {{ empresa_info.telefono }}</a></li>
+                    <li><a href="{{ empresa_info.correo_href }}">✉ {{ empresa_info.correo }}</a></li>
+                    <li><a href="{{ empresa_info.mapa_url }}" target="_blank" rel="noopener noreferrer">● {{ empresa_info.direccion }}</a></li>
                 </ul>
-
             </div>
-
-
         </div>
-
 
         <div class="footer-bottom">
-
-            <div class="container">
-
-                <p>
-                    © 2026 PH Servicios Electrónicos.
-                    Todos los derechos reservados.
-                </p>
-
+            <div class="container footer-bottom-content">
+                <p>© {% now "Y" %} {{ empresa_info.nombre_comercial }}. Todos los derechos reservados.</p>
+                <p>RUT {{ empresa_info.rut }}</p>
             </div>
-
         </div>
-
     </footer>
 
-
-    <!-- JAVASCRIPT -->
-
     <script src="{% static 'js/main.js' %}"></script>
-
 </body>
-
 </html>

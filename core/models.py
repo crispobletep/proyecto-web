@@ -1,4 +1,8 @@
+from uuid import uuid4
+
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.text import slugify
 
 
 class Cotizacion(models.Model):
@@ -51,6 +55,32 @@ class Cotizacion(models.Model):
 
     def __str__(self):
         return f"{self.nombre} — {self.servicio}"
+
+    def clean(self):
+        super().clean()
+
+        if self.variante_id and not self.producto_id:
+            self.producto_id = self.variante.producto_id
+
+        if (
+            self.variante_id
+            and self.producto_id
+            and self.variante.producto_id != self.producto_id
+        ):
+            raise ValidationError(
+                {
+                    "variante": (
+                        "La variante seleccionada no pertenece al "
+                        "producto de esta cotización."
+                    ),
+                }
+            )
+
+    def save(self, *args, **kwargs):
+        # La relación producto/variante también queda protegida para
+        # importaciones, scripts y usos del ORM fuera del administrador.
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Categoria(models.Model):
@@ -268,6 +298,19 @@ class Producto(models.Model):
     def __str__(self):
         return self.nombre
 
+    def clean(self):
+        super().clean()
+
+        if self.categoria_id and self.categoria.padre_id is None:
+            raise ValidationError(
+                {
+                    "categoria": (
+                        "El producto debe pertenecer a una subcategoría, "
+                        "no directamente a una familia principal."
+                    ),
+                }
+            )
+
     @property
     def alt_imagen(self):
         return self.texto_alternativo or self.nombre
@@ -407,6 +450,68 @@ class VarianteProducto(models.Model):
 
     def __str__(self):
         return f"{self.producto.nombre} — {self.nombre}"
+
+
+class ImagenProducto(models.Model):
+    producto = models.ForeignKey(
+        Producto,
+        on_delete=models.CASCADE,
+        related_name="imagenes_catalogo",
+    )
+
+    variantes = models.ManyToManyField(
+        VarianteProducto,
+        related_name="imagenes_catalogo",
+        blank=True,
+        help_text=(
+            "Variantes o códigos representados por esta fotografía. "
+            "Puede seleccionar varias cuando comparten la misma imagen."
+        ),
+    )
+
+    clave = models.SlugField(
+        "Identificador de importación",
+        max_length=220,
+        unique=True,
+        help_text=(
+            "Identificador estable utilizado por las cargas automáticas "
+            "para actualizar la imagen sin duplicarla."
+        ),
+    )
+
+    imagen = models.ImageField(
+        upload_to="productos/catalogo/",
+    )
+
+    texto_alternativo = models.CharField(
+        max_length=180,
+        blank=True,
+    )
+
+    orden = models.PositiveIntegerField(
+        default=0,
+    )
+
+    class Meta:
+        ordering = ["orden", "id"]
+        verbose_name = "Imagen de producto"
+        verbose_name_plural = "Imágenes de productos"
+
+    def __str__(self):
+        return f"{self.producto.nombre} — imagen {self.orden or self.pk}"
+
+    def save(self, *args, **kwargs):
+        # El administrador permite agregar fotografías dentro de la ficha del
+        # producto sin pedir al usuario una clave técnica. Las importaciones
+        # pueden seguir entregando su propia clave estable.
+        if not self.clave:
+            producto = getattr(self, "producto", None)
+            producto_slug = getattr(producto, "slug", "producto")
+            self.clave = slugify(
+                f"manual-{producto_slug}-{uuid4().hex[:12]}"
+            )
+
+        return super().save(*args, **kwargs)
 
 
 class EspecificacionVariante(models.Model):

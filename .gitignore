@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+
+.venv/
+venv/
+venv-python314-backup/
+
+.env
+.env.*
+!.env.example
+
+test.sqlite3

@@ -1,9 +1,12 @@
+from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
 from django.shortcuts import redirect, render
+from django.urls import reverse
+
+from .forms import CotizacionForm, SERVICIOS
 
 from .models import (
     Categoria,
-    Cotizacion,
     Producto,
     VarianteProducto,
 )
@@ -34,6 +37,7 @@ def productos(request):
         .filter(
             publicado=True,
             categoria__activa=True,
+            categoria__padre__activa=True,
         )
         .select_related(
             "categoria",
@@ -43,6 +47,7 @@ def productos(request):
         .prefetch_related(
             "caracteristicas",
             "especificaciones",
+            "imagenes_catalogo",
             Prefetch(
                 "variantes",
                 queryset=(
@@ -75,8 +80,16 @@ def productos(request):
         .prefetch_related("subcategorias")
     )
 
+    paginador = Paginator(productos_catalogo, 8)
+    pagina_productos = paginador.get_page(request.GET.get("pagina"))
+
+    parametros_paginacion = request.GET.copy()
+    parametros_paginacion.pop("pagina", None)
+
     contexto = {
-        "productos": productos_catalogo,
+        "productos": pagina_productos,
+        "pagina_productos": pagina_productos,
+        "parametros_paginacion": parametros_paginacion.urlencode(),
         "familias": familias,
         "familia_activa": familia_slug,
         "categoria_activa": categoria_slug,
@@ -91,8 +104,6 @@ def productos(request):
 
 def contacto(request):
     enviado = request.GET.get("enviado") == "1"
-    error = None
-
     producto_seleccionado = None
     variante_seleccionada = None
 
@@ -163,37 +174,30 @@ def contacto(request):
 
         mensaje_sugerido += "."
 
-    if request.method == "POST":
-        nombre = request.POST.get("nombre", "").strip()
-        empresa_nombre = request.POST.get("empresa", "").strip()
-        email = request.POST.get("email", "").strip()
-        telefono = request.POST.get("telefono", "").strip()
-        servicio = request.POST.get("servicio", "").strip()
-        mensaje = request.POST.get("mensaje", "").strip()
+    valores_servicio = {valor for valor, _ in SERVICIOS if valor}
+    servicio_solicitado = request.GET.get("servicio", "").strip()
+    if servicio_solicitado not in valores_servicio:
+        servicio_solicitado = ""
 
-        if nombre and email and telefono and servicio and mensaje:
-            Cotizacion.objects.create(
-                nombre=nombre,
-                empresa=empresa_nombre,
-                email=email,
-                telefono=telefono,
-                servicio=servicio,
-                producto=producto_seleccionado,
-                variante=variante_seleccionada,
-                mensaje=mensaje,
-            )
+    inicial = {
+        "servicio": "Productos" if producto_seleccionado else servicio_solicitado,
+        "mensaje": mensaje_sugerido,
+    }
+    formulario = CotizacionForm(request.POST or None, initial=inicial)
 
-            return redirect("/contacto/?enviado=1")
+    if request.method == "POST" and formulario.is_valid():
+        cotizacion = formulario.save(commit=False)
+        cotizacion.producto = producto_seleccionado
+        cotizacion.variante = variante_seleccionada
+        cotizacion.save()
 
-        error = "Por favor completa todos los campos obligatorios."
+        return redirect(f"{reverse('contacto')}?enviado=1")
 
     contexto = {
         "enviado": enviado,
-        "error": error,
+        "formulario": formulario,
         "producto_seleccionado": producto_seleccionado,
         "variante_seleccionada": variante_seleccionada,
-        "mensaje_sugerido": mensaje_sugerido,
-        "datos": request.POST if request.method == "POST" else {},
     }
 
     return render(

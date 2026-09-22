@@ -1,29 +1,84 @@
 {% extends 'base.html' %}
 
-{% block titulo %}
-Servicios | PH Servicios Electrónicos
-{% endblock %}
+{% block titulo %}Servicios eléctricos | PH Servicios Electrónicos{% endblock %}
+{% block meta_description %}Servicios de instalaciones, montajes, mantención, tableros y canalizaciones eléctricas para proyectos comerciales e industriales.{% endblock %}
 
 {% block contenido %}
-
-<section class="about">
-
-    <div class="container">
-
-        <span class="section-tag">
-            PH SERVICIOS
-        </span>
-
-        <h1>
-            Nuestros servicios
-        </h1>
-
-        <p>
-            Próximamente presentaremos nuestros servicios.
-        </p>
-
+<section class="page-hero services-hero">
+    <div class="container page-hero-content">
+        <span class="section-tag section-tag-light">SERVICIOS ELÉCTRICOS</span>
+        <h1>Soluciones para cada etapa de tu proyecto</h1>
+        <p>Apoyamos requerimientos eléctricos desde el levantamiento inicial hasta la ejecución, puesta en marcha y mantención.</p>
+        <a href="{% url 'contacto' %}?servicio=Instalaci%C3%B3n%20el%C3%A9ctrica" class="btn">Solicitar evaluación</a>
     </div>
-
 </section>
 
+<section class="services services-page" aria-labelledby="services-title">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-tag">NUESTRAS CAPACIDADES</span>
+            <h2 id="services-title">Servicios para instalaciones profesionales</h2>
+            <p>Analizamos cada necesidad para definir un alcance claro, una solución segura y los materiales apropiados.</p>
+        </div>
+
+        <div class="services-grid">
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">⚡</div>
+                <h3>Instalaciones eléctricas</h3>
+                <p>Ejecución y adecuación de instalaciones para espacios comerciales, corporativos e infraestructura.</p>
+                <a href="{% url 'contacto' %}?servicio=Instalaci%C3%B3n%20el%C3%A9ctrica">Cotizar este servicio →</a>
+            </article>
+
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">⚙</div>
+                <h3>Mantención eléctrica</h3>
+                <p>Revisión preventiva, diagnóstico y corrección de fallas para favorecer la continuidad operacional.</p>
+                <a href="{% url 'contacto' %}?servicio=Mantenci%C3%B3n">Cotizar este servicio →</a>
+            </article>
+
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">▦</div>
+                <h3>Tableros eléctricos</h3>
+                <p>Armado, montaje, ordenamiento y adecuación de tableros de distribución y control.</p>
+                <a href="{% url 'contacto' %}?servicio=Infraestructura">Consultar solución →</a>
+            </article>
+
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">≋</div>
+                <h3>Canalizaciones y montaje</h3>
+                <p>Implementación de canalizaciones, bandejas, ductos y soportes para una instalación ordenada y mantenible.</p>
+                <a href="{% url 'contacto' %}?servicio=Infraestructura">Consultar solución →</a>
+            </article>
+
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">⌁</div>
+                <h3>Proyectos e infraestructura</h3>
+                <p>Apoyo técnico y ejecución para habilitaciones, ampliaciones y requerimientos eléctricos especiales.</p>
+                <a href="{% url 'contacto' %}?servicio=Proyecto%20especial%20%2F%20Otro">Presentar proyecto →</a>
+            </article>
+
+            <article class="service-card">
+                <div class="service-icon" aria-hidden="true">▤</div>
+                <h3>Materiales eléctricos</h3>
+                <p>Venta y cotización de productos para protección, señalización, canalización y montaje.</p>
+                <a href="{% url 'productos' %}">Revisar catálogo →</a>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="service-process" aria-labelledby="process-title">
+    <div class="container">
+        <div class="section-heading">
+            <span class="section-tag">FORMA DE TRABAJO</span>
+            <h2 id="process-title">Un proceso claro de principio a fin</h2>
+        </div>
+        <div class="process-grid">
+            <article><span>01</span><h3>Levantamiento</h3><p>Revisamos el requerimiento, las condiciones del lugar y los antecedentes disponibles.</p></article>
+            <article><span>02</span><h3>Propuesta</h3><p>Definimos alcance, alternativas técnicas, materiales y condiciones de ejecución.</p></article>
+            <article><span>03</span><h3>Ejecución</h3><p>Coordinamos el trabajo con foco en seguridad, orden y comunicación.</p></article>
+            <article><span>04</span><h3>Entrega</h3><p>Verificamos el resultado y entregamos las recomendaciones correspondientes.</p></article>
+        </div>
+    </div>
+</section>
 {% endblock %}

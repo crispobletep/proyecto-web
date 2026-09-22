@@ -1,408 +1,243 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block titulo %}
-Catálogo de productos | PH Servicios Electrónicos
-{% endblock %}
+{% block titulo %}Catálogo de productos | PH Servicios Electrónicos{% endblock %}
+{% block meta_description %}Catálogo de materiales eléctricos, protecciones, señalización y componentes para instalaciones eléctricas profesionales.{% endblock %}
 
 {% block contenido %}
 
-<!-- =====================================================
-     MENÚ DE FAMILIAS
-====================================================== -->
-
 <nav class="catalog-menu" aria-label="Familias de productos">
     <div class="container catalog-menu-inner">
-
-        <a
-            href="{% url 'productos' %}"
-            class="{% if not familia_activa and not categoria_activa %}active{% endif %}">
-            Todos
-        </a>
-
+        <a href="{% url 'productos' %}" class="{% if not familia_activa and not categoria_activa %}active{% endif %}">Todos</a>
         {% for familia in familias %}
-            <a
-                href="{% url 'productos' %}?familia={{ familia.slug }}"
-                class="{% if familia_activa == familia.slug %}active{% endif %}">
+            <a href="{% url 'productos' %}?familia={{ familia.slug }}" class="{% if familia_activa == familia.slug %}active{% endif %}">
                 {{ familia.nombre }}
             </a>
         {% endfor %}
-
     </div>
 </nav>
-
 
 {% if familia_activa %}
     <nav class="catalog-submenu" aria-label="Categorías de productos">
         <div class="container catalog-submenu-inner">
-
             {% for familia in familias %}
                 {% if familia.slug == familia_activa %}
-
-                    <a
-                        href="{% url 'productos' %}?familia={{ familia.slug }}"
-                        class="{% if not categoria_activa %}active{% endif %}">
-                        Todos
-                    </a>
-
+                    <a href="{% url 'productos' %}?familia={{ familia.slug }}" class="{% if not categoria_activa %}active{% endif %}">Todos</a>
                     {% for categoria in familia.subcategorias.all %}
                         {% if categoria.activa %}
-                            <a
-                                href="{% url 'productos' %}?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}"
-                                class="{% if categoria_activa == categoria.slug %}active{% endif %}">
+                            <a href="{% url 'productos' %}?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}" class="{% if categoria_activa == categoria.slug %}active{% endif %}">
                                 {{ categoria.nombre }}
                             </a>
                         {% endif %}
                     {% endfor %}
-
                 {% endif %}
             {% endfor %}
-
         </div>
     </nav>
 {% endif %}
 
-
-<!-- =====================================================
-     HERO DEL CATÁLOGO
-====================================================== -->
-
 <section class="page-hero products-hero">
-
     <div class="container page-hero-content">
-
-        <span class="section-tag section-tag-light">
-            CATÁLOGO ELÉCTRICO
-        </span>
-
-        <h1>
-            Soluciones eléctricas para cada proyecto
-        </h1>
-
-        <p>
-            Una selección de productos para instalaciones
-            residenciales, comerciales e industriales,
-            presentada en un diseño visual, moderno y ordenado.
-        </p>
-
-        <a
-            href="#catalogo-productos"
-            class="btn">
-            Explorar productos
-        </a>
-
+        <span class="section-tag section-tag-light">CATÁLOGO ELÉCTRICO</span>
+        <h1>Soluciones eléctricas para cada proyecto</h1>
+        <p>Productos organizados por aplicación, marca y presentación para facilitar una selección técnica clara y una cotización precisa.</p>
+        <a href="#catalogo-productos" class="btn">Explorar productos</a>
     </div>
-
 </section>
-
-
-<!-- =====================================================
-     INTRODUCCIÓN
-====================================================== -->
 
 <section class="catalog-intro">
-
     <div class="container catalog-intro-grid">
-
         <div>
-
-            <span class="section-tag">
-                CATÁLOGO DE PRODUCTOS
-            </span>
-
-            <h2>
-                Material eléctrico para instalaciones profesionales
-            </h2>
-
+            <span class="section-tag">CATÁLOGO DE PRODUCTOS</span>
+            <h2>Material eléctrico para instalaciones profesionales</h2>
         </div>
-
-        <p>
-            Protecciones, canalización, conexión y accesorios
-            para desarrollar instalaciones seguras, ordenadas
-            y preparadas para distintas exigencias de obra.
-        </p>
-
+        <p>Cada ficha reúne sus presentaciones disponibles, códigos e información técnica sin repetir innecesariamente el producto.</p>
     </div>
-
 </section>
 
-
-<!-- =====================================================
-     PRODUCTOS DINÁMICOS
-====================================================== -->
-
-<section
-    class="cascade-products"
-    id="catalogo-productos">
-
+<section class="catalog-products-section" id="catalogo-productos">
     <div class="container">
-
-            {% for producto in productos %}
-
-        <article
-            class="cascade-product"
-            data-family="{% if producto.categoria.padre %}{{ producto.categoria.padre.slug }}{% else %}{{ producto.categoria.slug }}{% endif %}">
-
-            <div class="cascade-visual">
-
-                <span class="cascade-number">
-                    {{ forloop.counter|stringformat:"02d" }}
-                </span>
-
-                {% if producto.imagen %}
-                    <img
-                        class="product-photo"
-                        src="{{ producto.imagen.url }}"
-                        alt="{{ producto.alt_imagen }}"
-                        loading="lazy">
-                {% else %}
-                    <div class="electric-icon" aria-hidden="true">⚡</div>
-                {% endif %}
-
-                <span class="visual-label">
-
-                    {% if producto.marca_nueva %}
-                        {{ producto.marca_nueva.nombre|upper }} ·
-                    {% elif producto.marca %}
-                        {{ producto.marca|upper }} ·
-                    {% endif %}
-
-                    {{ producto.etiqueta_catalogo|upper }}
-
-                </span>
-
+        <header class="catalog-results-header">
+            <div>
+                <span class="section-tag">PRODUCTOS DISPONIBLES</span>
+                <h2>{{ pagina_productos.paginator.count }} producto{{ pagina_productos.paginator.count|pluralize }}</h2>
             </div>
+            <p>Pasa el cursor por una miniatura o presentación para ampliar su imagen. En teléfonos, presiónala una vez.</p>
+        </header>
 
-            <div class="cascade-copy">
+        <div class="catalog-grid">
+            {% for producto in productos %}
+                <article class="catalog-card" data-family="{% if producto.categoria.padre %}{{ producto.categoria.padre.slug }}{% else %}{{ producto.categoria.slug }}{% endif %}">
+                    <header class="catalog-card-header">
+                        <div class="catalog-brand">
+                            {% if producto.marca_nueva and producto.marca_nueva.logo %}
+                                <img src="{{ producto.marca_nueva.logo.url }}" alt="Marca {{ producto.marca_nueva.nombre }}">
+                            {% elif producto.marca_nueva %}
+                                <strong>{{ producto.marca_nueva.nombre }}</strong>
+                            {% elif producto.marca %}
+                                <strong>{{ producto.marca }}</strong>
+                            {% else %}
+                                <strong>Marca por confirmar</strong>
+                            {% endif %}
+                        </div>
+                        <span class="catalog-category">{{ producto.categoria.nombre }}</span>
+                    </header>
 
-                <div class="product-heading">
-
-                    {% if producto.marca_nueva and producto.marca_nueva.logo %}
-                        <img
-                            class="product-brand-logo"
-                            src="{{ producto.marca_nueva.logo.url }}"
-                            alt="Marca {{ producto.marca_nueva.nombre }}">
-                    {% elif producto.marca_nueva %}
-                        <span class="product-brand-name">
-                            {{ producto.marca_nueva.nombre }}
-                        </span>
-                    {% elif producto.marca %}
-                        <span class="product-brand-name">
-                            {{ producto.marca }}
-                        </span>
-                    {% endif %}
-
-                </div>
-
-                <span class="product-kicker">
-                    {{ producto.subtitulo }}
-                </span>
-
-                <h2>{{ producto.nombre }}</h2>
-
-                <p class="product-description">
-                    {{ producto.descripcion }}
-                </p>
-
-                {% if producto.caracteristicas.all %}
-                    <ul class="product-features">
-                        {% for caracteristica in producto.caracteristicas.all %}
-                            <li>{{ caracteristica.texto }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-
-                {% if producto.variantes_disponibles %}
-                    <div class="variant-summary">
-                        <span class="variant-summary-title">
-                            Presentaciones disponibles
-                        </span>
-
-                        <div class="variant-chips">
-                            {% for variante in producto.variantes_disponibles|slice:":6" %}
-                                <span>{{ variante.nombre }}</span>
+                    <div class="catalog-media">
+                        <div class="catalog-thumbs" aria-label="Imágenes de {{ producto.nombre }}">
+                            {% if producto.imagen %}
+                                <button type="button" class="catalog-thumb active" data-preview-src="{{ producto.imagen.url }}" data-preview-alt="{{ producto.alt_imagen }}" aria-label="Ver imagen principal de {{ producto.nombre }}">
+                                    <img src="{{ producto.imagen.url }}" alt="">
+                                </button>
+                            {% endif %}
+                            {% for imagen_catalogo in producto.imagenes_catalogo.all %}
+                                {% if imagen_catalogo.imagen.name != producto.imagen.name %}
+                                    <button type="button" class="catalog-thumb" data-preview-src="{{ imagen_catalogo.imagen.url }}" data-preview-alt="{{ imagen_catalogo.texto_alternativo|default:producto.alt_imagen }}" aria-label="Ver {{ imagen_catalogo.texto_alternativo|default:producto.nombre }}">
+                                        <img src="{{ imagen_catalogo.imagen.url }}" alt="">
+                                    </button>
+                                {% endif %}
+                            {% empty %}
+                                {% for variante in producto.variantes_disponibles %}
+                                    {% if variante.imagen %}
+                                        <button type="button" class="catalog-thumb" data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}" aria-label="Ver {{ variante.nombre }}">
+                                            <img src="{{ variante.imagen.url }}" alt="">
+                                        </button>
+                                    {% endif %}
+                                {% endfor %}
                             {% endfor %}
+                        </div>
 
-                            {% if producto.variantes_disponibles|length > 6 %}
-                                <span class="variant-more">
-                                    +{{ producto.variantes_disponibles|length|add:"-6" }}
-                                </span>
+                        <div class="catalog-image-stage">
+                            {% if producto.imagen %}
+                                <img class="catalog-main-image" src="{{ producto.imagen.url }}" alt="{{ producto.alt_imagen }}" loading="lazy">
+                            {% elif producto.variantes_disponibles.0.imagen %}
+                                <img class="catalog-main-image" src="{{ producto.variantes_disponibles.0.imagen.url }}" alt="{{ producto.nombre }} — {{ producto.variantes_disponibles.0.nombre }}" loading="lazy">
+                            {% else %}
+                                <div class="catalog-image-placeholder" aria-hidden="true">⚡</div>
                             {% endif %}
                         </div>
                     </div>
-                {% endif %}
 
-                {% if producto.especificaciones.all or producto.variantes_disponibles %}
-                    <details class="technical-details">
+                    <div class="catalog-card-body">
+                        <span class="catalog-kicker">{{ producto.subtitulo }}</span>
+                        <h2>{{ producto.nombre }}</h2>
+                        <p class="catalog-description">{{ producto.descripcion }}</p>
 
-                        <summary>
-                            <span>Ficha técnica y variantes</span>
-                            <span class="details-symbol" aria-hidden="true">+</span>
-                        </summary>
+                        {% if producto.modelo or producto.codigo %}
+                            <div class="catalog-reference">
+                                {% if producto.modelo %}<span>Referencia: <strong>{{ producto.modelo }}</strong></span>{% endif %}
+                                {% if producto.codigo %}<span>Código: <strong>{{ producto.codigo }}</strong></span>{% endif %}
+                            </div>
+                        {% endif %}
 
-                        <div class="technical-content">
+                        {% if producto.caracteristicas.all %}
+                            <ul class="catalog-feature-list">
+                                {% for caracteristica in producto.caracteristicas.all|slice:":3" %}
+                                    <li>{{ caracteristica.texto }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
 
-                            {% if producto.especificaciones.all %}
-                                <h3>Especificaciones generales</h3>
+                        {% if producto.variantes_disponibles %}
+                            <section class="catalog-variants" aria-label="Variantes de {{ producto.nombre }}">
+                                <div class="catalog-variants-heading">
+                                    <h3>Presentaciones</h3>
+                                    <span>{{ producto.variantes_disponibles|length }} disponible{{ producto.variantes_disponibles|length|pluralize }}</span>
+                                </div>
 
-                                <dl class="general-specifications">
+                                <div class="catalog-variant-strip" role="list">
+                                    {% for variante in producto.variantes_disponibles %}
+                                        <article class="catalog-variant-card" role="listitem" {% if variante.imagen %}data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
+                                            {% if variante.imagen %}
+                                                <img class="catalog-variant-image" src="{{ variante.imagen.url }}" alt="" loading="lazy">
+                                            {% endif %}
+                                            <strong>{{ variante.nombre }}</strong>
+                                            {% if variante.codigo %}
+                                                <span class="catalog-variant-code">Código {{ variante.codigo }}</span>
+                                            {% elif variante.modelo %}
+                                                <span class="catalog-variant-code">Modelo {{ variante.modelo }}</span>
+                                            {% endif %}
+
+                                            {% if variante.especificaciones.all %}
+                                                <dl class="catalog-variant-specs">
+                                                    {% for especificacion in variante.especificaciones.all|slice:":3" %}
+                                                        <div>
+                                                            <dt>{{ especificacion.nombre }}</dt>
+                                                            <dd>{{ especificacion.valor }}{% if especificacion.unidad %} {{ especificacion.unidad }}{% endif %}</dd>
+                                                        </div>
+                                                    {% endfor %}
+                                                </dl>
+                                            {% endif %}
+
+                                            <a href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}&amp;variante={{ variante.pk }}" class="catalog-variant-quote">Cotizar esta opción</a>
+                                        </article>
+                                    {% endfor %}
+                                </div>
+                            </section>
+                        {% else %}
+                            <p class="catalog-no-variants">Presentaciones disponibles bajo consulta.</p>
+                        {% endif %}
+
+                        {% if producto.especificaciones.all %}
+                            <details class="catalog-specifications">
+                                <summary><span>Especificaciones generales</span><span aria-hidden="true">+</span></summary>
+                                <dl>
                                     {% for especificacion in producto.especificaciones.all %}
                                         <div>
                                             <dt>{{ especificacion.nombre }}</dt>
-                                            <dd>
-                                                {{ especificacion.valor }}
-                                                {% if especificacion.unidad %}
-                                                    {{ especificacion.unidad }}
-                                                {% endif %}
-                                            </dd>
+                                            <dd>{{ especificacion.valor }}{% if especificacion.unidad %} {{ especificacion.unidad }}{% endif %}</dd>
                                         </div>
                                     {% endfor %}
                                 </dl>
-                            {% endif %}
+                            </details>
+                        {% endif %}
+                    </div>
 
-                            {% if producto.variantes_disponibles %}
-                                <h3>Variantes disponibles</h3>
+                    <footer class="catalog-card-footer">
+                        <span>¿Necesitas orientación técnica?</span>
+                        <a href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}">Solicitar cotización <span aria-hidden="true">→</span></a>
+                    </footer>
+                </article>
+            {% empty %}
+                <div class="catalog-empty">
+                    <strong>No hay productos publicados en esta categoría.</strong>
+                    <p>Prueba con otra clasificación o consulta directamente con un asesor.</p>
+                    <a href="{% url 'productos' %}" class="btn">Ver todo el catálogo</a>
+                </div>
+            {% endfor %}
+        </div>
 
-                                <div class="variant-table-wrapper">
-                                    <table class="variant-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Variante</th>
-                                                <th>Modelo</th>
-                                                <th>Especificaciones</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {% for variante in producto.variantes_disponibles %}
-                                                <tr>
-                                                    <td>
-                                                        <strong>{{ variante.nombre }}</strong>
-                                                    </td>
-
-                                                    <td>
-                                                        {% if variante.modelo %}
-                                                            {{ variante.modelo }}
-                                                        {% elif variante.codigo %}
-                                                            {{ variante.codigo }}
-                                                        {% else %}
-                                                            Por confirmar
-                                                        {% endif %}
-                                                    </td>
-
-                                                    <td>
-                                                        {% for especificacion in variante.especificaciones.all %}
-                                                            <span class="variant-specification">
-                                                                {{ especificacion.nombre }}:
-                                                                <strong>
-                                                                    {{ especificacion.valor }}
-                                                                    {% if especificacion.unidad %}
-                                                                        {{ especificacion.unidad }}
-                                                                    {% endif %}
-                                                                </strong>
-                                                            </span>
-                                                        {% empty %}
-                                                            <span>Consultar información técnica</span>
-                                                        {% endfor %}
-                                                    </td>
-
-                                                    <td>
-                                                        <a
-                                                            class="variant-quote"
-                                                            href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}&amp;variante={{ variante.pk }}">
-                                                            Cotizar
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            {% endif %}
-
-                        </div>
-
-                    </details>
+        {% if pagina_productos.paginator.num_pages > 1 %}
+            <nav class="catalog-pagination" aria-label="Páginas del catálogo">
+                {% if pagina_productos.has_previous %}
+                    <a href="?{% if parametros_paginacion %}{{ parametros_paginacion }}&amp;{% endif %}pagina={{ pagina_productos.previous_page_number }}">← Anterior</a>
                 {% endif %}
-
-                <a
-                    href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}"
-                    class="product-cta">
-                    Solicitar cotización
-                    <span aria-hidden="true">→</span>
-                </a>
-
-            </div>
-
-        </article>
-
-    {% empty %}
-
-        <p class="no-products">
-            Todavía no hay productos publicados en esta categoría.
-        </p>
-
-    {% endfor %}
-
+                <span>Página {{ pagina_productos.number }} de {{ pagina_productos.paginator.num_pages }}</span>
+                {% if pagina_productos.has_next %}
+                    <a href="?{% if parametros_paginacion %}{{ parametros_paginacion }}&amp;{% endif %}pagina={{ pagina_productos.next_page_number }}">Siguiente →</a>
+                {% endif %}
+            </nav>
+        {% endif %}
     </div>
-
 </section>
 
 <section class="catalog-benefits" aria-label="Beneficios del catálogo">
     <div class="container catalog-benefits-grid">
-
-        <div class="catalog-benefit">
-            <strong>Seguridad</strong>
-            <span>Soluciones para instalaciones confiables.</span>
-        </div>
-
-        <div class="catalog-benefit">
-            <strong>Asesoría técnica</strong>
-            <span>Orientación para seleccionar cada producto.</span>
-        </div>
-
-        <div class="catalog-benefit">
-            <strong>Variedad</strong>
-            <span>Alternativas para diferentes proyectos.</span>
-        </div>
-
-        <div class="catalog-benefit">
-            <strong>Cotización personalizada</strong>
-            <span>Atención según tus requerimientos.</span>
-        </div>
-
+        <div class="catalog-benefit"><strong>Seguridad</strong><span>Soluciones para instalaciones confiables.</span></div>
+        <div class="catalog-benefit"><strong>Asesoría técnica</strong><span>Orientación para seleccionar cada producto.</span></div>
+        <div class="catalog-benefit"><strong>Variedad</strong><span>Alternativas para diferentes proyectos.</span></div>
+        <div class="catalog-benefit"><strong>Cotización personalizada</strong><span>Atención según tus requerimientos.</span></div>
     </div>
 </section>
 
-<!-- =====================================================
-     BANNER FINAL
-====================================================== -->
-
 <section class="catalog-banner">
-
     <div class="container catalog-banner-inner">
-
         <div>
-
-            <span class="section-tag section-tag-light">
-                ¿BUSCAS OTRO PRODUCTO?
-            </span>
-
-            <h2>
-                Podemos ayudarte a cotizar más alternativas eléctricas.
-            </h2>
-
+            <span class="section-tag section-tag-light">¿BUSCAS OTRO PRODUCTO?</span>
+            <h2>Podemos ayudarte a cotizar más alternativas eléctricas.</h2>
         </div>
-
-        <a
-            href="{% url 'contacto' %}"
-            class="btn btn-light">
-            Hablar con un asesor
-        </a>
-
+        <a href="{% url 'contacto' %}" class="btn btn-light">Hablar con un asesor</a>
     </div>
-
 </section>
 
 {% endblock %}

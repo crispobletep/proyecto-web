@@ -186,6 +186,58 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    function loadMapPreview(trigger) {
+        const frame = trigger?.querySelector("[data-map-src]");
+        if (!frame || frame.dataset.mapLoaded === "true") return;
+
+        const source = frame.dataset.mapSrc;
+        if (!source) return;
+
+        const iframe = document.createElement("iframe");
+        iframe.src = source;
+        iframe.title = frame.dataset.mapTitle || "Vista previa de Google Maps";
+        iframe.referrerPolicy = "no-referrer-when-downgrade";
+        iframe.tabIndex = -1;
+        iframe.setAttribute("aria-hidden", "true");
+        iframe.addEventListener("load", () => {
+            frame.querySelector(".project-map-loading")?.remove();
+        }, { once: true });
+
+        window.setTimeout(() => {
+            const loading = frame.querySelector(".project-map-loading");
+            if (loading) {
+                loading.textContent = "No se pudo cargar la vista previa";
+            }
+        }, 6000);
+
+        frame.dataset.mapLoaded = "true";
+        frame.appendChild(iframe);
+    }
+
+    document.querySelectorAll("[data-map-preview]").forEach((trigger) => {
+        trigger.addEventListener("mouseenter", () => loadMapPreview(trigger));
+        trigger.addEventListener("focusin", () => loadMapPreview(trigger));
+    });
+
+    document.querySelectorAll("[data-map-address-preview]").forEach((address) => {
+        const card = address.closest(".project-card-catalog");
+        const trigger = card?.querySelector("[data-map-preview]");
+        if (!card || !trigger) return;
+
+        const showPreview = () => {
+            card.classList.add("map-preview-from-address");
+            loadMapPreview(trigger);
+        };
+        const hidePreview = () => {
+            card.classList.remove("map-preview-from-address");
+        };
+
+        address.addEventListener("mouseenter", showPreview);
+        address.addEventListener("mouseleave", hidePreview);
+        address.addEventListener("focusin", showPreview);
+        address.addEventListener("focusout", hidePreview);
+    });
+
     const quoteForm = document.querySelector(".quote-form");
     quoteForm?.addEventListener("submit", () => {
         const submitButton = quoteForm.querySelector("[type='submit']");

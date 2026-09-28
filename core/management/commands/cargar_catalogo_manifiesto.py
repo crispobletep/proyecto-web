@@ -14,6 +14,7 @@ from django.utils.text import slugify
 from core.models import (
     Categoria,
     CaracteristicaProducto,
+    Cotizacion,
     EspecificacionProducto,
     EspecificacionVariante,
     ImagenProducto,
@@ -43,7 +44,7 @@ CARACTERISTICAS = {
     "plafones-led": (
         "Iluminación LED de bajo consumo",
         "Diseño delgado para instalación interior",
-        "Disponible en distintas potencias",
+        "Montaje embutido o sobrepuesto según el producto",
     ),
     "canalizacion-electrica": (
         "Componente para canalización de conductores eléctricos",
@@ -85,6 +86,10 @@ CARACTERISTICAS = {
         "Cierre y entradas protegidas",
     ),
 }
+
+
+def familia_usa_variantes(familia):
+    return familia != "plafones-led"
 
 
 @dataclass(frozen=True)
@@ -397,7 +402,12 @@ class Command(BaseCommand):
         filas = self._leer_manifiesto(manifiesto)
         grupos = self._agrupar(filas)
         self._validar_colisiones_db(grupos)
-        codigos = {codigo for fila in filas for codigo in fila.codigos}
+        codigos = {
+            codigo
+            for fila in filas
+            if familia_usa_variantes(fila.familia)
+            for codigo in fila.codigos
+        }
 
         self.stdout.write(f"Manifiesto: {manifiesto}")
         self.stdout.write(
@@ -543,6 +553,7 @@ class Command(BaseCommand):
             codigo: grupo
             for grupo in grupos.values()
             for fila in grupo.filas
+            if familia_usa_variantes(fila.familia)
             for codigo in fila.codigos
         }
         existentes = (
@@ -642,10 +653,13 @@ class Command(BaseCommand):
         marca = marcas.get(marca_definicion[0]) if marca_definicion else None
         nombre = nombre_producto(grupo)
         slug = slug_producto(grupo)
-        descripcion = (
-            f"{nombre}. Producto incorporado desde el catálogo técnico; "
-            "seleccione la variante correspondiente para solicitar cotización."
-        )
+        if familia_usa_variantes(fila_inicial.familia):
+            descripcion = (
+                f"{nombre}. Producto incorporado desde el catálogo técnico; "
+                "seleccione la variante correspondiente para solicitar cotización."
+            )
+        else:
+            descripcion = f"{nombre}. Producto incorporado desde el catálogo técnico."
 
         producto, creado = Producto.objects.update_or_create(
             slug=slug,
@@ -679,9 +693,18 @@ class Command(BaseCommand):
 
         variantes = {}
         fila_por_codigo = {}
-        for fila in grupo.filas:
-            for codigo in fila.codigos:
-                fila_por_codigo.setdefault(codigo, fila)
+        if familia_usa_variantes(fila_inicial.familia):
+            for fila in grupo.filas:
+                for codigo in fila.codigos:
+                    fila_por_codigo.setdefault(codigo, fila)
+
+        variantes_obsoletas = producto.variantes.exclude(
+            codigo__in=fila_por_codigo
+        )
+        Cotizacion.objects.filter(
+            variante__in=variantes_obsoletas
+        ).update(variante=None)
+        variantes_obsoletas.delete()
 
         for posicion, (codigo, fila) in enumerate(fila_por_codigo.items(), start=1):
             nombre_variante, especificaciones = datos_variante(fila, codigo)
@@ -739,7 +762,11 @@ class Command(BaseCommand):
                     "orden": posicion,
                 },
             )
-            imagen.variantes.set(variantes[codigo] for codigo in fila.codigos)
+            imagen.variantes.set(
+                variantes[codigo]
+                for codigo in fila.codigos
+                if codigo in variantes
+            )
             contadores[
                 "imagenes_creadas" if creada else "imagenes_actualizadas"
             ] += 1

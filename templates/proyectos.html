@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Proyectos y sectores | PH Servicios Electrónicos{% endblock %}
-{% block meta_description %}Soluciones eléctricas para proyectos de salud, edificios, industria, comercio, hotelería y construcción.{% endblock %}
+{% block titulo %}Proyectos ejecutados | PH Servicios Electrónicos{% endblock %}
+{% block meta_description %}Conoce proyectos residenciales, hospitalarios y de infraestructura en los que ha participado PH Servicios Electrónicos.{% endblock %}
 
 {% block contenido %}
 <section class="projects-hero">
     <div class="projects-hero-overlay"></div>
     <div class="container projects-hero-content">
-        <span class="section-tag projects-hero-tag">SOLUCIONES POR SECTOR</span>
-        <h1>Proyectos eléctricos adaptados a cada entorno</h1>
-        <p>Abordamos requerimientos comerciales, corporativos y de infraestructura con soluciones ajustadas al alcance de cada cliente.</p>
+        <span class="section-tag projects-hero-tag">NUESTRA EXPERIENCIA</span>
+        <h1>Proyectos que respaldan nuestro trabajo</h1>
+        <p>Participamos en obras residenciales, hospitalarias y de infraestructura, aportando soluciones eléctricas ajustadas a los requerimientos de cada proyecto.</p>
         <a href="{% url 'contacto' %}?servicio=Proyecto%20especial%20%2F%20Otro" class="btn">⚡ Cotizar proyecto</a>
     </div>
 </section>
 
-<section class="project-categories" aria-label="Filtrar áreas de proyecto">
+<section class="project-categories" aria-label="Filtrar proyectos por sector">
     <div class="container">
-        <div class="project-category-grid">
-            <button type="button" class="project-category-item active" data-project-filter="todos" aria-pressed="true"><span aria-hidden="true">▦</span><strong>Todos</strong></button>
-            <button type="button" class="project-category-item" data-project-filter="hospitalario" aria-pressed="false"><span aria-hidden="true">✚</span><strong>Salud</strong></button>
-            <button type="button" class="project-category-item" data-project-filter="edificios" aria-pressed="false"><span aria-hidden="true">▤</span><strong>Edificios</strong></button>
-            <button type="button" class="project-category-item" data-project-filter="industrial" aria-pressed="false"><span aria-hidden="true">⚙</span><strong>Industrial</strong></button>
-            <button type="button" class="project-category-item" data-project-filter="comercial" aria-pressed="false"><span aria-hidden="true">▣</span><strong>Comercial</strong></button>
-            <button type="button" class="project-category-item" data-project-filter="construccion" aria-pressed="false"><span aria-hidden="true">⌂</span><strong>Construcción</strong></button>
+        <div class="project-category-grid project-category-grid-dynamic">
+            <button type="button" class="project-category-item active" data-project-filter="todos" aria-pressed="true">
+                <span aria-hidden="true">▦</span><strong>Todos</strong>
+            </button>
+            {% for sector in sectores %}
+            <button type="button" class="project-category-item" data-project-filter="{{ sector.valor }}" aria-pressed="false">
+                <span aria-hidden="true">{{ sector.icono }}</span><strong>{{ sector.nombre }}</strong>
+            </button>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -30,83 +32,84 @@
 <section class="projects-catalog" aria-labelledby="projects-title">
     <div class="container">
         <div class="section-heading">
-            <span class="section-tag">ÁREAS DE APLICACIÓN</span>
-            <h2 id="projects-title">Experiencia aplicable a distintos sectores</h2>
-            <p>Estas categorías representan los tipos de requerimientos que podemos evaluar y cotizar. El alcance definitivo se determina con los antecedentes de cada proyecto.</p>
+            <span class="section-tag">PROYECTOS PRINCIPALES</span>
+            <h2 id="projects-title">Experiencia en obras de distinta escala</h2>
+            <p>Revisa una selección de proyectos ejecutados y en desarrollo. Puedes consultar su ubicación y la referencia oficial de cada obra.</p>
         </div>
 
         <div class="projects-catalog-grid" aria-live="polite">
-            <article class="project-card project-card-catalog" data-project-category="hospitalario">
+            {% for proyecto in proyectos %}
+            <article class="project-card project-card-catalog" data-project-category="{{ proyecto.sector }}">
                 <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80" alt="Infraestructura de salud" loading="lazy">
-                    <span class="project-category">Salud</span>
+                    {% if proyecto.imagen %}
+                    <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.alt_imagen }}" loading="lazy">
+                    {% else %}
+                    <div class="project-image-placeholder" role="img" aria-label="Imagen de {{ proyecto.nombre }} pendiente de publicación">
+                        <span aria-hidden="true">▤</span>
+                        <small>Fotografía próximamente</small>
+                    </div>
+                    {% endif %}
+                    <span class="project-category">{{ proyecto.get_sector_display }}</span>
+                    {% if proyecto.enlace_mapa %}
+                    <a class="project-map-pin{% if proyecto.enlace_mapa_embebido %} project-map-trigger{% endif %}" href="{{ proyecto.enlace_mapa }}" target="_blank" rel="noopener noreferrer" title="Ver {{ proyecto.direccion }} en Google Maps" aria-label="Ver ubicación de {{ proyecto.nombre }} en Google Maps"{% if proyecto.enlace_mapa_embebido %} data-map-preview{% endif %}>
+                        <span aria-hidden="true">⌖</span>
+                        {% if proyecto.enlace_mapa_embebido %}
+                        <span class="project-map-preview project-map-preview-pin" aria-hidden="true">
+                            <strong>Ver ubicación</strong>
+                            <span class="project-map-frame" data-map-src="{{ proyecto.enlace_mapa_embebido }}" data-map-title="Mapa de {{ proyecto.nombre }}">
+                                <span class="project-map-loading">Cargando mapa…</span>
+                            </span>
+                            <small>{{ proyecto.direccion }}</small>
+                        </span>
+                        {% else %}
+                        <span class="project-map-simple-tooltip">Abrir en Google Maps</span>
+                        {% endif %}
+                    </a>
+                    {% endif %}
                 </div>
                 <div class="project-info">
-                    <h3>Infraestructura de salud</h3>
-                    <p>Soluciones eléctricas para centros médicos, consultas, clínicas y espacios de atención.</p>
-                    <a href="{% url 'contacto' %}?servicio=Proyecto%20especial%20%2F%20Otro">Consultar requerimiento →</a>
+                    <div class="project-status-row">
+                        <span class="project-status project-status-{{ proyecto.estado }}">{{ proyecto.get_estado_display }}</span>
+                        {% if proyecto.periodo %}<span class="project-period">{{ proyecto.periodo }}</span>{% endif %}
+                    </div>
+                    <h3>{{ proyecto.nombre }}</h3>
+                    <p>{{ proyecto.descripcion }}</p>
+                    <dl class="project-meta">
+                        {% if proyecto.constructora %}
+                        <div><dt>Constructora</dt><dd>{{ proyecto.constructora }}</dd></div>
+                        {% endif %}
+                        {% if proyecto.mandante %}
+                        <div><dt>Mandante</dt><dd>{{ proyecto.mandante }}</dd></div>
+                        {% endif %}
+                        {% if proyecto.direccion %}
+                        <div>
+                            <dt>Ubicación</dt>
+                            <dd>
+                                <a class="project-address-map" href="{{ proyecto.enlace_mapa }}" target="_blank" rel="noopener noreferrer" aria-label="Abrir {{ proyecto.direccion }} en Google Maps"{% if proyecto.enlace_mapa_embebido %} data-map-address-preview{% endif %}>
+                                    <span>{{ proyecto.direccion }}</span>
+                                    <span aria-hidden="true">⌖</span>
+                                </a>
+                            </dd>
+                        </div>
+                        {% endif %}
+                    </dl>
+                    <div class="project-actions">
+                        {% if proyecto.url_referencia %}
+                        <a href="{{ proyecto.url_referencia }}" target="_blank" rel="noopener noreferrer">Ver referencia oficial <span aria-hidden="true">↗</span></a>
+                        {% endif %}
+                        {% if proyecto.enlace_mapa %}
+                        <a href="{{ proyecto.enlace_mapa }}" target="_blank" rel="noopener noreferrer">Abrir mapa <span aria-hidden="true">⌖</span></a>
+                        {% endif %}
+                    </div>
                 </div>
             </article>
-
-            <article class="project-card project-card-catalog" data-project-category="edificios">
-                <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80" alt="Edificio corporativo" loading="lazy">
-                    <span class="project-category">Edificios</span>
-                </div>
-                <div class="project-info">
-                    <h3>Edificios y oficinas</h3>
-                    <p>Instalaciones, tableros, distribución y adecuaciones para oficinas y espacios corporativos.</p>
-                    <a href="{% url 'contacto' %}?servicio=Infraestructura">Consultar requerimiento →</a>
-                </div>
-            </article>
-
-            <article class="project-card project-card-catalog" data-project-category="industrial">
-                <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=900&q=80" alt="Infraestructura industrial" loading="lazy">
-                    <span class="project-category">Industrial</span>
-                </div>
-                <div class="project-info">
-                    <h3>Instalaciones industriales</h3>
-                    <p>Montaje, canalización y distribución eléctrica para espacios productivos y operacionales.</p>
-                    <a href="{% url 'contacto' %}?servicio=Instalaci%C3%B3n%20el%C3%A9ctrica">Consultar requerimiento →</a>
-                </div>
-            </article>
-
-            <article class="project-card project-card-catalog" data-project-category="comercial">
-                <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=900&q=80" alt="Espacio comercial" loading="lazy">
-                    <span class="project-category">Comercial</span>
-                </div>
-                <div class="project-info">
-                    <h3>Locales y espacios comerciales</h3>
-                    <p>Habilitaciones y adecuaciones eléctricas para locales, salas de venta y áreas de servicio.</p>
-                    <a href="{% url 'contacto' %}?servicio=Instalaci%C3%B3n%20el%C3%A9ctrica">Consultar requerimiento →</a>
-                </div>
-            </article>
-
-            <article class="project-card project-card-catalog" data-project-category="comercial">
-                <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80" alt="Infraestructura hotelera" loading="lazy">
-                    <span class="project-category">Hotelería</span>
-                </div>
-                <div class="project-info">
-                    <h3>Hoteles y servicios</h3>
-                    <p>Soluciones para habitaciones, áreas comunes, servicios generales y espacios de atención.</p>
-                    <a href="{% url 'contacto' %}?servicio=Proyecto%20especial%20%2F%20Otro">Consultar requerimiento →</a>
-                </div>
-            </article>
-
-            <article class="project-card project-card-catalog" data-project-category="construccion">
-                <div class="project-image">
-                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=80" alt="Proyecto en construcción" loading="lazy">
-                    <span class="project-category">Construcción</span>
-                </div>
-                <div class="project-info">
-                    <h3>Nueva infraestructura</h3>
-                    <p>Coordinación e implementación de instalaciones eléctricas para obras y ampliaciones.</p>
-                    <a href="{% url 'contacto' %}?servicio=Infraestructura">Consultar requerimiento →</a>
-                </div>
-            </article>
+            {% empty %}
+            <div class="projects-empty-state">
+                <span aria-hidden="true">▤</span>
+                <h3>Estamos preparando esta sección</h3>
+                <p>Los proyectos publicados aparecerán aquí próximamente.</p>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -118,7 +121,7 @@
         </div>
         <div class="featured-project-content">
             <span class="section-tag">EVALUACIÓN PERSONALIZADA</span>
-            <h2>¿Tu proyecto no aparece en estas categorías?</h2>
+            <h2>¿Necesitas apoyo para un nuevo proyecto?</h2>
             <p>Envíanos sus antecedentes. Podemos revisar requerimientos especiales y orientarte sobre alcance, materiales y alternativas disponibles.</p>
             <div class="featured-project-data">
                 <span>✓ Revisión del requerimiento</span>

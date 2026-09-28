@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#071a35">
     <title>{% block titulo %}PH Servicios Electrónicos{% endblock %}</title>
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/hola.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20260924-4">
 </head>
 <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
@@ -107,11 +107,10 @@
         <div class="footer-bottom">
             <div class="container footer-bottom-content">
                 <p>© {% now "Y" %} {{ empresa_info.nombre_comercial }}. Todos los derechos reservados.</p>
-                <p>RUT {{ empresa_info.rut }}</p>
             </div>
         </div>
     </footer>
 
-    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}?v=20260924-4"></script>
 </body>
 </html>

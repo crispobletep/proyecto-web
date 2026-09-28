@@ -1,5 +1,7 @@
 from uuid import uuid4
+from urllib.parse import quote_plus
 
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.text import slugify
@@ -81,6 +83,114 @@ class Cotizacion(models.Model):
         # importaciones, scripts y usos del ORM fuera del administrador.
         self.full_clean()
         return super().save(*args, **kwargs)
+
+
+class Proyecto(models.Model):
+    SECTORES = (
+        ("residencial", "Residencial"),
+        ("hospitalario", "Salud"),
+        ("comercial", "Comercial"),
+        ("industrial", "Industrial"),
+        ("infraestructura", "Infraestructura"),
+    )
+
+    ESTADOS = (
+        ("en_construccion", "En construcción"),
+        ("finalizado", "Finalizado"),
+        ("en_ejecucion", "En ejecución"),
+        ("planificado", "Planificado"),
+    )
+
+    nombre = models.CharField(max_length=180)
+    slug = models.SlugField(
+        "Identificador web",
+        max_length=200,
+        unique=True,
+        help_text="Se genera automáticamente desde el nombre del proyecto.",
+    )
+    sector = models.CharField(max_length=30, choices=SECTORES)
+    descripcion = models.TextField()
+    imagen = models.ImageField(
+        upload_to="proyectos/",
+        blank=True,
+        help_text="Imagen principal que aparecerá en la sección de proyectos.",
+    )
+    texto_alternativo = models.CharField(
+        max_length=180,
+        blank=True,
+        help_text="Descripción accesible de la imagen.",
+    )
+    constructora = models.CharField(max_length=180, blank=True)
+    mandante = models.CharField(
+        "Cliente o mandante",
+        max_length=180,
+        blank=True,
+    )
+    estado = models.CharField(max_length=30, choices=ESTADOS)
+    periodo = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text="Ejemplo: Abril 2021 – mayo 2023.",
+    )
+    direccion = models.CharField(max_length=250, blank=True)
+    url_mapa = models.URLField(
+        "URL de Google Maps",
+        max_length=500,
+        blank=True,
+        help_text=(
+            "Opcional. Si se deja vacío, se generará una búsqueda en "
+            "Google Maps usando la dirección registrada."
+        ),
+    )
+    url_referencia = models.URLField(
+        "URL de referencia",
+        max_length=500,
+        blank=True,
+        help_text="Sitio oficial del proyecto o del mandante.",
+    )
+    orden = models.PositiveIntegerField(default=0)
+    destacado = models.BooleanField(default=False)
+    publicado = models.BooleanField(
+        "Publicado en el sitio",
+        default=False,
+    )
+    creado = models.DateTimeField(auto_now_add=True)
+    actualizado = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["orden", "-destacado", "nombre"]
+        verbose_name = "Proyecto"
+        verbose_name_plural = "Proyectos"
+
+    def __str__(self):
+        return self.nombre
+
+    @property
+    def alt_imagen(self):
+        return self.texto_alternativo or self.nombre
+
+    @property
+    def enlace_mapa(self):
+        if self.url_mapa:
+            return self.url_mapa
+        if self.direccion:
+            consulta = quote_plus(self.direccion)
+            return (
+                "https://www.google.com/maps/search/?api=1&query="
+                f"{consulta}"
+            )
+        return ""
+
+    @property
+    def enlace_mapa_embebido(self):
+        api_key = getattr(settings, "GOOGLE_MAPS_EMBED_API_KEY", "")
+        if not self.direccion or not api_key:
+            return ""
+        consulta = quote_plus(self.direccion)
+        return (
+            "https://www.google.com/maps/embed/v1/place?"
+            f"key={api_key}&q={consulta}&zoom=15&language=es"
+        )
 
 
 class Categoria(models.Model):

@@ -10,6 +10,7 @@ from .models import (
     ImagenProducto,
     Marca,
     Producto,
+    Proyecto,
     VarianteProducto,
 )
 
@@ -87,6 +88,99 @@ class CotizacionAdmin(admin.ModelAdmin):
             return "Se asigna al guardar"
 
         return f"COT-{cotizacion.pk:06d}"
+
+
+@admin.register(Proyecto)
+class ProyectoAdmin(admin.ModelAdmin):
+    list_display = (
+        "miniatura",
+        "nombre",
+        "sector",
+        "estado",
+        "periodo",
+        "orden",
+        "destacado",
+        "publicado",
+    )
+    list_display_links = ("miniatura", "nombre")
+    list_editable = ("orden", "destacado", "publicado")
+    list_filter = ("sector", "estado", "destacado", "publicado")
+    search_fields = (
+        "nombre",
+        "descripcion",
+        "constructora",
+        "mandante",
+        "direccion",
+    )
+    prepopulated_fields = {"slug": ("nombre",)}
+    readonly_fields = ("vista_previa", "creado", "actualizado")
+    save_on_top = True
+    fieldsets = (
+        (
+            "Información principal",
+            {
+                "fields": (
+                    "nombre",
+                    "slug",
+                    "sector",
+                    "descripcion",
+                    "estado",
+                    "periodo",
+                ),
+            },
+        ),
+        (
+            "Participantes",
+            {"fields": ("constructora", "mandante")},
+        ),
+        (
+            "Imagen",
+            {"fields": ("imagen", "texto_alternativo", "vista_previa")},
+        ),
+        (
+            "Ubicación y enlaces",
+            {
+                "fields": (
+                    "direccion",
+                    "url_mapa",
+                    "url_referencia",
+                ),
+            },
+        ),
+        (
+            "Publicación",
+            {
+                "fields": (
+                    "orden",
+                    "destacado",
+                    "publicado",
+                    "creado",
+                    "actualizado",
+                ),
+            },
+        ),
+    )
+
+    @admin.display(description="Imagen")
+    def miniatura(self, proyecto):
+        if not proyecto.imagen:
+            return "Sin imagen"
+        return format_html(
+            '<img src="{}" alt="" style="width:70px;height:46px;'
+            'object-fit:cover;border-radius:4px;">',
+            proyecto.imagen.url,
+        )
+
+    @admin.display(description="Vista previa")
+    def vista_previa(self, proyecto):
+        if not proyecto.imagen:
+            return "La imagen aparecerá aquí después de guardarla."
+        return format_html(
+            '<img src="{}" alt="{}" style="max-width:520px;'
+            'max-height:320px;object-fit:contain;border-radius:6px;">',
+            proyecto.imagen.url,
+            proyecto.alt_imagen,
+        )
 
 
 @admin.register(Categoria)

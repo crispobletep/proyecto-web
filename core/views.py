@@ -1,15 +1,22 @@
+import logging
+
 from django.core.paginator import Paginator
 from django.db.models import Prefetch, Q
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from .email_notifications import enviar_notificacion_cotizacion
 from .forms import CotizacionForm, SERVICIOS
 
 from .models import (
     Categoria,
     Producto,
+    Proyecto,
     VarianteProducto,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def inicio(request):
@@ -25,7 +32,35 @@ def servicios(request):
 
 
 def proyectos(request):
-    return render(request, "proyectos.html")
+    proyectos_publicados = Proyecto.objects.filter(publicado=True)
+    sectores_publicados = set(
+        proyectos_publicados.values_list("sector", flat=True)
+    )
+    iconos = {
+        "residencial": "▤",
+        "hospitalario": "✚",
+        "comercial": "▣",
+        "industrial": "⚙",
+        "infraestructura": "⌂",
+    }
+    sectores = [
+        {
+            "valor": valor,
+            "nombre": nombre,
+            "icono": iconos.get(valor, "▦"),
+        }
+        for valor, nombre in Proyecto.SECTORES
+        if valor in sectores_publicados
+    ]
+
+    return render(
+        request,
+        "proyectos.html",
+        {
+            "proyectos": proyectos_publicados,
+            "sectores": sectores,
+        },
+    )
 
 
 def productos(request):
@@ -190,6 +225,17 @@ def contacto(request):
         cotizacion.producto = producto_seleccionado
         cotizacion.variante = variante_seleccionada
         cotizacion.save()
+
+        try:
+            enviar_notificacion_cotizacion(cotizacion)
+        except Exception:
+            # La solicitud ya quedó resguardada en la base de datos. Un fallo
+            # temporal del proveedor de correo no debe hacer que el cliente la
+            # envíe nuevamente y genere registros duplicados.
+            logger.exception(
+                "No se pudo enviar la notificación de la cotización %s",
+                cotizacion.pk,
+            )
 
         return redirect(f"{reverse('contacto')}?enviado=1")
 

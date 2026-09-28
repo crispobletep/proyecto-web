@@ -33,11 +33,6 @@
                     {{ empresa_info.direccion }}
                 </a>
             </div>
-            <div class="contact-detail">
-                <strong>Identificación tributaria</strong>
-                <span>RUT {{ empresa_info.rut }}</span>
-            </div>
-
             <div class="contact-note">
                 <strong>¿Qué puedes cotizar?</strong>
                 <p>Instalaciones y montajes eléctricos, mantención, infraestructura, productos y requerimientos especiales.</p>
@@ -104,6 +99,7 @@
                     <div class="form-group{% if formulario.telefono.errors %} has-error{% endif %}">
                         <label for="{{ formulario.telefono.id_for_label }}">Teléfono *</label>
                         {{ formulario.telefono }}
+                        <small class="field-help" id="telefono-ayuda">Puedes escribir 912345678 o incluir el código +56.</small>
                         {% for error in formulario.telefono.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
                     </div>
                 </div>
@@ -117,6 +113,7 @@
                 <div class="form-group{% if formulario.mensaje.errors %} has-error{% endif %}">
                     <label for="{{ formulario.mensaje.id_for_label }}">Describe tu proyecto *</label>
                     {{ formulario.mensaje }}
+                    <small class="field-help" id="mensaje-ayuda">Entre 20 y 2000 caracteres. Incluye cantidades, plazos o medidas si corresponde.</small>
                     {% for error in formulario.mensaje.errors %}<small class="field-error">{{ error }}</small>{% endfor %}
                 </div>
 

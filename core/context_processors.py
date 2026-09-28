@@ -3,7 +3,6 @@ EMPRESA = {
     "razon_social": (
         "Patricio Hernández Proyectos y Montajes Eléctricos Limitada"
     ),
-    "rut": "76.096.219-5",
     "telefono": "+56 2 2983 688",
     "telefono_href": "tel:+5622983688",
     "correo": "administracion@phinstalaciones.cl",

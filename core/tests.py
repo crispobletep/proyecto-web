@@ -1,11 +1,26 @@
 import csv
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
+from django.core import mail
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 
-from .models import Cotizacion, ImagenProducto, Producto, VarianteProducto
+from core.management.commands.cargar_iluminacion_y_cajas import (
+    IMAGENES as IMAGENES_ILUMINACION_Y_CAJAS,
+)
+from core.management.commands.cargar_ferrules_y_cintas import (
+    IMAGENES as IMAGENES_FERRULES_Y_CINTAS,
+)
+
+from .models import (
+    Cotizacion,
+    ImagenProducto,
+    Producto,
+    Proyecto,
+    VarianteProducto,
+)
 
 
 class CargarCatalogoManifiestoTests(TestCase):
@@ -54,6 +69,38 @@ class CargarCatalogoManifiestoTests(TestCase):
             escritor.writerows(filas)
         return manifiesto
 
+    def crear_manifiesto_plafones(self):
+        filas = (
+            {
+                "familia": "plafones-led",
+                "titulo": "AVC 60 x 60 cm embutido",
+                "archivo": "plafones-led/avc-6060-emb.png",
+                "codigos": "AVC-6060-6E | AVC-6060-12E",
+                "uso": "principal",
+                "lamina_fuente": "catalogo.png",
+            },
+            {
+                "familia": "plafones-led",
+                "titulo": "AVC 60 x 60 cm sobrepuesto",
+                "archivo": "plafones-led/avc-6060-sp.png",
+                "codigos": "AVC-6060-6S | AVC-6060-12S",
+                "uso": "principal",
+                "lamina_fuente": "catalogo.png",
+            },
+        )
+
+        for fila in filas:
+            ruta = self.origen / fila["archivo"]
+            ruta.parent.mkdir(parents=True, exist_ok=True)
+            ruta.write_bytes(b"imagen-de-prueba")
+
+        manifiesto = self.origen / "manifesto_plafones.csv"
+        with manifiesto.open("w", encoding="utf-8-sig", newline="") as archivo:
+            escritor = csv.DictWriter(archivo, fieldnames=filas[0].keys())
+            escritor.writeheader()
+            escritor.writerows(filas)
+        return manifiesto
+
     def test_validacion_no_modifica_la_base(self):
         manifiesto = self.crear_manifiesto()
 
@@ -87,6 +134,41 @@ class CargarCatalogoManifiestoTests(TestCase):
         self.assertEqual(Producto.objects.count(), 1)
         self.assertEqual(VarianteProducto.objects.count(), 2)
         self.assertEqual(ImagenProducto.objects.count(), 2)
+
+    def test_plafones_embutidos_y_sobrepuestos_no_crean_variantes(self):
+        manifiesto = self.crear_manifiesto_plafones()
+
+        call_command(
+            "cargar_catalogo_manifiesto",
+            manifiesto=manifiesto,
+            aplicar=True,
+            publicar=True,
+        )
+        producto = Producto.objects.get(nombre="AVC 60 x 60 cm embutido")
+        VarianteProducto.objects.create(
+            producto=producto,
+            nombre="Variante obsoleta",
+            codigo="AVC-OBSOLETA",
+        )
+
+        call_command(
+            "cargar_catalogo_manifiesto",
+            manifiesto=manifiesto,
+            aplicar=True,
+            publicar=True,
+        )
+
+        plafones = Producto.objects.filter(categoria__slug="plafones-led")
+        self.assertEqual(plafones.count(), 2)
+        self.assertFalse(
+            VarianteProducto.objects.filter(producto__in=plafones).exists()
+        )
+        self.assertFalse(
+            ImagenProducto.objects.filter(
+                producto__in=plafones,
+                variantes__isnull=False,
+            ).exists()
+        )
 
 
 class CargarPilotosYLegrandTests(TestCase):
@@ -196,6 +278,238 @@ class CargarPilotosYLegrandTests(TestCase):
         self.assertTrue(imagen.clave.startswith("manual-"))
 
 
+class CargarFerrulesYCintasTests(TestCase):
+    def setUp(self):
+        self.temporal = tempfile.TemporaryDirectory()
+        self.raiz = Path(self.temporal.name)
+        self.media = self.raiz / "media"
+        self.origen = self.raiz / "origen"
+        self.origen.mkdir()
+        for datos in IMAGENES_FERRULES_Y_CINTAS.values():
+            (self.origen / datos["origen"]).write_bytes(b"imagen-de-prueba")
+        self.ajuste_media = override_settings(MEDIA_ROOT=self.media)
+        self.ajuste_media.enable()
+
+    def tearDown(self):
+        self.ajuste_media.disable()
+        self.temporal.cleanup()
+
+    def test_validacion_no_modifica_el_catalogo(self):
+        call_command("cargar_ferrules_y_cintas", origen=self.origen)
+
+        self.assertEqual(Producto.objects.count(), 0)
+        self.assertEqual(VarianteProducto.objects.count(), 0)
+        self.assertEqual(ImagenProducto.objects.count(), 0)
+
+    def test_carga_publica_fichas_variantes_e_imagenes_sin_duplicar(self):
+        for _ in range(2):
+            call_command(
+                "cargar_ferrules_y_cintas",
+                origen=self.origen,
+                aplicar=True,
+            )
+
+        self.assertEqual(Producto.objects.count(), 5)
+        self.assertEqual(Producto.objects.filter(publicado=True).count(), 5)
+        self.assertEqual(VarianteProducto.objects.count(), 9)
+        self.assertEqual(ImagenProducto.objects.count(), 12)
+
+        ferrules = Producto.objects.get(
+            slug="ferrules-aislados-1-5-a-10-mm2"
+        )
+        self.assertEqual(ferrules.variantes.count(), 5)
+        self.assertEqual(ferrules.imagenes_catalogo.count(), 5)
+        self.assertEqual(
+            set(ferrules.variantes.values_list("nombre", flat=True)),
+            {
+                "1,5 mm² · 16 AWG · Azul",
+                "2,5 mm² · 14 AWG · Gris",
+                "4 mm² · 12 AWG · Naranjo",
+                "6 mm² · 10 AWG · Verde",
+                "10 mm² · 8 AWG · Café",
+            },
+        )
+
+        lexo = Producto.objects.get(
+            slug="cinta-aislante-vinilica-lexo-19mm-20m"
+        )
+        self.assertEqual(lexo.variantes.count(), 4)
+        self.assertEqual(lexo.imagenes_catalogo.count(), 4)
+        self.assertEqual(
+            set(lexo.variantes.values_list("nombre", flat=True)),
+            {"Azul", "Verde", "Blanca", "Roja"},
+        )
+
+        temflex = Producto.objects.get(
+            slug="cinta-aislante-3m-temflex-165-negra"
+        )
+        self.assertEqual(temflex.codigo, "165BK4A")
+        self.assertEqual(
+            temflex.especificaciones.get(nombre="Espesor nominal").valor,
+            "0,15",
+        )
+
+        respuesta = self.client.get("/productos/?familia=conexion-y-aislacion")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Ferrules aislados de 1,5 a 10 mm²")
+        self.assertContains(respuesta, "Cinta aislante vinílica LEXO")
+        self.assertContains(respuesta, "Cinta de goma autofundente FSL")
+        self.assertContains(respuesta, "165BK4A")
+
+
+class CargarIluminacionYCajasTests(TestCase):
+    def setUp(self):
+        self.temporal = tempfile.TemporaryDirectory()
+        self.raiz = Path(self.temporal.name)
+        self.media = self.raiz / "media"
+        self.origen = self.raiz / "origen"
+        self.origen.mkdir()
+        for datos in IMAGENES_ILUMINACION_Y_CAJAS.values():
+            (self.origen / datos["origen"]).write_bytes(b"imagen-de-prueba")
+        self.ajuste_media = override_settings(MEDIA_ROOT=self.media)
+        self.ajuste_media.enable()
+
+    def tearDown(self):
+        self.ajuste_media.disable()
+        self.temporal.cleanup()
+
+    def test_validacion_no_modifica_el_catalogo(self):
+        call_command("cargar_iluminacion_y_cajas", origen=self.origen)
+
+        self.assertEqual(Producto.objects.count(), 0)
+        self.assertEqual(VarianteProducto.objects.count(), 0)
+        self.assertEqual(ImagenProducto.objects.count(), 0)
+
+    def test_carga_publica_productos_variantes_e_imagenes_sin_duplicar(self):
+        for _ in range(2):
+            call_command(
+                "cargar_iluminacion_y_cajas",
+                origen=self.origen,
+                aplicar=True,
+            )
+
+        self.assertEqual(Producto.objects.count(), 9)
+        self.assertEqual(Producto.objects.filter(publicado=True).count(), 9)
+        self.assertEqual(VarianteProducto.objects.count(), 19)
+        self.assertEqual(ImagenProducto.objects.count(), 24)
+
+        plafon = Producto.objects.get(
+            slug="plafon-led-sobrepuesto-fsl-6500k"
+        )
+        self.assertEqual(plafon.variantes.count(), 0)
+
+        fsl_embutido = Producto.objects.get(slug="panel-led-embutido-fsl")
+        self.assertEqual(fsl_embutido.variantes.count(), 0)
+
+        avc_sobrepuesto = Producto.objects.get(
+            slug="panel-led-sobrepuesto-avc-6500k"
+        )
+        self.assertEqual(avc_sobrepuesto.variantes.count(), 0)
+
+        plafones = Producto.objects.filter(categoria__slug="plafones-led")
+        self.assertFalse(
+            VarianteProducto.objects.filter(producto__in=plafones).exists()
+        )
+
+        gabinetes = Producto.objects.get(
+            slug="gabinetes-metalicos-una-puerta"
+        )
+        self.assertEqual(gabinetes.variantes.count(), 8)
+        self.assertEqual(
+            gabinetes.variantes.filter(nombre__icontains="con chasis").count(),
+            3,
+        )
+        for variante in gabinetes.variantes.filter(
+            nombre__icontains="con chasis"
+        ):
+            self.assertIn("con-chasis", variante.imagen.name)
+
+        respuesta = self.client.get("/productos/?familia=tableros-electricos")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Gabinetes metálicos de una puerta")
+        self.assertContains(respuesta, "Cajas estancas de derivación")
+        self.assertContains(respuesta, "Caja Chuqui de superficie")
+        self.assertContains(respuesta, "GAB-MET-600-400-200-IP65-CH")
+
+        iluminacion = self.client.get("/productos/?familia=iluminacion")
+        self.assertEqual(iluminacion.status_code, 200)
+        self.assertContains(iluminacion, "Panel LED embutido FSL")
+        self.assertContains(iluminacion, "Panel LED sobrepuesto AVC 6500 K")
+        self.assertNotContains(iluminacion, "FSL-PL-E-24W")
+        self.assertNotContains(iluminacion, "AVC-PL-S-18W-6500K")
+        self.assertContains(iluminacion, "Cotizar este producto", count=4)
+
+
+class CargarProyectosInicialesTests(TestCase):
+    nombres_imagenes = (
+        "fueron dos torres en mirador azul.jpeg",
+        "Remodelación Edificio A, Hospital del trabajador.jpeg",
+    )
+    imagenes_incluidas = (
+        "edificio-el-estero.png",
+        "edificio-froilan-lagos.jpg",
+        "edificio-martin-de-zamora.jpg",
+    )
+
+    def setUp(self):
+        self.temporal = tempfile.TemporaryDirectory()
+        self.raiz = Path(self.temporal.name)
+        self.media = self.raiz / "media"
+        self.origen = self.raiz / "origen"
+        self.origen.mkdir()
+        (self.media / "proyectos").mkdir(parents=True)
+        for nombre in self.nombres_imagenes:
+            (self.origen / nombre).write_bytes(b"imagen-de-prueba")
+        for nombre in self.imagenes_incluidas:
+            (self.media / "proyectos" / nombre).write_bytes(
+                b"imagen-oficial-de-prueba"
+            )
+        self.ajuste_media = override_settings(MEDIA_ROOT=self.media)
+        self.ajuste_media.enable()
+
+    def tearDown(self):
+        self.ajuste_media.disable()
+        self.temporal.cleanup()
+
+    def test_simulacion_no_modifica_la_base(self):
+        call_command("cargar_proyectos_iniciales", origen=self.origen)
+
+        self.assertEqual(Proyecto.objects.count(), 0)
+
+    def test_carga_publica_proyectos_y_es_idempotente(self):
+        for _ in range(2):
+            call_command(
+                "cargar_proyectos_iniciales",
+                origen=self.origen,
+                aplicar=True,
+            )
+
+        self.assertEqual(Proyecto.objects.count(), 5)
+        self.assertEqual(Proyecto.objects.filter(publicado=True).count(), 5)
+        self.assertEqual(Proyecto.objects.exclude(imagen="").count(), 5)
+
+        mirador = Proyecto.objects.get(slug="edificios-mirador-azul")
+        self.assertEqual(mirador.estado, "finalizado")
+        self.assertIn("Torre", mirador.texto_alternativo)
+        self.assertIn("google.com/maps", mirador.enlace_mapa)
+        with self.settings(GOOGLE_MAPS_EMBED_API_KEY="clave-de-prueba"):
+            self.assertIn("maps/embed/v1/place", mirador.enlace_mapa_embebido)
+            self.assertIn("clave-de-prueba", mirador.enlace_mapa_embebido)
+
+        with self.settings(GOOGLE_MAPS_EMBED_API_KEY="clave-de-prueba"):
+            respuesta = self.client.get("/proyectos/")
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Edificios Mirador Azul")
+        self.assertContains(respuesta, "Hospital del Trabajador")
+        self.assertContains(respuesta, "data-project-category=\"residencial\"")
+        self.assertContains(respuesta, "Ver referencia oficial")
+        self.assertContains(respuesta, "Ver ubicación")
+        self.assertNotContains(respuesta, "Fotografía próximamente")
+        self.assertContains(respuesta, "data-map-preview", count=5)
+        self.assertContains(respuesta, "data-map-address-preview", count=5)
+        self.assertContains(respuesta, "data-map-src", count=5)
+
+
 class SitioPublicoTests(TestCase):
     def test_paginas_principales_renderizan_con_datos_reales(self):
         for ruta in (
@@ -209,12 +523,12 @@ class SitioPublicoTests(TestCase):
             with self.subTest(ruta=ruta):
                 respuesta = self.client.get(ruta)
                 self.assertEqual(respuesta.status_code, 200)
+                self.assertNotContains(respuesta, "76.096.219-5")
 
         respuesta = self.client.get("/contacto/")
         self.assertContains(respuesta, "+56 2 2983 688")
         self.assertContains(respuesta, "administracion@phinstalaciones.cl")
         self.assertContains(respuesta, "San Diego 1325")
-        self.assertContains(respuesta, "76.096.219-5")
 
         servicios = self.client.get("/servicios/")
         self.assertNotContains(servicios, "Próximamente")
@@ -225,7 +539,12 @@ class SitioPublicoTests(TestCase):
         self.assertNotContains(proyectos, "proyectos demostrativos")
         self.assertContains(proyectos, "data-project-filter")
 
-    def test_formulario_valida_y_registra_cotizacion(self):
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        DEFAULT_FROM_EMAIL="web@phinstalaciones.cl",
+        COTIZACIONES_EMAIL="administracion@phinstalaciones.cl",
+    )
+    def test_formulario_valida_registra_y_notifica_cotizacion(self):
         datos = {
             "nombre": "Cliente de prueba",
             "empresa": "Empresa de prueba",
@@ -238,9 +557,47 @@ class SitioPublicoTests(TestCase):
 
         self.assertRedirects(respuesta, "/contacto/?enviado=1")
         self.assertEqual(Cotizacion.objects.count(), 1)
+        cotizacion = Cotizacion.objects.get()
+        self.assertEqual(cotizacion.telefono, "+56912345678")
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(
+            mail.outbox[0].to,
+            ["administracion@phinstalaciones.cl"],
+        )
+        self.assertEqual(mail.outbox[0].reply_to, ["cliente@example.com"])
+        self.assertIn("COT-000001", mail.outbox[0].subject)
 
-        datos["telefono"] = "12"
+        datos["telefono"] = "1234567890"
         respuesta = self.client.post("/contacto/", datos)
         self.assertEqual(respuesta.status_code, 200)
-        self.assertContains(respuesta, "Ingresa un teléfono válido")
+        self.assertContains(respuesta, "Ingresa un teléfono chileno válido")
+        self.assertEqual(Cotizacion.objects.count(), 1)
+        self.assertEqual(len(mail.outbox), 1)
+
+        datos["telefono"] = "912345678"
+        datos["email"] = "correo-invalido"
+        respuesta = self.client.post("/contacto/", datos)
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Ingresa un correo electrónico válido")
+        self.assertEqual(Cotizacion.objects.count(), 1)
+        self.assertEqual(len(mail.outbox), 1)
+
+    @patch(
+        "core.views.enviar_notificacion_cotizacion",
+        side_effect=RuntimeError("SMTP no disponible"),
+    )
+    def test_un_fallo_de_correo_no_pierde_la_cotizacion(self, _notificar):
+        datos = {
+            "nombre": "Cliente de prueba",
+            "empresa": "",
+            "email": "cliente@example.com",
+            "telefono": "912345678",
+            "servicio": "Mantención",
+            "mensaje": "Necesito coordinar una mantención preventiva.",
+        }
+
+        with self.assertLogs("core.views", level="ERROR"):
+            respuesta = self.client.post("/contacto/", datos)
+
+        self.assertRedirects(respuesta, "/contacto/?enviado=1")
         self.assertEqual(Cotizacion.objects.count(), 1)

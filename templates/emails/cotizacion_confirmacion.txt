@@ -1,0 +1,17 @@
+HOLA {{ cotizacion.nombre|upper }},
+
+Recibimos correctamente tu solicitud de cotización {{ identificador }}.
+
+Nuestro equipo revisará los antecedentes enviados y se pondrá en contacto contigo para confirmar los detalles y preparar una propuesta.
+
+RESUMEN DE TU SOLICITUD
+Servicio: {{ cotizacion.servicio }}
+{% if cotizacion.producto %}Producto: {{ cotizacion.producto.nombre }}
+{% if cotizacion.variante %}Variante: {{ cotizacion.variante.nombre }}
+{% endif %}{% elif cotizacion.proyecto %}Proyecto de referencia: {{ cotizacion.proyecto.nombre }}
+{% endif %}Mensaje: {{ cotizacion.mensaje }}
+
+Este mensaje confirma la recepción de tu solicitud y no constituye todavía una cotización comercial.
+
+PH Servicios Electrónicos
+phcotizacion@phinstalaciones.cl

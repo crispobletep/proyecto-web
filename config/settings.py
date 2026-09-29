@@ -126,10 +126,7 @@ DEFAULT_FROM_EMAIL = os.getenv(
 )
 COTIZACIONES_EMAIL = os.getenv(
     "COTIZACIONES_EMAIL",
-    (
-        "phcotizacion@phinstalaciones.cl,"
-        "administracion@phinstalaciones.cl"
-    ),
+    "phcotizacion@phinstalaciones.cl",
 )
 
 

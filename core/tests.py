@@ -560,7 +560,7 @@ class SitioPublicoTests(TestCase):
         self.assertEqual(Cotizacion.objects.count(), 1)
         cotizacion = Cotizacion.objects.get()
         self.assertEqual(cotizacion.telefono, "+56912345678")
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(
             mail.outbox[0].to,
             ["administracion@phinstalaciones.cl"],
@@ -579,13 +579,19 @@ class SitioPublicoTests(TestCase):
         self.assertEqual(tipo, "text/html")
         self.assertIn("Datos del cliente", contenido_html)
         self.assertIn("Necesito evaluar una instalación eléctrica", contenido_html)
+        self.assertEqual(mail.outbox[1].to, ["cliente@example.com"])
+        self.assertIn("Recibimos tu solicitud", mail.outbox[1].subject)
+        self.assertIn(
+            "fue registrada correctamente",
+            mail.outbox[1].alternatives[0][0],
+        )
 
         datos["telefono"] = "1234567890"
         respuesta = self.client.post("/contacto/", datos)
         self.assertEqual(respuesta.status_code, 200)
         self.assertContains(respuesta, "Ingresa un teléfono chileno válido")
         self.assertEqual(Cotizacion.objects.count(), 1)
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
 
         datos["telefono"] = "912345678"
         datos["email"] = "correo-invalido"
@@ -593,7 +599,7 @@ class SitioPublicoTests(TestCase):
         self.assertEqual(respuesta.status_code, 200)
         self.assertContains(respuesta, "Ingresa un correo electrónico válido")
         self.assertEqual(Cotizacion.objects.count(), 1)
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 2)
 
     @override_settings(
         EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
@@ -643,8 +649,11 @@ class SitioPublicoTests(TestCase):
         cotizacion = Cotizacion.objects.get()
         self.assertEqual(cotizacion.producto, producto)
         self.assertIsNone(cotizacion.proyecto)
+        self.assertEqual(len(mail.outbox), 2)
         self.assertIn(producto.nombre, mail.outbox[0].subject)
         self.assertIn(producto.nombre, mail.outbox[0].body)
+        self.assertEqual(mail.outbox[1].to, ["producto@example.com"])
+        self.assertIn(producto.nombre, mail.outbox[1].body)
 
     @override_settings(
         EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
@@ -686,11 +695,14 @@ class SitioPublicoTests(TestCase):
         cotizacion = Cotizacion.objects.get()
         self.assertEqual(cotizacion.proyecto, proyecto)
         self.assertIsNone(cotizacion.producto)
+        self.assertEqual(len(mail.outbox), 2)
         self.assertIn(proyecto.nombre, mail.outbox[0].subject)
         self.assertIn(proyecto.nombre, mail.outbox[0].body)
         contenido_html = mail.outbox[0].alternatives[0][0]
         self.assertIn("Proyecto de referencia", contenido_html)
         self.assertIn("Salud", contenido_html)
+        self.assertEqual(mail.outbox[1].to, ["proyecto@example.com"])
+        self.assertIn(proyecto.nombre, mail.outbox[1].body)
 
     @patch(
         "core.views.enviar_notificacion_cotizacion",

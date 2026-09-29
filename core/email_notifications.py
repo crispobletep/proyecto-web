@@ -1,19 +1,16 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, get_connection
 from django.template.loader import render_to_string
 from django.utils import timezone
 
 
 def enviar_notificacion_cotizacion(cotizacion):
-    """Envía al equipo comercial una copia legible de la cotización."""
+    """Notifica al equipo comercial y confirma la recepción al cliente."""
     destinatarios = [
         correo.strip()
         for correo in settings.COTIZACIONES_EMAIL.split(",")
         if correo.strip()
     ]
-
-    if not destinatarios:
-        return 0
 
     identificador = f"COT-{cotizacion.pk:06d}"
     contexto = {
@@ -43,13 +40,42 @@ def enviar_notificacion_cotizacion(cotizacion):
     elif cotizacion.proyecto:
         referencia = cotizacion.proyecto.nombre
 
-    mensaje = EmailMultiAlternatives(
-        subject=f"Nueva cotización {identificador} · {referencia}",
-        body=contenido_texto,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=destinatarios,
-        reply_to=[cotizacion.email],
-    )
-    mensaje.attach_alternative(contenido_html, "text/html")
+    mensajes = []
 
-    return mensaje.send(fail_silently=False)
+    if destinatarios:
+        mensaje_interno = EmailMultiAlternatives(
+            subject=f"Nueva cotización {identificador} · {referencia}",
+            body=contenido_texto,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=destinatarios,
+            reply_to=[cotizacion.email],
+        )
+        mensaje_interno.attach_alternative(contenido_html, "text/html")
+        mensajes.append(mensaje_interno)
+
+    contexto_cliente = {
+        **contexto,
+        "referencia": referencia,
+    }
+    confirmacion_texto = render_to_string(
+        "emails/cotizacion_confirmacion.txt",
+        contexto_cliente,
+    )
+    confirmacion_html = render_to_string(
+        "emails/cotizacion_confirmacion.html",
+        contexto_cliente,
+    )
+    confirmacion_cliente = EmailMultiAlternatives(
+        subject=f"Recibimos tu solicitud de cotización · {identificador}",
+        body=confirmacion_texto,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[cotizacion.email],
+    )
+    confirmacion_cliente.attach_alternative(
+        confirmacion_html,
+        "text/html",
+    )
+    mensajes.append(confirmacion_cliente)
+
+    conexion = get_connection(fail_silently=False)
+    return conexion.send_messages(mensajes)

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Recibimos tu solicitud {{ identificador }}</title>
+</head>
+<body style="margin:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#172033;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f6f8;padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:640px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e2e7ec;">
+                    <tr>
+                        <td style="background:#102a43;color:#ffffff;padding:26px 30px;">
+                            <div style="font-size:12px;letter-spacing:1.5px;font-weight:bold;color:#7dd3fc;">PH SERVICIOS ELECTRÓNICOS</div>
+                            <h1 style="margin:8px 0 4px;font-size:24px;line-height:1.25;">Recibimos tu solicitud</h1>
+                            <div style="font-size:14px;color:#d9e8f5;">{{ identificador }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:28px 30px;">
+                            <p style="margin:0 0 14px;font-size:17px;line-height:1.6;">Hola {{ cotizacion.nombre }},</p>
+                            <p style="margin:0 0 24px;line-height:1.65;color:#43546a;">Tu solicitud de cotización fue registrada correctamente. Nuestro equipo revisará los antecedentes enviados y se pondrá en contacto contigo para confirmar los detalles y preparar una propuesta.</p>
+
+                            <h2 style="margin:0 0 12px;font-size:16px;color:#102a43;">Resumen de tu solicitud</h2>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:22px;">
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;width:34%;font-weight:bold;">Servicio</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.servicio }}</td></tr>
+                                {% if cotizacion.producto %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Producto</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.producto.nombre }}</td></tr>{% endif %}
+                                {% if cotizacion.variante %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Variante</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.variante.nombre }}</td></tr>{% endif %}
+                                {% if cotizacion.proyecto %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Proyecto de referencia</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.proyecto.nombre }}</td></tr>{% endif %}
+                            </table>
+
+                            <div style="padding:16px 18px;background:#f5f8fa;border-left:4px solid #0ea5e9;border-radius:4px;line-height:1.65;white-space:pre-line;">{{ cotizacion.mensaje }}</div>
+                            <p style="margin:22px 0 0;font-size:13px;line-height:1.55;color:#64748b;">Este mensaje confirma la recepción de tu solicitud y no constituye todavía una cotización comercial.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:18px 30px;background:#eef3f7;color:#526579;font-size:13px;line-height:1.5;">
+                            PH Servicios Electrónicos · phcotizacion@phinstalaciones.cl
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

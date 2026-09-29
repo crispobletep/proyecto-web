@@ -94,6 +94,7 @@
                         {% endif %}
                     </dl>
                     <div class="project-actions">
+                        <a href="{% url 'contacto' %}?proyecto={{ proyecto.slug|urlencode }}">Cotizar un proyecto similar <span aria-hidden="true">→</span></a>
                         {% if proyecto.url_referencia %}
                         <a href="{{ proyecto.url_referencia }}" target="_blank" rel="noopener noreferrer">Ver referencia oficial <span aria-hidden="true">↗</span></a>
                         {% endif %}

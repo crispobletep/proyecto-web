@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 from django.utils import timezone
 
 
@@ -14,42 +15,41 @@ def enviar_notificacion_cotizacion(cotizacion):
     if not destinatarios:
         return 0
 
-    producto = cotizacion.producto.nombre if cotizacion.producto else "No indicado"
-    variante = (
-        cotizacion.variante.nombre if cotizacion.variante else "No indicada"
-    )
-    fecha = timezone.localtime(cotizacion.fecha).strftime("%d-%m-%Y %H:%M")
-
-    contenido = "\n".join(
-        (
-            "Se recibió una nueva solicitud de cotización desde el sitio web.",
-            "",
-            f"Identificador: COT-{cotizacion.pk:06d}",
-            f"Fecha: {fecha}",
-            f"Nombre: {cotizacion.nombre}",
-            f"Empresa: {cotizacion.empresa or 'No indicada'}",
-            f"Correo: {cotizacion.email}",
-            f"Teléfono: {cotizacion.telefono}",
-            f"Servicio: {cotizacion.servicio}",
-            f"Producto: {producto}",
-            f"Variante: {variante}",
-            "",
-            "Descripción:",
-            cotizacion.mensaje,
-            "",
-            "La solicitud también quedó guardada en el administrador de Django.",
-        )
-    )
-
-    mensaje = EmailMessage(
-        subject=(
-            f"Nueva cotización COT-{cotizacion.pk:06d} · "
-            f"{cotizacion.servicio}"
+    identificador = f"COT-{cotizacion.pk:06d}"
+    contexto = {
+        "cotizacion": cotizacion,
+        "identificador": identificador,
+        "fecha": timezone.localtime(cotizacion.fecha).strftime(
+            "%d-%m-%Y %H:%M"
         ),
-        body=contenido,
+        "mensaje_generico": (
+            "Esta solicitud fue enviada desde el formulario del sitio web. "
+            "Contacta al cliente para confirmar los antecedentes y preparar "
+            "la cotización correspondiente."
+        ),
+    }
+    contenido_texto = render_to_string(
+        "emails/cotizacion_nueva.txt",
+        contexto,
+    )
+    contenido_html = render_to_string(
+        "emails/cotizacion_nueva.html",
+        contexto,
+    )
+
+    referencia = cotizacion.servicio
+    if cotizacion.producto:
+        referencia = cotizacion.producto.nombre
+    elif cotizacion.proyecto:
+        referencia = cotizacion.proyecto.nombre
+
+    mensaje = EmailMultiAlternatives(
+        subject=f"Nueva cotización {identificador} · {referencia}",
+        body=contenido_texto,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=destinatarios,
         reply_to=[cotizacion.email],
     )
+    mensaje.attach_alternative(contenido_html, "text/html")
 
     return mensaje.send(fail_silently=False)

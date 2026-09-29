@@ -23,6 +23,7 @@ class CotizacionAdmin(admin.ModelAdmin):
         "empresa",
         "servicio",
         "producto",
+        "proyecto",
         "variante",
         "email",
         "telefono",
@@ -36,12 +37,14 @@ class CotizacionAdmin(admin.ModelAdmin):
         "telefono",
         "servicio",
         "producto__nombre",
+        "proyecto__nombre",
         "variante__nombre",
     )
 
     list_filter = (
         "servicio",
         "producto",
+        "proyecto",
         "fecha",
     )
 
@@ -52,6 +55,7 @@ class CotizacionAdmin(admin.ModelAdmin):
 
     autocomplete_fields = (
         "producto",
+        "proyecto",
         "variante",
     )
 
@@ -64,6 +68,7 @@ class CotizacionAdmin(admin.ModelAdmin):
                     "fecha",
                     "servicio",
                     "producto",
+                    "proyecto",
                     "variante",
                     "mensaje",
                 ),

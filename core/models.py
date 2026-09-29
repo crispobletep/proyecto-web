@@ -36,6 +36,15 @@ class Cotizacion(models.Model):
         blank=True,
     )
 
+    proyecto = models.ForeignKey(
+        "Proyecto",
+        verbose_name="Proyecto de referencia",
+        on_delete=models.PROTECT,
+        related_name="cotizaciones",
+        null=True,
+        blank=True,
+    )
+
     variante = models.ForeignKey(
         "VarianteProducto",
         verbose_name="Variante solicitada",
@@ -60,6 +69,12 @@ class Cotizacion(models.Model):
 
     def clean(self):
         super().clean()
+
+        if self.producto_id and self.proyecto_id:
+            raise ValidationError(
+                "La cotización debe referirse a un producto o a un proyecto, "
+                "no a ambos simultáneamente."
+            )
 
         if self.variante_id and not self.producto_id:
             self.producto_id = self.variante.producto_id

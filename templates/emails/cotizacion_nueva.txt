@@ -1,0 +1,28 @@
+NUEVA SOLICITUD DE COTIZACIÓN
+
+{{ mensaje_generico }}
+
+SOLICITUD
+Identificador: {{ identificador }}
+Fecha: {{ fecha }}
+Servicio: {{ cotizacion.servicio }}
+{% if cotizacion.producto %}Producto: {{ cotizacion.producto.nombre }}
+{% if cotizacion.producto.marca_nueva %}Marca: {{ cotizacion.producto.marca_nueva.nombre }}
+{% elif cotizacion.producto.marca %}Marca: {{ cotizacion.producto.marca }}
+{% endif %}{% if cotizacion.variante %}Variante: {{ cotizacion.variante.nombre }}
+{% if cotizacion.variante.codigo %}Código: {{ cotizacion.variante.codigo }}
+{% endif %}{% endif %}{% elif cotizacion.proyecto %}Proyecto de referencia: {{ cotizacion.proyecto.nombre }}
+Sector: {{ cotizacion.proyecto.get_sector_display }}
+{% if cotizacion.proyecto.direccion %}Ubicación: {{ cotizacion.proyecto.direccion }}
+{% endif %}{% endif %}
+DATOS DEL CLIENTE
+Nombre: {{ cotizacion.nombre }}
+Empresa: {{ cotizacion.empresa|default:"No indicada" }}
+Correo: {{ cotizacion.email }}
+Teléfono: {{ cotizacion.telefono }}
+
+MENSAJE DEL CLIENTE
+{{ cotizacion.mensaje }}
+
+Puedes responder directamente a este correo para contactar al cliente.
+La solicitud también quedó guardada en el administrador de Django.

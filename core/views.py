@@ -140,10 +140,12 @@ def productos(request):
 def contacto(request):
     enviado = request.GET.get("enviado") == "1"
     producto_seleccionado = None
+    proyecto_seleccionado = None
     variante_seleccionada = None
 
     if request.method == "POST":
         producto_id = request.POST.get("producto_id", "").strip()
+        proyecto_id = request.POST.get("proyecto_id", "").strip()
         variante_id = request.POST.get("variante_id", "").strip()
 
         if producto_id.isdigit():
@@ -156,6 +158,12 @@ def contacto(request):
                 .select_related("marca_nueva")
                 .first()
             )
+
+        if proyecto_id.isdigit() and not producto_seleccionado:
+            proyecto_seleccionado = Proyecto.objects.filter(
+                pk=proyecto_id,
+                publicado=True,
+            ).first()
 
         if variante_id.isdigit() and producto_seleccionado:
             variante_seleccionada = (
@@ -170,6 +178,7 @@ def contacto(request):
 
     else:
         producto_slug = request.GET.get("producto", "").strip()
+        proyecto_slug = request.GET.get("proyecto", "").strip()
         variante_id = request.GET.get("variante", "").strip()
 
         if producto_slug:
@@ -182,6 +191,12 @@ def contacto(request):
                 .select_related("marca_nueva")
                 .first()
             )
+
+        if proyecto_slug and not producto_seleccionado:
+            proyecto_seleccionado = Proyecto.objects.filter(
+                slug=proyecto_slug,
+                publicado=True,
+            ).first()
 
         if variante_id.isdigit() and producto_seleccionado:
             variante_seleccionada = (
@@ -207,7 +222,17 @@ def contacto(request):
                 f", variante {variante_seleccionada.nombre}"
             )
 
-        mensaje_sugerido += "."
+        mensaje_sugerido += (
+            ". Agradezco indicar disponibilidad, plazo de entrega y "
+            "condiciones comerciales."
+        )
+
+    elif proyecto_seleccionado:
+        mensaje_sugerido = (
+            "Solicito una cotización para desarrollar un proyecto similar a "
+            f"{proyecto_seleccionado.nombre}. Agradezco indicar los "
+            "antecedentes necesarios para preparar una propuesta."
+        )
 
     valores_servicio = {valor for valor, _ in SERVICIOS if valor}
     servicio_solicitado = request.GET.get("servicio", "").strip()
@@ -215,7 +240,15 @@ def contacto(request):
         servicio_solicitado = ""
 
     inicial = {
-        "servicio": "Productos" if producto_seleccionado else servicio_solicitado,
+        "servicio": (
+            "Productos"
+            if producto_seleccionado
+            else (
+                "Proyecto especial / Otro"
+                if proyecto_seleccionado
+                else servicio_solicitado
+            )
+        ),
         "mensaje": mensaje_sugerido,
     }
     formulario = CotizacionForm(request.POST or None, initial=inicial)
@@ -223,6 +256,7 @@ def contacto(request):
     if request.method == "POST" and formulario.is_valid():
         cotizacion = formulario.save(commit=False)
         cotizacion.producto = producto_seleccionado
+        cotizacion.proyecto = proyecto_seleccionado
         cotizacion.variante = variante_seleccionada
         cotizacion.save()
 
@@ -243,6 +277,7 @@ def contacto(request):
         "enviado": enviado,
         "formulario": formulario,
         "producto_seleccionado": producto_seleccionado,
+        "proyecto_seleccionado": proyecto_seleccionado,
         "variante_seleccionada": variante_seleccionada,
     }
 

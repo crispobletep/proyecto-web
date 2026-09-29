@@ -15,6 +15,7 @@ from core.management.commands.cargar_ferrules_y_cintas import (
 )
 
 from .models import (
+    Categoria,
     Cotizacion,
     ImagenProducto,
     Producto,
@@ -565,7 +566,19 @@ class SitioPublicoTests(TestCase):
             ["administracion@phinstalaciones.cl"],
         )
         self.assertEqual(mail.outbox[0].reply_to, ["cliente@example.com"])
-        self.assertIn("COT-000001", mail.outbox[0].subject)
+        self.assertIn(
+            f"COT-{cotizacion.pk:06d}",
+            mail.outbox[0].subject,
+        )
+        self.assertIn(
+            "Contacta al cliente para confirmar los antecedentes",
+            mail.outbox[0].body,
+        )
+        self.assertEqual(len(mail.outbox[0].alternatives), 1)
+        contenido_html, tipo = mail.outbox[0].alternatives[0]
+        self.assertEqual(tipo, "text/html")
+        self.assertIn("Datos del cliente", contenido_html)
+        self.assertIn("Necesito evaluar una instalación eléctrica", contenido_html)
 
         datos["telefono"] = "1234567890"
         respuesta = self.client.post("/contacto/", datos)
@@ -581,6 +594,103 @@ class SitioPublicoTests(TestCase):
         self.assertContains(respuesta, "Ingresa un correo electrónico válido")
         self.assertEqual(Cotizacion.objects.count(), 1)
         self.assertEqual(len(mail.outbox), 1)
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        DEFAULT_FROM_EMAIL="phcotizacion@phinstalaciones.cl",
+        COTIZACIONES_EMAIL="phcotizacion@phinstalaciones.cl",
+    )
+    def test_cotizacion_desde_producto_conserva_y_envia_la_seleccion(self):
+        familia = Categoria.objects.create(
+            nombre="Iluminación",
+            slug="iluminacion-prueba",
+        )
+        categoria = Categoria.objects.create(
+            nombre="Plafones",
+            slug="plafones-prueba",
+            padre=familia,
+        )
+        producto = Producto.objects.create(
+            categoria=categoria,
+            nombre="Plafón LED de prueba",
+            slug="plafon-led-prueba",
+            subtitulo="Iluminación LED",
+            descripcion="Producto para comprobar la cotización.",
+            publicado=True,
+        )
+
+        seleccion = self.client.get(
+            "/contacto/?producto=plafon-led-prueba"
+        )
+        self.assertContains(seleccion, "Producto seleccionado")
+        self.assertContains(seleccion, producto.nombre)
+        self.assertContains(seleccion, "disponibilidad, plazo de entrega")
+
+        respuesta = self.client.post(
+            "/contacto/",
+            {
+                "producto_id": producto.pk,
+                "nombre": "Cliente producto",
+                "empresa": "Empresa de prueba",
+                "email": "producto@example.com",
+                "telefono": "912345678",
+                "servicio": "Productos",
+                "mensaje": "Necesito veinte unidades para una instalación.",
+            },
+        )
+
+        self.assertRedirects(respuesta, "/contacto/?enviado=1")
+        cotizacion = Cotizacion.objects.get()
+        self.assertEqual(cotizacion.producto, producto)
+        self.assertIsNone(cotizacion.proyecto)
+        self.assertIn(producto.nombre, mail.outbox[0].subject)
+        self.assertIn(producto.nombre, mail.outbox[0].body)
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        DEFAULT_FROM_EMAIL="phcotizacion@phinstalaciones.cl",
+        COTIZACIONES_EMAIL="phcotizacion@phinstalaciones.cl",
+    )
+    def test_cotizacion_desde_proyecto_conserva_y_envia_la_referencia(self):
+        proyecto = Proyecto.objects.create(
+            nombre="Proyecto hospitalario de prueba",
+            slug="proyecto-hospitalario-prueba",
+            sector="hospitalario",
+            descripcion="Proyecto usado para comprobar cotizaciones.",
+            estado="finalizado",
+            direccion="Santiago, Chile",
+            publicado=True,
+        )
+
+        seleccion = self.client.get(
+            "/contacto/?proyecto=proyecto-hospitalario-prueba"
+        )
+        self.assertContains(seleccion, "Proyecto de referencia")
+        self.assertContains(seleccion, proyecto.nombre)
+        self.assertContains(seleccion, "proyecto similar")
+
+        respuesta = self.client.post(
+            "/contacto/",
+            {
+                "proyecto_id": proyecto.pk,
+                "nombre": "Cliente proyecto",
+                "empresa": "Mandante de prueba",
+                "email": "proyecto@example.com",
+                "telefono": "+56 9 8765 4321",
+                "servicio": "Proyecto especial / Otro",
+                "mensaje": "Necesito desarrollar una obra de características similares.",
+            },
+        )
+
+        self.assertRedirects(respuesta, "/contacto/?enviado=1")
+        cotizacion = Cotizacion.objects.get()
+        self.assertEqual(cotizacion.proyecto, proyecto)
+        self.assertIsNone(cotizacion.producto)
+        self.assertIn(proyecto.nombre, mail.outbox[0].subject)
+        self.assertIn(proyecto.nombre, mail.outbox[0].body)
+        contenido_html = mail.outbox[0].alternatives[0][0]
+        self.assertIn("Proyecto de referencia", contenido_html)
+        self.assertIn("Salud", contenido_html)
 
     @patch(
         "core.views.enviar_notificacion_cotizacion",

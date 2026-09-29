@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nueva solicitud de cotización {{ identificador }}</title>
+</head>
+<body style="margin:0;background:#f4f6f8;font-family:Arial,Helvetica,sans-serif;color:#172033;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f6f8;padding:28px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e2e7ec;">
+                    <tr>
+                        <td style="background:#102a43;color:#ffffff;padding:26px 30px;">
+                            <div style="font-size:12px;letter-spacing:1.5px;font-weight:bold;color:#7dd3fc;">PH SERVICIOS ELECTRÓNICOS</div>
+                            <h1 style="margin:8px 0 4px;font-size:24px;line-height:1.25;">Nueva solicitud de cotización</h1>
+                            <div style="font-size:14px;color:#d9e8f5;">{{ identificador }} · {{ fecha }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:28px 30px;">
+                            <p style="margin:0 0 24px;line-height:1.6;color:#43546a;">{{ mensaje_generico }}</p>
+
+                            <h2 style="margin:0 0 12px;font-size:16px;color:#102a43;">Datos de la solicitud</h2>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:24px;">
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;width:34%;font-weight:bold;">Servicio</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.servicio }}</td></tr>
+                                {% if cotizacion.producto %}
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Producto</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.producto.nombre }}</td></tr>
+                                {% if cotizacion.producto.marca_nueva or cotizacion.producto.marca %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Marca</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{% if cotizacion.producto.marca_nueva %}{{ cotizacion.producto.marca_nueva.nombre }}{% else %}{{ cotizacion.producto.marca }}{% endif %}</td></tr>{% endif %}
+                                {% if cotizacion.variante %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Variante</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.variante.nombre }}{% if cotizacion.variante.codigo %} · {{ cotizacion.variante.codigo }}{% endif %}</td></tr>{% endif %}
+                                {% elif cotizacion.proyecto %}
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Proyecto de referencia</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.proyecto.nombre }}</td></tr>
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Sector</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.proyecto.get_sector_display }}</td></tr>
+                                {% if cotizacion.proyecto.direccion %}<tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Ubicación</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.proyecto.direccion }}</td></tr>{% endif %}
+                                {% endif %}
+                            </table>
+
+                            <h2 style="margin:0 0 12px;font-size:16px;color:#102a43;">Datos del cliente</h2>
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin-bottom:24px;">
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;width:34%;font-weight:bold;">Nombre</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.nombre }}</td></tr>
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Empresa</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;">{{ cotizacion.empresa|default:"No indicada" }}</td></tr>
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Correo</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;"><a href="mailto:{{ cotizacion.email }}" style="color:#0369a1;">{{ cotizacion.email }}</a></td></tr>
+                                <tr><td style="padding:9px 12px;background:#f5f8fa;border-bottom:1px solid #e2e7ec;font-weight:bold;">Teléfono</td><td style="padding:9px 12px;border-bottom:1px solid #e2e7ec;"><a href="tel:{{ cotizacion.telefono }}" style="color:#0369a1;">{{ cotizacion.telefono }}</a></td></tr>
+                            </table>
+
+                            <h2 style="margin:0 0 12px;font-size:16px;color:#102a43;">Mensaje del cliente</h2>
+                            <div style="padding:16px 18px;background:#f5f8fa;border-left:4px solid #0ea5e9;border-radius:4px;line-height:1.65;white-space:pre-line;">{{ cotizacion.mensaje }}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:18px 30px;background:#eef3f7;color:#526579;font-size:13px;line-height:1.5;">
+                            Puedes responder directamente a este correo para contactar al cliente. La solicitud también quedó guardada en el administrador de Django.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

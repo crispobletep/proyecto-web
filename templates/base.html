@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="{% block meta_description %}PH Servicios Electrónicos: proyectos, montajes eléctricos y venta de materiales para la construcción en Santiago.{% endblock %}">
+    <meta name="description" content="{% block meta_description %}PH Servicios Eléctricos: proyectos, montajes eléctricos y venta de materiales para la construcción en Santiago.{% endblock %}">
     <meta name="theme-color" content="#071a35">
-    <title>{% block titulo %}PH Servicios Electrónicos{% endblock %}</title>
+    <title>{% block titulo %}PH Servicios Eléctricos{% endblock %}</title>
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20260924-4">
+    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261003-4">
 </head>
 <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
@@ -32,8 +32,8 @@
 
     <header class="header">
         <div class="container nav">
-            <a href="{% url 'inicio' %}" class="logo" aria-label="PH Servicios Electrónicos, inicio">
-                <img src="{% static 'img/logo.png' %}" alt="PH Servicios Electrónicos" width="85" height="45">
+            <a href="{% url 'inicio' %}" class="logo" aria-label="PH Servicios Eléctricos, inicio">
+                <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="85" height="45">
             </a>
 
             <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-controls="main-navigation" aria-expanded="false">
@@ -44,10 +44,25 @@
                 <nav class="main-nav" id="main-navigation" aria-label="Navegación principal">
                     <ul class="menu">
                         <li><a href="{% url 'inicio' %}"{% if pagina == 'inicio' %} class="active" aria-current="page"{% endif %}>Inicio</a></li>
-                        <li><a href="{% url 'productos' %}"{% if pagina == 'productos' %} class="active" aria-current="page"{% endif %}>Productos</a></li>
-                        <li><a href="{% url 'empresa' %}"{% if pagina == 'empresa' %} class="active" aria-current="page"{% endif %}>Empresa</a></li>
-                        <li><a href="{% url 'servicios' %}"{% if pagina == 'servicios' %} class="active" aria-current="page"{% endif %}>Servicios</a></li>
-                        <li><a href="{% url 'proyectos' %}"{% if pagina == 'proyectos' %} class="active" aria-current="page"{% endif %}>Proyectos</a></li>
+                        <li class="nav-branch">
+                            <details{% if pagina == 'empresa' or pagina == 'proyectos' or pagina == 'servicios' %} class="active"{% endif %}>
+                                <summary>Construcciones <span aria-hidden="true">⌄</span></summary>
+                                <ul class="nav-submenu">
+                                    <li><a href="{% url 'empresa' %}"{% if pagina == 'empresa' %} aria-current="page"{% endif %}>Empresa</a></li>
+                                    <li><a href="{% url 'proyectos' %}"{% if pagina == 'proyectos' %} aria-current="page"{% endif %}>Proyectos</a></li>
+                                    <li><a href="{% url 'servicios' %}"{% if pagina == 'servicios' %} aria-current="page"{% endif %}>Servicios</a></li>
+                                </ul>
+                            </details>
+                        </li>
+                        <li class="nav-branch">
+                            <details{% if pagina == 'productos' %} class="active"{% endif %}>
+                                <summary>Productos <span aria-hidden="true">⌄</span></summary>
+                                <ul class="nav-submenu">
+                                    <li><a href="{% url 'productos' %}"{% if pagina == 'productos' %} aria-current="page"{% endif %}>Catálogo de productos</a></li>
+                                    <li><a href="{% url 'contacto' %}?servicio=Productos#formulario-cotizacion">Cotizar productos</a></li>
+                                </ul>
+                            </details>
+                        </li>
                         <li><a href="{% url 'contacto' %}"{% if pagina == 'contacto' %} class="active" aria-current="page"{% endif %}>Contacto</a></li>
                     </ul>
                 </nav>
@@ -76,21 +91,23 @@
         <div class="container footer-grid">
             <div class="footer-company">
                 <a href="{% url 'inicio' %}" class="logo footer-logo" aria-label="Volver al inicio">
-                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Electrónicos" width="85" height="45">
+                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="85" height="45">
                 </a>
-                <p>{{ empresa_info.razon_social }}</p>
                 <p class="footer-activity">{{ empresa_info.actividad }}</p>
             </div>
 
             <div>
-                <h3>Navegación</h3>
+                <h3>Construcciones</h3>
                 <ul class="footer-links">
-                    <li><a href="{% url 'inicio' %}">Inicio</a></li>
-                    <li><a href="{% url 'productos' %}">Productos</a></li>
                     <li><a href="{% url 'empresa' %}">Empresa</a></li>
                     <li><a href="{% url 'servicios' %}">Servicios</a></li>
                     <li><a href="{% url 'proyectos' %}">Proyectos</a></li>
                     <li><a href="{% url 'contacto' %}">Contacto</a></li>
+                </ul>
+                <h3>Productos</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'productos' %}">Catálogo de productos</a></li>
+                    <li><a href="{% url 'contacto' %}?servicio=Productos#formulario-cotizacion">Cotizar productos</a></li>
                 </ul>
             </div>
 
@@ -111,6 +128,6 @@
         </div>
     </footer>
 
-    <script src="{% static 'js/main.js' %}?v=20260924-4"></script>
+    <script src="{% static 'js/main.js' %}?v=20261003-4"></script>
 </body>
 </html>

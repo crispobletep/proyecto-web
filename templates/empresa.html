@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Empresa | PH Servicios Electrónicos{% endblock %}
-{% block meta_description %}Conoce a {{ empresa_info.razon_social }}, empresa de proyectos, montajes eléctricos y venta de materiales en Santiago.{% endblock %}
+{% block titulo %}Empresa | PH Servicios Eléctricos{% endblock %}
+{% block meta_description %}Conoce a {{ empresa_info.nombre_comercial }}, empresa de proyectos, montajes eléctricos y venta de materiales en Santiago.{% endblock %}
 
 {% block contenido %}
 <section class="page-hero company-hero">
     <div class="container">
-        <span class="section-tag">PH SERVICIOS ELECTRÓNICOS</span>
+        <span class="section-tag">PH SERVICIOS ELÉCTRICOS</span>
         <h1>Soluciones confiables para cada proyecto</h1>
         <p>Trabajamos para entregar soluciones eléctricas y electrónicas con un enfoque profesional, cercano y orientado a las necesidades reales de cada cliente.</p>
     </div>
@@ -17,11 +17,10 @@
         <div class="company-intro">
             <span class="section-tag">QUIÉNES SOMOS</span>
             <h2>Comprometidos con la calidad y el servicio</h2>
-            <p><strong>{{ empresa_info.razon_social }}</strong> desarrolla soluciones para proyectos comerciales, corporativos y de infraestructura, junto con la venta de materiales para la construcción. Buscamos acompañar a nuestros clientes desde el levantamiento de sus necesidades hasta la implementación, priorizando seguridad, calidad, comunicación y cumplimiento.</p>
+            <p><strong>{{ empresa_info.nombre_comercial }}</strong> desarrolla soluciones para proyectos comerciales, corporativos y de infraestructura, junto con la venta de materiales para la construcción. Buscamos acompañar a nuestros clientes desde el levantamiento de sus necesidades hasta la implementación, priorizando seguridad, calidad, comunicación y cumplimiento.</p>
         </div>
 
         <dl class="company-facts" aria-label="Datos de la empresa">
-            <div><dt>Razón social</dt><dd>{{ empresa_info.razon_social }}</dd></div>
             <div><dt>Dirección</dt><dd><a href="{{ empresa_info.mapa_url }}" target="_blank" rel="noopener noreferrer">{{ empresa_info.direccion }}</a></dd></div>
         </dl>
 
@@ -40,7 +39,7 @@
         <div class="promise-grid">
             <div><strong>Seguridad</strong><p>Soluciones pensadas para una ejecución responsable y confiable.</p></div>
             <div><strong>Calidad</strong><p>Cuidado en los detalles, materiales y terminaciones de cada trabajo.</p></div>
-            <div><strong>Transparencia</strong><p>Información clara sobre alcance, alternativas y necesidades del proyecto.</p></div>
+            <div><strong>Transparencia</strong><p>Información clara sobre el alcance, las alternativas y las necesidades del proyecto.</p></div>
             <div><strong>Cercanía</strong><p>Atención personalizada y comunicación durante todo el proceso.</p></div>
         </div>
     </div>

@@ -1,7 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const brandFilter = document.querySelector("#catalog-brand-filter");
+    brandFilter?.addEventListener("change", () => {
+        brandFilter.form.requestSubmit();
+    });
     const menuToggle = document.querySelector(".menu-toggle");
     const mainNavigation = document.querySelector(".main-nav");
     const menuIcon = menuToggle?.querySelector(".menu-toggle-icon");
+    const branches = document.querySelectorAll(".nav-branch details");
+    function closeBranches() {
+        branches.forEach((branch) => { branch.open = false; });
+    }
+    branches.forEach((branch) => {
+        branch.addEventListener("toggle", () => {
+            if (branch.open) branches.forEach((other) => {
+                if (other !== branch) other.open = false;
+            });
+        });
+    });
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".nav-branch")) closeBranches();
+    });
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            const openBranch = [...branches].find((branch) => branch.open);
+            openBranch?.querySelector("summary").focus();
+            closeBranches();
+        }
+    });
 
     function closeMenu({ returnFocus = false } = {}) {
         if (!menuToggle || !mainNavigation) return;
@@ -72,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const active = slideIndex === index;
                 slide.classList.toggle("active", active);
                 slide.setAttribute("aria-hidden", active ? "false" : "true");
+                slide.inert = !active;
             });
 
             dots.forEach((dot, dotIndex) => {
@@ -90,7 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function startAutoplay() {
             stopAutoplay();
-            if (reduceMotion.matches || totalSlides < 2 || document.hidden) return;
+            if (reduceMotion.matches || totalSlides < 2 || document.hidden
+                || carousel?.matches(":hover") || carousel?.contains(document.activeElement)) return;
             timer = window.setInterval(() => {
                 updateCarousel((currentSlide + 1) % totalSlides);
             }, 6000);
@@ -116,7 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
         carousel?.addEventListener("mouseenter", stopAutoplay);
         carousel?.addEventListener("mouseleave", startAutoplay);
         carousel?.addEventListener("focusin", stopAutoplay);
-        carousel?.addEventListener("focusout", startAutoplay);
+        carousel?.addEventListener("focusout", () => window.setTimeout(startAutoplay, 0));
         document.addEventListener("visibilitychange", startAutoplay);
         reduceMotion.addEventListener?.("change", startAutoplay);
 
@@ -128,44 +155,70 @@ document.addEventListener("DOMContentLoaded", () => {
         const mainImage = card.querySelector(".catalog-main-image");
         if (!mainImage) return;
 
-        const thumbnails = card.querySelectorAll(".catalog-thumb");
-        const previewTriggers = card.querySelectorAll(
-            ".catalog-thumb, .catalog-variant-card[data-preview-src]"
-        );
-        let selectedSrc = mainImage.currentSrc || mainImage.src;
+        const thumbnails = [...card.querySelectorAll(".catalog-thumb")];
+        const variants = [...card.querySelectorAll(".catalog-variant-card")];
+        const strip = card.querySelector(".catalog-variant-strip");
+        const rail = card.querySelector(".catalog-thumbs");
+        const status = card.querySelector(".catalog-selection-status");
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+        let selectedSrc = mainImage.getAttribute("src");
         let selectedAlt = mainImage.alt;
 
-        function showImage(src, alt) {
-            if (!src || mainImage.src === src) return;
-            mainImage.classList.add("changing");
-            window.setTimeout(() => {
-                mainImage.src = src;
-                mainImage.alt = alt || selectedAlt;
-                mainImage.classList.remove("changing");
-            }, 90);
-        }
-
-        function restoreSelectedImage() {
-            showImage(selectedSrc, selectedAlt);
-        }
-
-        previewTriggers.forEach((trigger) => {
-            const src = trigger.dataset.previewSrc;
-            const alt = trigger.dataset.previewAlt;
-            trigger.addEventListener("mouseenter", () => showImage(src, alt));
-            trigger.addEventListener("mouseleave", restoreSelectedImage);
-            trigger.addEventListener("focusin", () => showImage(src, alt));
-            trigger.addEventListener("focusout", restoreSelectedImage);
+        // El ID identifica la variante incluso cuando varias comparten fotografía.
+        card.querySelectorAll(".catalog-extra-image").forEach((extra) => {
+            if (thumbnails.some(item => item.dataset.variantId && item.dataset.previewSrc === extra.dataset.previewSrc)) extra.remove();
         });
-
-        thumbnails.forEach((thumbnail) => {
-            thumbnail.addEventListener("click", () => {
-                selectedSrc = thumbnail.dataset.previewSrc;
-                selectedAlt = thumbnail.dataset.previewAlt;
-                thumbnails.forEach((item) => item.classList.remove("active"));
-                thumbnail.classList.add("active");
-                showImage(selectedSrc, selectedAlt);
+        function showImage(src, alt) {
+            if (!src) return;
+            mainImage.src = src;
+            mainImage.alt = alt || selectedAlt;
+        }
+        function reveal(container, target, horizontal) {
+            if (!container || !target) return;
+            const bounds = container.getBoundingClientRect();
+            const item = target.getBoundingClientRect();
+            const delta = horizontal
+                ? item.left - bounds.left - (container.clientWidth - item.width) / 2
+                : item.top - bounds.top - (container.clientHeight - item.height) / 2;
+            container.scrollTo({
+                [horizontal ? "left" : "top"]: (horizontal ? container.scrollLeft : container.scrollTop) + delta,
+                behavior: reduceMotion.matches ? "instant" : "smooth",
             });
+        }
+        function select(trigger, variant) {
+            selectedSrc = trigger.dataset.previewSrc || selectedSrc;
+            selectedAlt = trigger.dataset.previewAlt || selectedAlt;
+            showImage(selectedSrc, selectedAlt);
+            variants.forEach(item => {
+                const active = item === variant;
+                item.classList.toggle("selected", active);
+                item.querySelector(".catalog-variant-select")?.setAttribute("aria-pressed", String(active));
+            });
+            let matched;
+            thumbnails.forEach(item => {
+                const active = variant ? item.dataset.variantId === variant.dataset.variantId : item === trigger;
+                item.classList.toggle("active", active);
+                item.setAttribute("aria-pressed", String(active));
+                if (active) matched = item;
+            });
+            if (status) status.textContent = variant ? `Variante seleccionada: ${variant.dataset.variantName}` : "Imagen del producto";
+            reveal(strip, variant, true);
+            reveal(rail, matched, rail && getComputedStyle(rail).flexDirection === "row");
+        }
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener("click", () => select(thumbnail,
+                variants.find(item => item.dataset.variantId === thumbnail.dataset.variantId)));
+        });
+        variants.forEach(variant => {
+            variant.querySelector(".catalog-variant-select")?.addEventListener("click", () => select(variant, variant));
+        });
+        // La previsualización al pasar el cursor no cambia la selección confirmada.
+        card.querySelectorAll(".catalog-thumb, .catalog-variant-select").forEach(trigger => {
+            const source = trigger.matches(".catalog-thumb") ? trigger : trigger.closest(".catalog-variant-card");
+            trigger.addEventListener("pointerenter", event => {
+                if (event.pointerType === "mouse") showImage(source.dataset.previewSrc, source.dataset.previewAlt);
+            });
+            trigger.addEventListener("pointerleave", () => showImage(selectedSrc, selectedAlt));
         });
     });
 

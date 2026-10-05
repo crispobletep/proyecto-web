@@ -10,6 +10,7 @@ from .forms import CotizacionForm, SERVICIOS
 
 from .models import (
     Categoria,
+    Marca,
     Producto,
     Proyecto,
     VarianteProducto,
@@ -19,8 +20,36 @@ from .models import (
 logger = logging.getLogger(__name__)
 
 
+def identificador_valido(valor):
+    """Aceptar únicamente IDs decimales dentro del rango de BigAutoField."""
+    return (
+        bool(valor) and len(valor) <= 19 and valor.isascii()
+        and valor.isdecimal() and 0 < int(valor) <= 9223372036854775807
+    )
+
+
 def inicio(request):
-    return render(request, "index.html")
+    proyectos_destacados = list(
+        Proyecto.objects.filter(publicado=True, destacado=True)[:4]
+    )
+    if len(proyectos_destacados) < 4:
+        ids_destacados = [proyecto.pk for proyecto in proyectos_destacados]
+        proyectos_destacados.extend(
+            Proyecto.objects.filter(publicado=True)
+            .exclude(pk__in=ids_destacados)[: 4 - len(proyectos_destacados)]
+        )
+    return render(
+        request,
+        "index.html",
+        {
+            "proyectos_destacados": proyectos_destacados,
+            "proyecto_portada": (
+                Proyecto.objects.filter(publicado=True, estado="finalizado")
+                .exclude(imagen="").order_by("-destacado", "orden", "nombre").first()
+                or Proyecto.objects.filter(publicado=True).exclude(imagen="").first()
+            ),
+        },
+    )
 
 
 def empresa(request):
@@ -66,6 +95,10 @@ def proyectos(request):
 def productos(request):
     familia_slug = request.GET.get("familia", "")
     categoria_slug = request.GET.get("categoria", "")
+    busqueda = request.GET.get("q", "").strip()[:150]
+    marca_id = request.GET.get("marca", "")
+    if not identificador_valido(marca_id):
+        marca_id = ""
 
     productos_catalogo = (
         Producto.objects
@@ -95,6 +128,17 @@ def productos(request):
         )
     )
 
+    # Las opciones permanecen estables al combinar o cambiar filtros.
+    marcas = Marca.objects.filter(
+        pk__in=productos_catalogo.values_list("marca_nueva_id", flat=True)
+    ).order_by("nombre")
+
+    if busqueda:
+        productos_catalogo = productos_catalogo.filter(
+            Q(nombre__icontains=busqueda) | Q(codigo__icontains=busqueda)
+            | Q(modelo__icontains=busqueda)
+            | Q(variantes__codigo__icontains=busqueda)
+        ).distinct()
     if categoria_slug:
         productos_catalogo = productos_catalogo.filter(
             categoria__slug=categoria_slug,
@@ -105,6 +149,9 @@ def productos(request):
             Q(categoria__padre__slug=familia_slug)
             | Q(categoria__slug=familia_slug)
         )
+
+    if marca_id:
+        productos_catalogo = productos_catalogo.filter(marca_nueva_id=marca_id)
 
     familias = (
         Categoria.objects
@@ -128,6 +175,9 @@ def productos(request):
         "familias": familias,
         "familia_activa": familia_slug,
         "categoria_activa": categoria_slug,
+        "busqueda": busqueda,
+        "marcas": marcas,
+        "marca_activa": marca_id,
     }
 
     return render(
@@ -148,24 +198,26 @@ def contacto(request):
         proyecto_id = request.POST.get("proyecto_id", "").strip()
         variante_id = request.POST.get("variante_id", "").strip()
 
-        if producto_id.isdigit():
+        if identificador_valido(producto_id):
             producto_seleccionado = (
                 Producto.objects
                 .filter(
                     pk=producto_id,
                     publicado=True,
+                    categoria__activa=True,
+                    categoria__padre__activa=True,
                 )
                 .select_related("marca_nueva")
                 .first()
             )
 
-        if proyecto_id.isdigit() and not producto_seleccionado:
+        if identificador_valido(proyecto_id) and not producto_seleccionado:
             proyecto_seleccionado = Proyecto.objects.filter(
                 pk=proyecto_id,
                 publicado=True,
             ).first()
 
-        if variante_id.isdigit() and producto_seleccionado:
+        if identificador_valido(variante_id) and producto_seleccionado:
             variante_seleccionada = (
                 VarianteProducto.objects
                 .filter(
@@ -187,6 +239,8 @@ def contacto(request):
                 .filter(
                     slug=producto_slug,
                     publicado=True,
+                    categoria__activa=True,
+                    categoria__padre__activa=True,
                 )
                 .select_related("marca_nueva")
                 .first()
@@ -198,7 +252,7 @@ def contacto(request):
                 publicado=True,
             ).first()
 
-        if variante_id.isdigit() and producto_seleccionado:
+        if identificador_valido(variante_id) and producto_seleccionado:
             variante_seleccionada = (
                 VarianteProducto.objects
                 .filter(
@@ -251,7 +305,7 @@ def contacto(request):
         ),
         "mensaje": mensaje_sugerido,
     }
-    formulario = CotizacionForm(request.POST or None, initial=inicial)
+    formulario = CotizacionForm(request.POST if request.method == "POST" else None, initial=inicial)
 
     if request.method == "POST" and formulario.is_valid():
         cotizacion = formulario.save(commit=False)

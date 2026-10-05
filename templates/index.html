@@ -2,13 +2,57 @@
 {% load static %}
 
 {% block titulo %}
-Inicio | PH Servicios Electrónicos
+Inicio | PH Servicios Eléctricos
 {% endblock %}
 
-{% block meta_description %}PH Servicios Electrónicos: instalaciones, proyectos, montajes y materiales eléctricos en Santiago.{% endblock %}
+{% block meta_description %}PH Servicios Eléctricos: instalaciones, proyectos, montajes y materiales eléctricos en Santiago.{% endblock %}
 
 
 {% block contenido %}
+
+<section class="home-paths" aria-labelledby="home-paths-title">
+    <div class="container">
+        <div class="home-paths-heading">
+            <span class="section-tag">PH SERVICIOS ELÉCTRICOS</span>
+            <h1 id="home-paths-title">Bienvenido a nuestro grupo empresarial</h1>
+            <p>Dos áreas, un mismo compromiso: construir y electrificar un mejor futuro.</p>
+        </div>
+        <div class="home-paths-grid">
+            <a href="{% url 'proyectos' %}" class="home-path home-path-projects">
+                {% if proyecto_portada %}
+                <img class="home-path-background" src="{{ proyecto_portada.imagen.url }}" alt="" fetchpriority="high">
+                {% else %}
+                <img class="home-path-background" src="{% static 'img/infraestructura-industrial.jpg' %}" alt="" fetchpriority="high">
+                {% endif %}
+                <span class="home-path-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 28V12h9V4h13v24M2 28h28M9 16v2m0 3v2m9-15h5m-5 5h5m-5 5h5m-5 5h5"/></svg></span>
+                <strong>CONSTRUCCIONES</strong>
+                <p>Conoce los proyectos y montajes eléctricos que desarrollamos con calidad y compromiso.</p>
+                <ul class="home-path-features">
+                    <li>Proyectos comerciales y habitacionales</li>
+                    <li>Instalaciones y montajes eléctricos</li>
+                    <li>Remodelaciones y mantenimiento</li>
+                    <li>Ingeniería y ejecución de proyectos</li>
+                </ul>
+                <span class="home-path-link">Ver proyectos <span aria-hidden="true">→</span></span>
+            </a>
+            <a href="{% url 'productos' %}" class="home-path home-path-products">
+                <img class="home-path-background" src="{% static 'img/phpm-materiales.jpg' %}" alt="">
+                <span class="home-path-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 3v9m10-9v9M7 12h18v5a9 9 0 0 1-18 0zM16 26v5"/></svg></span>
+                <strong>PRODUCTOS</strong>
+                <p>Materiales eléctricos para tus proyectos, instalaciones y necesidades.</p>
+                <ul class="home-path-features">
+                    <li>Iluminación</li>
+                    <li>Interruptores y enchufes</li>
+                    <li>Cables y canalización</li>
+                    <li>Tableros, protecciones y control</li>
+                    <li>Marcas y variantes disponibles</li>
+                </ul>
+                <span class="home-path-link">Ingresar al catálogo <span aria-hidden="true">→</span></span>
+            </a>
+        </div>
+    </div>
+</section>
+
 
 <!-- =====================================================
      HERO / CARRUSEL
@@ -30,13 +74,13 @@ Inicio | PH Servicios Electrónicos
             <div class="hero-slide-content">
 
                 <span class="tag">
-                    PH SERVICIOS ELECTRÓNICOS
+                    PH SERVICIOS ELÉCTRICOS
                 </span>
 
-                <h1>
+                <h2>
                     Instalaciones eléctricas
                     para grandes proyectos
-                </h1>
+                </h2>
 
                 <p>
                     Diseñamos, ejecutamos y mantenemos
@@ -62,8 +106,8 @@ Inicio | PH Servicios Electrónicos
         <article class="hero-slide">
 
             <img
-                src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1800&q=85"
-                alt="Profesional trabajando en infraestructura">
+                src="{% static 'img/phpm-materiales.jpg' %}"
+                alt="Materiales eléctricos y marcas distribuidas por PHPM">
 
             <div class="hero-slide-content">
 
@@ -71,10 +115,10 @@ Inicio | PH Servicios Electrónicos
                     INGENIERÍA Y EJECUCIÓN
                 </span>
 
-                <h1>
+                <h2>
                     Soluciones eléctricas
                     seguras y eficientes
-                </h1>
+                </h2>
 
                 <p>
                     Ingeniería, planificación y ejecución
@@ -100,8 +144,8 @@ Inicio | PH Servicios Electrónicos
         <article class="hero-slide">
 
             <img
-                src="https://images.unsplash.com/photo-1558008258-3256797b43f3?auto=format&fit=crop&w=1800&q=85"
-                alt="Instalaciones eléctricas industriales">
+                src="{% static 'img/phpm-distribucion.jpg' %}"
+                alt="Diseño comercial de PHPM con productos y marcas eléctricas">
 
             <div class="hero-slide-content">
 
@@ -109,10 +153,10 @@ Inicio | PH Servicios Electrónicos
                     EXPERIENCIA Y COMPROMISO
                 </span>
 
-                <h1>
+                <h2>
                     Preparados para nuevos
                     desafíos
-                </h1>
+                </h2>
 
                 <p>
                     Acompañamos cada proyecto desde
@@ -199,7 +243,7 @@ Inicio | PH Servicios Electrónicos
             <span>◈</span>
             <div>
                 <strong>Seguridad</strong>
-                <p>Procesos responsables y normativos</p>
+                <p>Procesos responsables y conformes a la normativa</p>
             </div>
         </div>
 
@@ -236,6 +280,13 @@ Inicio | PH Servicios Electrónicos
 
 
 <!-- =====================================================
+     ACCESOS PRINCIPALES
+====================================================== -->
+
+
+
+
+<!-- =====================================================
      QUIÉNES SOMOS
 ====================================================== -->
 
@@ -256,10 +307,10 @@ Inicio | PH Servicios Electrónicos
             </h2>
 
             <p>
-                {{ empresa_info.razon_social }} desarrolla
+                {{ empresa_info.nombre_comercial }} desarrolla
                 soluciones eléctricas y de montaje
                 para proyectos comerciales, corporativos
-                e infraestructura.
+                y de infraestructura.
             </p>
 
             <p>
@@ -564,12 +615,10 @@ Inicio | PH Servicios Electrónicos
 
             <div>
 
-                <span class="section-tag">
-                    SECTORES
-                </span>
+                <span class="section-tag">EXPERIENCIA REAL</span>
 
                 <h2>
-                    Soluciones por sector
+                    Proyectos destacados
                 </h2>
 
             </div>
@@ -586,160 +635,31 @@ Inicio | PH Servicios Electrónicos
 
 
         <div class="projects-grid">
-
-
+            {% for proyecto in proyectos_destacados %}
             <article class="project-card">
-
                 <div class="project-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=900&q=80"
-                        alt="Proyecto hospitalario">
-
-                    <span class="project-category">
-                        Hospitalario
-                    </span>
-
+                    {% if proyecto.imagen %}
+                    <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.alt_imagen }}" loading="lazy">
+                    {% else %}
+                    <div class="project-image-placeholder" role="img" aria-label="Imagen de {{ proyecto.nombre }} pendiente de publicación">
+                        <span aria-hidden="true">▤</span>
+                    </div>
+                    {% endif %}
+                    <span class="project-category">{{ proyecto.get_sector_display }}</span>
                 </div>
-
                 <div class="project-info">
-
-                    <span class="project-location">
-                        Sector salud
-                    </span>
-
-                    <h3>
-                        Infraestructura de salud
-                    </h3>
-
-                    <p>
-                        Soluciones eléctricas integrales
-                        para infraestructura de salud.
-                    </p>
-
-                    <a href="{% url 'proyectos' %}">
-                        Conocer soluciones →
-                    </a>
-
+                    <span class="project-location">{{ proyecto.get_estado_display }}{% if proyecto.periodo %} · {{ proyecto.periodo }}{% endif %}</span>
+                    <h3>{{ proyecto.nombre }}</h3>
+                    <p>{{ proyecto.descripcion|truncatewords:20 }}</p>
+                    <a href="{% url 'proyectos' %}#proyecto-{{ proyecto.slug }}">Ver proyecto →</a>
                 </div>
-
             </article>
-
-
-            <article class="project-card">
-
-                <div class="project-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1565610222536-ef125c59da2e?auto=format&fit=crop&w=900&q=80"
-                        alt="Proyecto industrial">
-
-                    <span class="project-category">
-                        Industrial
-                    </span>
-
-                </div>
-
-                <div class="project-info">
-
-                    <span class="project-location">
-                        Sector industrial
-                    </span>
-
-                    <h3>
-                        Instalaciones industriales
-                    </h3>
-
-                    <p>
-                        Instalaciones y sistemas eléctricos
-                        para procesos industriales.
-                    </p>
-
-                    <a href="{% url 'proyectos' %}">
-                        Conocer soluciones →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <article class="project-card">
-
-                <div class="project-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=900&q=80"
-                        alt="Edificio corporativo">
-
-                    <span class="project-category">
-                        Edificio
-                    </span>
-
-                </div>
-
-                <div class="project-info">
-
-                    <span class="project-location">
-                        Sector corporativo
-                    </span>
-
-                    <h3>
-                        Edificios y oficinas
-                    </h3>
-
-                    <p>
-                        Instalaciones eléctricas y
-                        tableros para infraestructura.
-                    </p>
-
-                    <a href="{% url 'proyectos' %}">
-                        Conocer soluciones →
-                    </a>
-
-                </div>
-
-            </article>
-
-
-            <article class="project-card">
-
-                <div class="project-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1564501049412-61c2a3083791?auto=format&fit=crop&w=900&q=80"
-                        alt="Proyecto hotelero">
-
-                    <span class="project-category">
-                        Hotel
-                    </span>
-
-                </div>
-
-                <div class="project-info">
-
-                    <span class="project-location">
-                        Sector hotelero
-                    </span>
-
-                    <h3>
-                        Hoteles y servicios
-                    </h3>
-
-                    <p>
-                        Instalaciones eléctricas completas
-                        para infraestructura hotelera.
-                    </p>
-
-                    <a href="{% url 'proyectos' %}">
-                        Conocer soluciones →
-                    </a>
-
-                </div>
-
-            </article>
-
-
+            {% empty %}
+            <div class="projects-empty-state">
+                <h3>Próximamente publicaremos nuestros proyectos.</h3>
+                <a href="{% url 'contacto' %}" class="text-link">Consultar por un proyecto →</a>
+            </div>
+            {% endfor %}
         </div>
 
     </div>

@@ -1,12 +1,12 @@
 EMPRESA = {
-    "nombre_comercial": "PH Servicios Electrónicos",
+    "nombre_comercial": "PH Servicios Eléctricos",
     "razon_social": (
         "Patricio Hernández Proyectos y Montajes Eléctricos Limitada"
     ),
     "telefono": "+56 2 2983 688",
     "telefono_href": "tel:+5622983688",
-    "correo": "administracion@phinstalaciones.cl",
-    "correo_href": "mailto:administracion@phinstalaciones.cl",
+    "correo": "phcotizacion@phinstalaciones.cl",
+    "correo_href": "mailto:phcotizacion@phinstalaciones.cl",
     "direccion": "San Diego 1325, Santiago Centro, Santiago",
     "mapa_url": (
         "https://www.google.com/maps/search/?api=1&query="

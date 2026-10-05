@@ -16,7 +16,7 @@ PROYECTOS = (
         "sector": "residencial",
         "descripcion": (
             "Proyecto habitacional actualmente en construcción en La Florida, "
-            "con participación de PH Servicios Electrónicos en sus instalaciones."
+            "con participación de PH Servicios Eléctricos en sus instalaciones."
         ),
         "constructora": "ICAFAL",
         "mandante": "Simonetti Inmobiliaria S.A.",

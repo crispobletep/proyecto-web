@@ -1,0 +1,2 @@
+const {chromium}=require('C:/Users/GIGAPOBLA/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{const b=await chromium.launch({channel:'msedge',headless:true});const p=await b.newPage({viewport:{width:1440,height:1000}});await p.goto('http://127.0.0.1:8000/productos/');await p.evaluate(()=>{document.documentElement.style.scrollBehavior='auto';window.scrollTo(0,document.querySelector('#catalogo-productos').offsetTop-125)});await p.screenshot({path:'tools/referencias/revision-filtros-1440.png'});await b.close()})();

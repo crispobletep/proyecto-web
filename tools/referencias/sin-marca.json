@@ -1,0 +1,432 @@
+[
+  {
+    "id": 73,
+    "nombre": "Piloto LED voltímetro y amperímetro 22 mm",
+    "descripcion": "Indicador digital compacto para supervisar tensión y corriente desde el frente de un tablero o panel eléctrico.",
+    "imagen": "productos/catalogo/pilotos/piloto-led-voltimetro-amperimetro-22mm.png",
+    "variantes": []
+  },
+  {
+    "id": 74,
+    "nombre": "Piloto voltímetro LED 22 mm",
+    "descripcion": "Voltímetro digital con display LED rojo para lectura de tensión en tableros y paneles eléctricos.",
+    "imagen": "productos/catalogo/pilotos/piloto-voltimetro-led-22mm.png",
+    "variantes": []
+  },
+  {
+    "id": 75,
+    "nombre": "Luces piloto LED 220 V de 22 mm",
+    "descripcion": "Luces piloto LED para indicar estados de operación, alarma o presencia de tensión en tableros y paneles.",
+    "imagen": "productos/catalogo/pilotos/luz-piloto-led-220v-roja.png",
+    "variantes": [
+      "productos/catalogo/pilotos/luz-piloto-led-220v-amarilla.png",
+      "productos/catalogo/pilotos/luz-piloto-led-220v-roja.png",
+      "productos/catalogo/pilotos/luz-piloto-led-220v-verde.png"
+    ]
+  },
+  {
+    "id": 82,
+    "nombre": "Gabinetes metálicos de una puerta",
+    "descripcion": "Gabinetes metálicos de una puerta para alojar equipos de distribución, control y automatización. Las versiones con chasis se identifican y muestran con su fotografía específica.",
+    "imagen": "productos/catalogo/gabinetes/gabinete-metalico-400x300x200-ip65-estandar.png",
+    "variantes": [
+      "productos/catalogo/gabinetes/gabinete-metalico-250x200x150-una-puerta.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-300x200x150-ip65.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-400x300x200-ip65-estandar.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-400x300x200-ip65-con-chasis.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-500x400x200-ip65-estandar.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-500x400x200-ip65-con-chasis.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-600x400x200-ip65-estandar.png",
+      "productos/catalogo/gabinetes/gabinete-metalico-600x400x200-ip65-con-chasis.png"
+    ]
+  },
+  {
+    "id": 83,
+    "nombre": "Cajas estancas de derivación",
+    "descripcion": "Cajas aislantes para derivación y protección de conexiones en montaje superficial, disponibles con laterales lisos o conos de entrada.",
+    "imagen": "productos/catalogo/cajas-estancas/caja-estanca-lisa-100x100x70-ip65.png",
+    "variantes": [
+      "productos/catalogo/cajas-estancas/caja-estanca-lisa-80x80x40.png",
+      "productos/catalogo/cajas-estancas/caja-estanca-con-conos-80x80x50-ip55.png",
+      "productos/catalogo/cajas-estancas/caja-estanca-lisa-100x100x70-ip65.png",
+      "productos/catalogo/cajas-estancas/caja-estanca-con-conos-100x100x70-ip65.png",
+      "productos/catalogo/cajas-estancas/caja-estanca-lisa-170x140x85.png",
+      "productos/catalogo/cajas-estancas/caja-estanca-lisa-220x170x95-ip55.png"
+    ]
+  },
+  {
+    "id": 84,
+    "nombre": "Cajas metálicas pregalvanizadas",
+    "descripcion": "Cajas metálicas para canalización, paso y montaje de dispositivos eléctricos, con entradas prepicadas según la presentación.",
+    "imagen": "productos/catalogo/cajas-metalicas/caja-a11-prepicada-100x100x65.png",
+    "variantes": [
+      "productos/catalogo/cajas-metalicas/caja-chuqui-metalica.png",
+      "productos/catalogo/cajas-metalicas/caja-a01-pregalvanizada-100x65x65.png",
+      "productos/catalogo/cajas-metalicas/caja-a11-prepicada-100x100x65.png"
+    ]
+  },
+  {
+    "id": 89,
+    "nombre": "Ferrules aislados de 1,5 a 10 mm²",
+    "descripcion": "Terminales puntera aislados para ordenar los filamentos de conductores flexibles y preparar una terminación uniforme antes del prensado y la conexión en borneras o equipos eléctricos.",
+    "imagen": "productos/catalogo/ferrules/ferrule-1-5mm2-16awg-azul.png",
+    "variantes": [
+      "productos/catalogo/ferrules/ferrule-1-5mm2-16awg-azul.png",
+      "productos/catalogo/ferrules/ferrule-2-5mm2-14awg-gris.png",
+      "productos/catalogo/ferrules/ferrule-4mm2-12awg-naranjo.png",
+      "productos/catalogo/ferrules/ferrule-6mm2-10awg-verde.png",
+      "productos/catalogo/ferrules/ferrule-10mm2-8awg-cafe.png"
+    ]
+  },
+  {
+    "id": 85,
+    "nombre": "Caja Chuqui de superficie",
+    "descripcion": "Caja plástica para instalar mecanismos eléctricos sobre muro, con puntos de fijación y entradas para canalización.",
+    "imagen": "productos/catalogo/cajas-instalacion/caja-chuqui-superficie.png",
+    "variantes": []
+  },
+  {
+    "id": 86,
+    "nombre": "Cajas embutidas con oreja metálica",
+    "descripcion": "Cajas eléctricas grises para instalación embutida de mecanismos, con oreja metálica de fijación y versiones para loza o tabique.",
+    "imagen": "productos/catalogo/cajas-instalacion/caja-loza-oreja-metalica-gris.png",
+    "variantes": [
+      "productos/catalogo/cajas-instalacion/caja-loza-oreja-metalica-gris.png",
+      "productos/catalogo/cajas-instalacion/caja-tabique-5-8-oreja-metalica.png"
+    ]
+  },
+  {
+    "id": 94,
+    "nombre": "Barra de conexión de bronce aislada para riel DIN",
+    "descripcion": "Barra aislada para organizar conexiones de conductores dentro de tableros eléctricos. Disponible en cuatro tamaños para adaptar la cantidad de puntos de conexión a cada montaje.",
+    "imagen": "productos/catalogo/conductores-conexiones/barras/barra-conexion-bronce-4p-riel-din.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/barras/barra-conexion-bronce-4p-riel-din.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-conexion-bronce-6p-riel-din.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-conexion-bronce-8p-riel-din.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-conexion-bronce-12p-riel-din.png"
+    ]
+  },
+  {
+    "id": 95,
+    "nombre": "Barra repartidora tetrapolar 125 A",
+    "descripcion": "Barra repartidora tetrapolar con cubierta aislante para distribuir alimentación en tableros eléctricos y mantener las conexiones agrupadas y protegidas.",
+    "imagen": "productos/catalogo/conductores-conexiones/barras/barra-repartidora-tetrapolar-4x4-125a.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-tetrapolar-4x4-125a.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-tetrapolar-4x7-125a.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-tetrapolar-4x11-125a.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-tetrapolar-4x15-125a.png"
+    ]
+  },
+  {
+    "id": 96,
+    "nombre": "Barra repartidora bipolar 125 A",
+    "descripcion": "Barra repartidora bipolar con cubierta aislante para centralizar y distribuir conexiones dentro de tableros eléctricos.",
+    "imagen": "productos/catalogo/conductores-conexiones/barras/barra-repartidora-bipolar-2x7-125a.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-bipolar-2x7-125a.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-bipolar-2x11-125a.png",
+      "productos/catalogo/conductores-conexiones/barras/barra-repartidora-bipolar-2x15-125a.png"
+    ]
+  },
+  {
+    "id": 27,
+    "nombre": "Tubería EMT metálica",
+    "descripcion": "Tubería EMT metálica. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/tuberia-emt.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/tuberia-emt.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-emt.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-emt.png"
+    ]
+  },
+  {
+    "id": 97,
+    "nombre": "Cable flexible libre de halógenos",
+    "descripcion": "Cable flexible libre de halógenos para instalaciones eléctricas que requieren distintas secciones y colores de identificación. Consulte la presentación y longitud disponibles al cotizar.",
+    "imagen": "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-negro.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-negro.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-azul.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-blanco.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-verde.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-1-5-rojo.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-2-5-negro.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-2-5-azul.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-2-5-blanco.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-2-5-verde.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-2-5-rojo.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-4-negro.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-4-azul.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-4-blanco.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-4-verde.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-4-rojo.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-negro.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-azul.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-blanco.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-verde.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-rojo.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-rojo.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-verde.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-blanco.png",
+      "productos/catalogo/conductores-conexiones/cables/cable-libre-halogeno-6-azul.png"
+    ]
+  },
+  {
+    "id": 28,
+    "nombre": "Curva EMT 90°",
+    "descripcion": "Curva EMT 90°. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/curva-emt-90.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/curva-emt-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-emt-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-emt-90.png"
+    ]
+  },
+  {
+    "id": 98,
+    "nombre": "Borne de paso gris para riel DIN",
+    "descripcion": "Borne de paso gris para organizar y conectar conductores en tableros eléctricos mediante montaje modular sobre riel DIN.",
+    "imagen": "productos/catalogo/conductores-conexiones/bornes/borne-paso-gris-riel-din.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/bornes/borne-paso-gris-riel-din.png",
+      "productos/catalogo/conductores-conexiones/bornes/borne-paso-gris-riel-din.png",
+      "productos/catalogo/conductores-conexiones/bornes/borne-paso-gris-riel-din.png",
+      "productos/catalogo/conductores-conexiones/bornes/borne-paso-gris-riel-din.png"
+    ]
+  },
+  {
+    "id": 29,
+    "nombre": "Curva EMT 45°",
+    "descripcion": "Curva EMT 45°. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/curva-emt-45.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/curva-emt-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-emt-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-emt-45.png"
+    ]
+  },
+  {
+    "id": 99,
+    "nombre": "Borne de tierra para riel DIN",
+    "descripcion": "Borne verde y amarillo para conexiones de protección a tierra en tableros eléctricos, con montaje modular sobre riel DIN.",
+    "imagen": "productos/catalogo/conductores-conexiones/bornes/borne-tierra-verde-amarillo-riel-din.png",
+    "variantes": [
+      "productos/catalogo/conductores-conexiones/bornes/borne-tierra-verde-amarillo-riel-din.png",
+      "productos/catalogo/conductores-conexiones/bornes/borne-tierra-verde-amarillo-riel-din.png"
+    ]
+  },
+  {
+    "id": 30,
+    "nombre": "Copla EMT",
+    "descripcion": "Copla EMT. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/copla-emt.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/copla-emt.png",
+      "productos/catalogo/canalizacion-electrica/copla-emt.png",
+      "productos/catalogo/canalizacion-electrica/copla-emt.png"
+    ]
+  },
+  {
+    "id": 31,
+    "nombre": "Terminal EMT",
+    "descripcion": "Terminal EMT. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/terminal-emt.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/terminal-emt.png",
+      "productos/catalogo/canalizacion-electrica/terminal-emt.png",
+      "productos/catalogo/canalizacion-electrica/terminal-emt.png"
+    ]
+  },
+  {
+    "id": 32,
+    "nombre": "Salida a caja EMT",
+    "descripcion": "Salida a caja EMT. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/salida-caja-emt.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/salida-caja-emt.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-emt.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-emt.png"
+    ]
+  },
+  {
+    "id": 33,
+    "nombre": "Tubería PVC eléctrica",
+    "descripcion": "Tubería PVC eléctrica. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png",
+      "productos/catalogo/canalizacion-electrica/tuberia-pvc.png"
+    ]
+  },
+  {
+    "id": 34,
+    "nombre": "Curva PVC 90°",
+    "descripcion": "Curva PVC 90°. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-90.png"
+    ]
+  },
+  {
+    "id": 35,
+    "nombre": "Curva PVC 45°",
+    "descripcion": "Curva PVC 45°. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png",
+      "productos/catalogo/canalizacion-electrica/curva-pvc-45.png"
+    ]
+  },
+  {
+    "id": 36,
+    "nombre": "Copla PVC",
+    "descripcion": "Copla PVC. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png",
+      "productos/catalogo/canalizacion-electrica/copla-pvc.png"
+    ]
+  },
+  {
+    "id": 37,
+    "nombre": "Terminal PVC",
+    "descripcion": "Terminal PVC. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png",
+      "productos/catalogo/canalizacion-electrica/terminal-pvc.png"
+    ]
+  },
+  {
+    "id": 38,
+    "nombre": "Salida a caja PVC",
+    "descripcion": "Salida a caja PVC. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png",
+      "productos/catalogo/canalizacion-electrica/salida-caja-pvc.png"
+    ]
+  },
+  {
+    "id": 39,
+    "nombre": "Flexible metálico",
+    "descripcion": "Flexible metálico. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/flexible-metalico.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/flexible-metalico.png",
+      "productos/catalogo/canalizacion-electrica/flexible-metalico.png",
+      "productos/catalogo/canalizacion-electrica/flexible-metalico.png"
+    ]
+  },
+  {
+    "id": 40,
+    "nombre": "Conector recto flexible",
+    "descripcion": "Conector recto flexible. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/conector-recto-flex.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/conector-recto-flex.png",
+      "productos/catalogo/canalizacion-electrica/conector-recto-flex.png",
+      "productos/catalogo/canalizacion-electrica/conector-recto-flex.png"
+    ]
+  },
+  {
+    "id": 41,
+    "nombre": "Adaptador a caja flexible",
+    "descripcion": "Adaptador a caja flexible. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/adaptador-caja-flex.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/adaptador-caja-flex.png",
+      "productos/catalogo/canalizacion-electrica/adaptador-caja-flex.png",
+      "productos/catalogo/canalizacion-electrica/adaptador-caja-flex.png"
+    ]
+  },
+  {
+    "id": 42,
+    "nombre": "Conector curvo 90°",
+    "descripcion": "Conector curvo 90°. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/conector-curvo-flex.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/conector-curvo-flex.png",
+      "productos/catalogo/canalizacion-electrica/conector-curvo-flex.png",
+      "productos/catalogo/canalizacion-electrica/conector-curvo-flex.png"
+    ]
+  },
+  {
+    "id": 43,
+    "nombre": "Flexible libre de halógeno",
+    "descripcion": "Flexible libre de halógeno. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/flexible-libre-halogeno.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/flexible-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/flexible-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/flexible-libre-halogeno.png"
+    ]
+  },
+  {
+    "id": 44,
+    "nombre": "Conector libre de halógeno",
+    "descripcion": "Conector libre de halógeno. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/conector-libre-halogeno.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/conector-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/conector-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/conector-libre-halogeno.png"
+    ]
+  },
+  {
+    "id": 45,
+    "nombre": "Adaptador libre de halógeno",
+    "descripcion": "Adaptador libre de halógeno. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/canalizacion-electrica/adaptador-libre-halogeno.png",
+    "variantes": [
+      "productos/catalogo/canalizacion-electrica/adaptador-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/adaptador-libre-halogeno.png",
+      "productos/catalogo/canalizacion-electrica/adaptador-libre-halogeno.png"
+    ]
+  },
+  {
+    "id": 67,
+    "nombre": "Soporte metálico para fotocelda",
+    "descripcion": "Soporte metálico para fotocelda. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/fotoceldas/soporte-metalico-sop-fc01.png",
+    "variantes": [
+      "productos/catalogo/fotoceldas/soporte-metalico-sop-fc01.png"
+    ]
+  },
+  {
+    "id": 68,
+    "nombre": "Soporte muro/poste ajustable",
+    "descripcion": "Soporte muro/poste ajustable. Producto incorporado desde el catálogo técnico; seleccione la variante correspondiente para solicitar cotización.",
+    "imagen": "productos/catalogo/fotoceldas/soporte-muro-poste-sop-fc02.png",
+    "variantes": [
+      "productos/catalogo/fotoceldas/soporte-muro-poste-sop-fc02.png"
+    ]
+  }
+]

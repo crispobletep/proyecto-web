@@ -1,5 +1,5 @@
 /* =========================================================
-   PH SERVICIOS ELECTRÓNICOS
+   PH SERVICIOS ELÉCTRICOS
    CSS PRINCIPAL
 ========================================================= */
 
@@ -1173,7 +1173,7 @@ a {
     letter-spacing: 1.5px;
 }
 
-.hero-slide-content h1 {
+.hero-slide-content h2 {
     max-width: 690px;
 
     margin-bottom: 20px;
@@ -1371,6 +1371,36 @@ a {
 
     line-height: 1.4;
 }
+
+
+/* =========================================================
+   10.1 ACCESOS A PROYECTOS Y MATERIALES
+========================================================= */
+
+ .home-paths { padding: 54px 0 64px; background: #f7f8fa; }
+.home-paths-heading { max-width: 900px; margin: 0 auto 32px; text-align: center; }
+.home-paths-heading h1 { margin-bottom: 12px; font-size: clamp(1.8rem, 3.4vw, 2.65rem); line-height: 1.2; }
+.home-paths-heading p { color: var(--text-muted, #667085); }
+.home-paths-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.home-path { position: relative; isolation: isolate; min-height: 510px; display: flex; flex-direction: column; align-items: center; padding: 42px 36px 32px; overflow: hidden; border-radius: var(--radius-lg); color: #fff; text-align: center; box-shadow: var(--shadow); background: #071a35; }
+.home-path .home-path-background { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform .35s ease; }
+.home-path .home-path-brand { object-fit: contain; padding: 34px; background: #fff; }
+.home-path::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(7,26,53,.25), rgba(7,26,53,.88)); }
+.home-path-products { background: radial-gradient(ellipse at center, #245691, #071a35 85%); }
+.home-path-products .home-path-background { object-fit: contain; object-position: center; }
+.home-path-products::before { background: linear-gradient(180deg, rgba(7,26,53,.7), rgba(7,26,53,.58) 50%, rgba(7,26,53,.85)); }
+.home-path-icon { width: 76px; height: 76px; display: grid; place-items: center; margin-bottom: 20px; border-radius: 50%; background: #fff; color: #153758; }
+.home-path-icon svg { width: 38px; height: 38px; }
+.home-path strong { color: #fff; font-size: clamp(1.5rem, 3vw, 2rem); }
+.home-path p { max-width: 380px; margin: 12px 0 22px; color: #fff; }
+.home-path-features { display: grid; gap: 10px; margin: 0 0 28px; padding: 0; list-style: none; text-align: left; font-size: .94rem; }
+.home-path-features li::before { content: "✓"; margin-right: 12px; color: #fff; }
+.home-path-link { display: flex; align-items: center; justify-content: center; gap: 20px; width: min(100%, 310px); margin-top: auto; padding: 15px 20px; border-radius: 7px; background: #2263d9; color: #fff; font-weight: 800; }
+.home-path-products .home-path-link { background: #d95316; }
+.home-path:hover .home-path-background { transform: scale(1.04); }
+.home-path-products:hover .home-path-background { transform: none; }
+.home-path:focus-visible { outline: 3px solid #2263d9; outline-offset: 5px; }
+@media (prefers-reduced-motion: reduce) { .home-path .home-path-background { transition: none; } .home-path:hover .home-path-background { transform: none; } }
 
 
 /* =========================================================
@@ -1684,6 +1714,10 @@ a {
     transform: translateY(-5px);
 
     box-shadow: var(--shadow-lg);
+}
+
+.project-card-catalog {
+    scroll-margin-top: 24px;
 }
 
 /* =========================================================
@@ -2699,7 +2733,7 @@ a {
         width: 88%;
     }
 
-    .hero-slide-content h1 {
+    .hero-slide-content h2 {
         max-width: 530px;
 
         font-size: 2.45rem;
@@ -2734,6 +2768,19 @@ a {
 
     .hero-value:last-child {
         border-bottom: none;
+    }
+
+    .home-paths {
+        padding: 58px 0;
+    }
+
+    .home-paths-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-path {
+        min-height: 260px;
+        padding: 27px;
     }
 
 
@@ -2920,7 +2967,7 @@ a {
         font-size: 0.64rem;
     }
 
-    .hero-slide-content h1 {
+    .hero-slide-content h2 {
         font-size: 2rem;
     }
 
@@ -3738,4 +3785,52 @@ a {
     .service-process {
         padding: 58px 0;
     }
+}
+/* Navegación por áreas y filtros del catálogo */
+.nav-branch { position: relative; }
+.nav-branch summary { display: flex; align-items: center; gap: 8px; padding: 30px 0; cursor: pointer; color: var(--blue-dark); font-size: .88rem; font-weight: 600; list-style: none; }
+.nav-branch summary::-webkit-details-marker { display: none; }
+.nav-branch details.active > summary, .nav-branch details[open] > summary { color: var(--red); }
+.nav-submenu { position: absolute; top: 100%; left: -18px; min-width: 235px; padding: 10px 18px; background: #fff; border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow-lg); z-index: 30; }
+.menu .nav-submenu a { padding: 12px 0; }
+.menu .nav-submenu a::after { display: none; }
+.menu .nav-submenu a[aria-current] { color: var(--red); }
+.nav-branch summary:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+.catalog-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; align-items: start; }
+.catalog-sidebar { padding: 22px; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-lg); }
+.catalog-sidebar h2 { font-size: 1.2rem; margin-bottom: 20px; }
+.catalog-filter-form { display: grid; gap: 10px; margin-bottom: 24px; }
+.catalog-filter-form label { font-size: .85rem; font-weight: 600; }
+.catalog-filter-form input, .catalog-filter-form select { width: 100%; min-width: 0; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font: inherit; font-size: .9rem; background: #fff; }
+.catalog-filter-links { display: grid; gap: 8px; margin-bottom: 22px; }
+.catalog-filter-links summary { cursor: pointer; padding: 10px 0; font-weight: 700; font-size: .9rem; }
+.catalog-filter-links a { display: block; padding: 8px; font-size: .85rem; color: var(--blue-dark); border-radius: 5px; overflow-wrap: anywhere; }
+.catalog-filter-links details a { margin-left: 8px; }
+.catalog-filter-links a:hover, .catalog-filter-links a[aria-current] { color: var(--red); background: #fff1f2; }
+.catalog-results { min-width: 0; }
+.catalog-results-header { align-items: start; flex-direction: column; gap: 10px; }
+.footer-links + h3 { margin-top: 24px; }
+@media (max-width: 1050px) and (min-width: 761px) { .catalog-layout .catalog-grid { grid-template-columns: 1fr; } }
+@media (max-width: 760px) {
+    .nav-branch summary { padding: 12px 0; border-bottom: 1px solid var(--border); }
+    .nav-submenu { position: static; min-width: 0; padding: 0 16px; border: 0; box-shadow: none; background: #f7f8fa; }
+    .catalog-layout { grid-template-columns: minmax(0, 1fr); }
+    .catalog-sidebar { padding: 20px; }
+}
+/* Selección sincronizada de imágenes y variantes */
+.catalog-variant-select { display: block; width: 100%; border: 0; padding: 0; border-radius: 6px; background: #fff; cursor: pointer; }
+.catalog-variant-select .catalog-variant-image { display: block; margin-bottom: 0; }
+.catalog-variant-select { margin-bottom: 9px; }
+.catalog-variant-card.selected { border-color: var(--catalog-accent); box-shadow: inset 0 0 0 1px var(--catalog-accent), 0 4px 14px rgba(7,26,53,.09); background: #fff; }
+.catalog-selection-status { min-height: 1.5em; margin: 0 0 10px; font-size: .78rem; font-weight: 600; color: var(--blue-dark); }
+.catalog-selection-status:empty { display: none; }
+.catalog-variant-select:focus-visible, .catalog-thumb:focus-visible, .catalog-variant-quote:focus-visible { outline: 3px solid var(--catalog-accent); outline-offset: 3px; }
+.catalog-variant-quote { transition: background-color .2s ease, box-shadow .2s ease; border-radius: 5px; }
+.catalog-variant-quote:hover, .catalog-variant-quote:focus-visible { background: #fff; box-shadow: 0 3px 12px rgba(7,26,53,.14); }
+.catalog-card .btn, .catalog-filter-form .btn { position: relative; overflow: hidden; }
+.catalog-filter-form .btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.3) 50%, transparent 70%); transform: translateX(-110%); transition: transform .55s ease; pointer-events: none; }
+.catalog-filter-form .btn:hover::after, .catalog-filter-form .btn:focus-visible::after { transform: translateX(110%); }
+@media (prefers-reduced-motion: reduce) {
+    .catalog-variant-card, .catalog-variant-quote { transition: none; }
+    .catalog-filter-form .btn::after { display: none; }
 }

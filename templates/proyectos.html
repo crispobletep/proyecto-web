@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block titulo %}Proyectos ejecutados | PH Servicios Electrónicos{% endblock %}
-{% block meta_description %}Conoce proyectos residenciales, hospitalarios y de infraestructura en los que ha participado PH Servicios Electrónicos.{% endblock %}
+{% block titulo %}Proyectos ejecutados | PH Servicios Eléctricos{% endblock %}
+{% block meta_description %}Conoce proyectos residenciales, hospitalarios y de infraestructura en los que ha participado PH Servicios Eléctricos.{% endblock %}
 
 {% block contenido %}
 <section class="projects-hero">
@@ -39,7 +39,7 @@
 
         <div class="projects-catalog-grid" aria-live="polite">
             {% for proyecto in proyectos %}
-            <article class="project-card project-card-catalog" data-project-category="{{ proyecto.sector }}">
+            <article id="proyecto-{{ proyecto.slug }}" class="project-card project-card-catalog" data-project-category="{{ proyecto.sector }}">
                 <div class="project-image">
                     {% if proyecto.imagen %}
                     <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.alt_imagen }}" loading="lazy">
@@ -123,7 +123,7 @@
         <div class="featured-project-content">
             <span class="section-tag">EVALUACIÓN PERSONALIZADA</span>
             <h2>¿Necesitas apoyo para un nuevo proyecto?</h2>
-            <p>Envíanos sus antecedentes. Podemos revisar requerimientos especiales y orientarte sobre alcance, materiales y alternativas disponibles.</p>
+            <p>Envíanos sus antecedentes. Podemos revisar requerimientos especiales y orientarte sobre el alcance, los materiales y las alternativas disponibles.</p>
             <div class="featured-project-data">
                 <span>✓ Revisión del requerimiento</span>
                 <span>✓ Alternativas técnicas</span>

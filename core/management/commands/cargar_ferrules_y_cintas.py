@@ -1,3 +1,4 @@
+from core.catalog_imports import retirar_variantes
 from pathlib import Path, PurePosixPath
 
 from django.core.files import File
@@ -482,7 +483,7 @@ class Command(BaseCommand):
 
         variantes = {}
         nombres_variantes = {item["nombre"] for item in definicion["variantes"]}
-        producto.variantes.exclude(nombre__in=nombres_variantes).delete()
+        retirar_variantes(producto.variantes.exclude(nombre__in=nombres_variantes))
         for orden, datos in enumerate(definicion["variantes"], start=1):
             variante, _ = VarianteProducto.objects.update_or_create(
                 producto=producto,

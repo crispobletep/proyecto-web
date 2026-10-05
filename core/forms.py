@@ -61,7 +61,7 @@ class CotizacionForm(forms.ModelForm):
                     "placeholder": "+56 9 1234 5678",
                     "autocomplete": "tel",
                     "inputmode": "tel",
-                    "pattern": r"[+0-9() -]{9,18}",
+                    "pattern": r"[+0-9\(\) \-]{9,18}",
                     "title": (
                         "Ingresa 9 dígitos chilenos o el número completo "
                         "con código +56."
@@ -127,7 +127,7 @@ class CotizacionForm(forms.ModelForm):
             )
 
         digitos = re.sub(r"\D", "", telefono)
-        numero_nacional = digitos[2:] if digitos.startswith("56") else digitos
+        numero_nacional = digitos[2:] if len(digitos) == 11 and digitos.startswith("56") else digitos
 
         if len(numero_nacional) != 9 or numero_nacional[0] == "0":
             raise forms.ValidationError(

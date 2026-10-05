@@ -1,3 +1,4 @@
+from core.catalog_imports import retirar_variantes
 from pathlib import Path, PurePosixPath
 
 from django.conf import settings
@@ -806,10 +807,7 @@ class Command(BaseCommand):
         variantes_obsoletas = producto.variantes.exclude(
             codigo__in=codigos_vigentes
         )
-        Cotizacion.objects.filter(
-            variante__in=variantes_obsoletas
-        ).update(variante=None)
-        variantes_obsoletas.delete()
+        retirar_variantes(variantes_obsoletas)
 
         variantes_por_imagen = {}
         for orden, datos in enumerate(definicion["variantes"], start=1):

@@ -13,11 +13,15 @@ from core.management.commands.cargar_iluminacion_y_cajas import (
 from core.management.commands.cargar_ferrules_y_cintas import (
     IMAGENES as IMAGENES_FERRULES_Y_CINTAS,
 )
+from core.management.commands.cargar_conductores_y_conexiones import (
+    IMAGENES as IMAGENES_CONDUCTORES_Y_CONEXIONES,
+)
 
 from .models import (
     Categoria,
     Cotizacion,
     ImagenProducto,
+    Marca,
     Producto,
     Proyecto,
     VarianteProducto,
@@ -279,6 +283,84 @@ class CargarPilotosYLegrandTests(TestCase):
         self.assertTrue(imagen.clave.startswith("manual-"))
 
 
+class CargarConductoresYConexionesTests(TestCase):
+    def setUp(self):
+        self.temporal = tempfile.TemporaryDirectory()
+        self.raiz = Path(self.temporal.name)
+        self.media = self.raiz / "media"
+        self.origen = self.raiz / "origen"
+        self.origen.mkdir()
+        for datos in IMAGENES_CONDUCTORES_Y_CONEXIONES.values():
+            (self.origen / datos["origen"]).write_bytes(b"imagen-de-prueba")
+        self.ajuste_media = override_settings(MEDIA_ROOT=self.media)
+        self.ajuste_media.enable()
+
+    def tearDown(self):
+        self.ajuste_media.disable()
+        self.temporal.cleanup()
+
+    def test_validacion_no_modifica_el_catalogo(self):
+        call_command("cargar_conductores_y_conexiones", origen=self.origen)
+
+        self.assertEqual(Producto.objects.count(), 0)
+        self.assertEqual(VarianteProducto.objects.count(), 0)
+        self.assertEqual(ImagenProducto.objects.count(), 0)
+
+    def test_carga_productos_variantes_imagenes_y_categorias(self):
+        Categoria.objects.create(
+            nombre="Mecanismos eléctricos",
+            slug="mecanismos-electricos",
+            orden=40,
+        )
+        for _ in range(2):
+            call_command(
+                "cargar_conductores_y_conexiones",
+                origen=self.origen,
+                aplicar=True,
+            )
+
+        self.assertEqual(Producto.objects.count(), 6)
+        self.assertEqual(Producto.objects.filter(publicado=True).count(), 6)
+        self.assertEqual(VarianteProducto.objects.count(), 41)
+        self.assertEqual(ImagenProducto.objects.count(), 33)
+        self.assertTrue(
+            Categoria.objects.filter(
+                slug="cables-libres-halogeno",
+                padre__slug="conductores-electricos",
+            ).exists()
+        )
+        self.assertEqual(
+            Categoria.objects.get(slug="mecanismos-electricos").nombre,
+            "Interruptores, enchufes y accesorios",
+        )
+
+        cable = Producto.objects.get(slug="cable-flexible-libre-halogenos")
+        self.assertEqual(cable.variantes.count(), 24)
+        cable_10_rojo = cable.variantes.get(nombre="10 mm² · Rojo")
+        cable_6_rojo = cable.variantes.get(nombre="6 mm² · Rojo")
+        self.assertEqual(cable_10_rojo.imagen.name, cable_6_rojo.imagen.name)
+        self.assertEqual(
+            cable_10_rojo.especificaciones.get(nombre="Sección").valor,
+            "10",
+        )
+
+        borne_gris = Producto.objects.get(slug="borne-paso-gris-riel-din")
+        self.assertEqual(borne_gris.variantes.count(), 4)
+        self.assertEqual(
+            borne_gris.variantes.values_list("imagen", flat=True).distinct().count(),
+            1,
+        )
+        borne_tierra = Producto.objects.get(slug="borne-tierra-riel-din")
+        self.assertEqual(borne_tierra.variantes.count(), 2)
+
+        respuesta = self.client.get(
+            "/productos/?familia=conductores-electricos"
+        )
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertContains(respuesta, "Cable flexible libre de halógenos")
+        self.assertContains(respuesta, "10 mm² · Azul")
+
+
 class CargarFerrulesYCintasTests(TestCase):
     def setUp(self):
         self.temporal = tempfile.TemporaryDirectory()
@@ -512,6 +594,89 @@ class CargarProyectosInicialesTests(TestCase):
 
 
 class SitioPublicoTests(TestCase):
+    def test_marcas_permanecen_estables_y_priorizan_relacion(self):
+        familia = Categoria.objects.create(nombre="Familia A", slug="familia-a")
+        categoria = Categoria.objects.create(nombre="Categoría A", slug="categoria-a", padre=familia)
+        otra_familia = Categoria.objects.create(nombre="Familia B", slug="familia-b")
+        otra_categoria = Categoria.objects.create(nombre="Categoría B", slug="categoria-b", padre=otra_familia)
+        marca = Marca.objects.create(nombre="Marca A", slug="marca-a")
+        otra_marca = Marca.objects.create(nombre="Marca B", slug="marca-b")
+        producto = Producto.objects.create(
+            nombre="Producto A", slug="producto-a", categoria=categoria,
+            marca_nueva=marca, marca="Marca B", publicado=True,
+        )
+        Producto.objects.create(
+            nombre="Producto B", slug="producto-b", categoria=otra_categoria,
+            marca_nueva=otra_marca, publicado=True,
+        )
+        Producto.objects.create(
+            nombre="Sin marca", slug="sin-marca", categoria=categoria, publicado=True,
+        )
+        respuesta = self.client.get("/productos/", {"familia": familia.slug})
+        self.assertEqual(list(respuesta.context["marcas"]), [marca, otra_marca])
+        respuesta = self.client.get("/productos/", {"marca": marca.pk})
+        self.assertEqual(list(respuesta.context["productos"]), [producto])
+        respuesta = self.client.get("/productos/", {"familia": familia.slug, "marca": otra_marca.pk})
+        self.assertEqual(list(respuesta.context["productos"]), [])
+        self.assertIn(otra_marca, respuesta.context["marcas"])
+        for filtros in (
+            {"familia": familia.slug, "marca": marca.pk},
+            {"categoria": categoria.slug, "marca": otra_marca.pk},
+            {"q": "sin-resultados", "marca": marca.pk},
+            {"marca": otra_marca.pk},
+            {},
+        ):
+            respuesta = self.client.get("/productos/", filtros)
+            self.assertEqual(list(respuesta.context["marcas"]), [marca, otra_marca])
+
+
+    def test_migracion_marca_anterior_solo_completa_coincidencias_seguras(self):
+        from importlib import import_module
+        from django.apps import apps
+        from django.db import connection
+        from types import SimpleNamespace
+
+        familia = Categoria.objects.create(nombre="Familia", slug="familia")
+        categoria = Categoria.objects.create(nombre="Categoría", slug="categoria", padre=familia)
+        marca = Marca.objects.create(nombre="LEXO", slug="lexo")
+        antiguo = Producto.objects.create(nombre="Antiguo", slug="antiguo", categoria=categoria, marca=" lexo ")
+        desconocido = Producto.objects.create(nombre="Desconocido", slug="desconocido", categoria=categoria, marca="Sin identificar")
+        actual = Producto.objects.create(nombre="Actual", slug="actual", categoria=categoria, marca="Otra", marca_nueva=marca)
+        migracion = import_module("core.migrations.0015_vincular_marcas_anteriores")
+        for _ in range(2):
+            migracion.vincular_marcas(apps, SimpleNamespace(connection=connection))
+        antiguo.refresh_from_db()
+        desconocido.refresh_from_db()
+        actual.refresh_from_db()
+        self.assertEqual(antiguo.marca_nueva_id, marca.pk)
+        self.assertEqual(antiguo.marca, " lexo ")
+        self.assertIsNone(desconocido.marca_nueva_id)
+        self.assertEqual(actual.marca_nueva_id, marca.pk)
+
+    def test_filtros_catalogo_combinan_busqueda_marca_y_categoria(self):
+        familia = Categoria.objects.create(nombre="Protecciones", slug="protecciones")
+        categoria = Categoria.objects.create(nombre="Automáticos", slug="automaticos", padre=familia)
+        marca = Marca.objects.create(nombre="Marca de prueba", slug="marca-prueba")
+        producto = Producto.objects.create(
+            nombre="Interruptor de prueba", slug="interruptor-prueba",
+            codigo="INT-123", categoria=categoria, marca_nueva=marca,
+            publicado=True,
+        )
+        Producto.objects.create(
+            nombre="Interruptor sin publicar", slug="interruptor-oculto",
+            categoria=categoria, marca_nueva=marca, publicado=False,
+        )
+        respuesta = self.client.get("/productos/", {
+            "q": "INT-123", "marca": str(marca.pk), "categoria": categoria.slug,
+        })
+        self.assertEqual(list(respuesta.context["productos"]), [producto])
+        self.assertContains(respuesta, "catalog-sidebar")
+        self.assertIn("q=INT-123", respuesta.context["parametros_paginacion"])
+        respuesta = self.client.get("/productos/", {"q": "no-existe"})
+        self.assertEqual(respuesta.context["pagina_productos"].paginator.count, 0)
+        respuesta = self.client.get("/productos/", {"marca": "inválida"})
+        self.assertEqual(list(respuesta.context["productos"]), [producto])
+
     def test_paginas_principales_renderizan_con_datos_reales(self):
         for ruta in (
             "/",
@@ -528,12 +693,12 @@ class SitioPublicoTests(TestCase):
 
         respuesta = self.client.get("/contacto/")
         self.assertContains(respuesta, "+56 2 2983 688")
-        self.assertContains(respuesta, "administracion@phinstalaciones.cl")
+        self.assertContains(respuesta, "phcotizacion@phinstalaciones.cl")
         self.assertContains(respuesta, "San Diego 1325")
 
         servicios = self.client.get("/servicios/")
         self.assertNotContains(servicios, "Próximamente")
-        self.assertContains(servicios, "Mantención eléctrica")
+        self.assertContains(servicios, "Mantenimiento eléctrico")
 
         proyectos = self.client.get("/proyectos/")
         self.assertNotContains(proyectos, 'href="#"')

@@ -1,3 +1,4 @@
+from core.catalog_imports import retirar_variantes
 import csv
 import re
 from collections import OrderedDict
@@ -52,16 +53,16 @@ CARACTERISTICAS = {
         "Apto para instalaciones residenciales, comerciales e industriales",
     ),
     "staford-enchufes": (
-        "Mecanismo modular de la línea STAFORD",
+        "Mecanismo modular de la línea STANFORD",
         "Disponible en diferentes colores",
         "Uso residencial y comercial",
     ),
     "staford-modulos": (
-        "Módulo complementario de la línea STAFORD",
+        "Módulo complementario de la línea STANFORD",
         "Diseño modular para placas compatibles",
     ),
     "staford-placas": (
-        "Placa modular de la línea STAFORD",
+        "Placa modular de la línea STANFORD",
         "Disponible en diferentes colores",
     ),
     "fotoceldas": (
@@ -138,13 +139,13 @@ def nombre_producto(grupo):
             fila.titulo,
             flags=re.IGNORECASE,
         )
-        return f"{nombre} STAFORD"
+        return f"{nombre} STANFORD"
 
     if fila.familia == "staford-placas":
         puestos = re.search(r"(\d+)\s+puesto", fila.titulo, re.IGNORECASE)
         cantidad = int(puestos.group(1)) if puestos else 1
         palabra = "puesto" if cantidad == 1 else "puestos"
-        return f"Placa STAFORD de {cantidad} {palabra}"
+        return f"Placa STANFORD de {cantidad} {palabra}"
 
     nombres_especiales = {
         "kalop-casquetes": "Casquetes industriales KALOP",
@@ -152,7 +153,7 @@ def nombre_producto(grupo):
         "kalop-accesorios": "Bases para casquete KALOP",
         "tableros-cnc": "Tableros eléctricos de exterior CNC IP65",
     }
-    return nombres_especiales.get(fila.familia, fila.titulo)
+    return re.sub(r"\bstaford\b", "Stanford", nombres_especiales.get(fila.familia, fila.titulo), flags=re.IGNORECASE)
 
 
 def slug_producto(grupo):
@@ -190,7 +191,11 @@ def clasificacion(fila):
             "staford-placas": ("placas-electricas", "Placas eléctricas", 30),
         }
         return (
-            ("mecanismos-electricos", "Mecanismos eléctricos", 40),
+            (
+                "mecanismos-electricos",
+                "Interruptores, enchufes y accesorios",
+                40,
+            ),
             subcategorias[fila.familia],
         )
 
@@ -232,7 +237,7 @@ def marca_fila(fila):
         }.get(prefijo)
 
     if fila.familia.startswith("staford-"):
-        return "staford", "STAFORD"
+        return "stanford", "Stanford"
 
     if fila.familia == "fotoceldas":
         prefijo = codigo.split("-", 1)[0]
@@ -240,7 +245,7 @@ def marca_fila(fila):
             "LEX": ("lexo", "LEXO"),
             "LEG": ("legrand", "Legrand"),
             "CHT": ("chint", "CHINT"),
-            "STF": ("staford", "STAFORD"),
+            "STF": ("stanford", "Stanford"),
         }.get(prefijo)
 
     if fila.familia.startswith("kalop-"):
@@ -701,10 +706,7 @@ class Command(BaseCommand):
         variantes_obsoletas = producto.variantes.exclude(
             codigo__in=fila_por_codigo
         )
-        Cotizacion.objects.filter(
-            variante__in=variantes_obsoletas
-        ).update(variante=None)
-        variantes_obsoletas.delete()
+        retirar_variantes(variantes_obsoletas)
 
         for posicion, (codigo, fila) in enumerate(fila_por_codigo.items(), start=1):
             nombre_variante, especificaciones = datos_variante(fila, codigo)
@@ -758,7 +760,7 @@ class Command(BaseCommand):
                 defaults={
                     "producto": producto,
                     "imagen": destinos[fila.archivo],
-                    "texto_alternativo": fila.titulo,
+                    "texto_alternativo": re.sub(r"\bstaford\b", "Stanford", fila.titulo, flags=re.IGNORECASE),
                     "orden": posicion,
                 },
             )

@@ -1,40 +1,10 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block titulo %}Catálogo de productos | PH Servicios Electrónicos{% endblock %}
+{% block titulo %}Catálogo de productos | PH Servicios Eléctricos{% endblock %}
 {% block meta_description %}Catálogo de materiales eléctricos, protecciones, señalización y componentes para instalaciones eléctricas profesionales.{% endblock %}
 
 {% block contenido %}
-
-<nav class="catalog-menu" aria-label="Familias de productos">
-    <div class="container catalog-menu-inner">
-        <a href="{% url 'productos' %}" class="{% if not familia_activa and not categoria_activa %}active{% endif %}">Todos</a>
-        {% for familia in familias %}
-            <a href="{% url 'productos' %}?familia={{ familia.slug }}" class="{% if familia_activa == familia.slug %}active{% endif %}">
-                {{ familia.nombre }}
-            </a>
-        {% endfor %}
-    </div>
-</nav>
-
-{% if familia_activa %}
-    <nav class="catalog-submenu" aria-label="Categorías de productos">
-        <div class="container catalog-submenu-inner">
-            {% for familia in familias %}
-                {% if familia.slug == familia_activa %}
-                    <a href="{% url 'productos' %}?familia={{ familia.slug }}" class="{% if not categoria_activa %}active{% endif %}">Todos</a>
-                    {% for categoria in familia.subcategorias.all %}
-                        {% if categoria.activa %}
-                            <a href="{% url 'productos' %}?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}" class="{% if categoria_activa == categoria.slug %}active{% endif %}">
-                                {{ categoria.nombre }}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </nav>
-{% endif %}
 
 <section class="page-hero products-hero">
     <div class="container page-hero-content">
@@ -56,13 +26,42 @@
 </section>
 
 <section class="catalog-products-section" id="catalogo-productos">
-    <div class="container">
+    <div class="container catalog-layout">
+        <aside class="catalog-sidebar" aria-labelledby="catalog-filters-title">
+            <h2 id="catalog-filters-title">Filtrar productos</h2>
+            <form method="get" action="{% url 'productos' %}#catalogo-productos" class="catalog-filter-form">
+                <label for="catalog-search">Buscar por nombre o código</label>
+                <input id="catalog-search" type="search" name="q" value="{{ busqueda }}" placeholder="¿Qué producto necesitas?">
+                <label for="catalog-brand-filter">Marca</label>
+                <select id="catalog-brand-filter" name="marca">
+                    <option value="">Todas las marcas</option>
+                    {% for marca in marcas %}<option value="{{ marca.pk }}"{% if marca_activa == marca.pk|stringformat:"s" %} selected{% endif %}>{{ marca.nombre }}</option>{% endfor %}
+                </select>
+                {% if familia_activa %}<input type="hidden" name="familia" value="{{ familia_activa }}">{% endif %}
+                {% if categoria_activa %}<input type="hidden" name="categoria" value="{{ categoria_activa }}">{% endif %}
+                <button class="btn btn-small" type="submit">Aplicar filtros</button>
+            </form>
+            <nav aria-label="Familias y categorías de productos" class="catalog-filter-links">
+                <a href="{% url 'productos' %}?q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if not familia_activa and not categoria_activa %} aria-current="page"{% endif %}>Todas las categorías</a>
+                {% for familia in familias %}
+                <details{% if familia_activa == familia.slug %} open{% endif %}>
+                    <summary>{{ familia.nombre }}</summary>
+                    <a href="?familia={{ familia.slug }}&amp;q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if familia_activa == familia.slug and not categoria_activa %} aria-current="page"{% endif %}>Ver todos</a>
+                    {% for categoria in familia.subcategorias.all %}{% if categoria.activa %}
+                    <a href="?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}&amp;q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if categoria_activa == categoria.slug %} aria-current="page"{% endif %}>{{ categoria.nombre }}</a>
+                    {% endif %}{% endfor %}
+                </details>
+                {% endfor %}
+            </nav>
+            <a class="text-link" href="{% url 'productos' %}#catalogo-productos">Limpiar filtros</a>
+        </aside>
+        <div class="catalog-results">
         <header class="catalog-results-header">
             <div>
                 <span class="section-tag">PRODUCTOS DISPONIBLES</span>
                 <h2>{{ pagina_productos.paginator.count }} producto{{ pagina_productos.paginator.count|pluralize }}</h2>
             </div>
-            <p>Pasa el cursor por una miniatura o presentación para ampliar su imagen. En teléfonos, presiónala una vez.</p>
+            <p>Selecciona una miniatura para ver su imagen y el detalle de la variante. Desliza las presentaciones para explorar más opciones.</p>
         </header>
 
         <div class="catalog-grid">
@@ -85,25 +84,21 @@
 
                     <div class="catalog-media">
                         <div class="catalog-thumbs" aria-label="Imágenes de {{ producto.nombre }}">
-                            {% if producto.imagen %}
-                                <button type="button" class="catalog-thumb active" data-preview-src="{{ producto.imagen.url }}" data-preview-alt="{{ producto.alt_imagen }}" aria-label="Ver imagen principal de {{ producto.nombre }}">
-                                    <img src="{{ producto.imagen.url }}" alt="">
+                            {% for variante in producto.variantes_disponibles %}
+                                {% if variante.imagen or producto.imagen %}
+                                <button type="button" class="catalog-thumb" data-variant-id="{{ variante.pk }}" data-preview-src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}" aria-label="Ver {{ variante.nombre }}" aria-pressed="false">
+                                    <img src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" alt="" loading="lazy">
                                 </button>
-                            {% endif %}
-                            {% for imagen_catalogo in producto.imagenes_catalogo.all %}
-                                {% if imagen_catalogo.imagen.name != producto.imagen.name %}
-                                    <button type="button" class="catalog-thumb" data-preview-src="{{ imagen_catalogo.imagen.url }}" data-preview-alt="{{ imagen_catalogo.texto_alternativo|default:producto.alt_imagen }}" aria-label="Ver {{ imagen_catalogo.texto_alternativo|default:producto.nombre }}">
-                                        <img src="{{ imagen_catalogo.imagen.url }}" alt="">
-                                    </button>
                                 {% endif %}
                             {% empty %}
-                                {% for variante in producto.variantes_disponibles %}
-                                    {% if variante.imagen %}
-                                        <button type="button" class="catalog-thumb" data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}" aria-label="Ver {{ variante.nombre }}">
-                                            <img src="{{ variante.imagen.url }}" alt="">
-                                        </button>
-                                    {% endif %}
-                                {% endfor %}
+                                {% if producto.imagen %}
+                                <button type="button" class="catalog-thumb active" data-preview-src="{{ producto.imagen.url }}" data-preview-alt="{{ producto.alt_imagen }}" aria-label="Ver imagen principal de {{ producto.nombre }}" aria-pressed="true"><img src="{{ producto.imagen.url }}" alt=""></button>
+                                {% endif %}
+                            {% endfor %}
+                            {% for imagen_catalogo in producto.imagenes_catalogo.all %}
+                                {% if imagen_catalogo.imagen.name != producto.imagen.name %}
+                                <button type="button" class="catalog-thumb catalog-extra-image" data-preview-src="{{ imagen_catalogo.imagen.url }}" data-preview-alt="{{ imagen_catalogo.texto_alternativo|default:producto.alt_imagen }}" aria-label="Ver {{ imagen_catalogo.texto_alternativo|default:producto.nombre }}" aria-pressed="false"><img src="{{ imagen_catalogo.imagen.url }}" alt="" loading="lazy"></button>
+                                {% endif %}
                             {% endfor %}
                         </div>
 
@@ -145,11 +140,12 @@
                                     <span>{{ producto.variantes_disponibles|length }} disponible{{ producto.variantes_disponibles|length|pluralize }}</span>
                                 </div>
 
+                                <p class="catalog-selection-status" role="status" aria-live="polite"></p>
                                 <div class="catalog-variant-strip" role="list">
                                     {% for variante in producto.variantes_disponibles %}
-                                        <article class="catalog-variant-card" role="listitem" {% if variante.imagen %}data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
+                                        <article class="catalog-variant-card" role="listitem" data-variant-id="{{ variante.pk }}" data-variant-name="{{ variante.nombre }}" {% if variante.imagen %}data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
                                             {% if variante.imagen %}
-                                                <img class="catalog-variant-image" src="{{ variante.imagen.url }}" alt="" loading="lazy">
+                                                <button type="button" class="catalog-variant-select" aria-label="Ver {{ variante.nombre }}" aria-pressed="false"><img class="catalog-variant-image" src="{{ variante.imagen.url }}" alt="" loading="lazy"></button>
                                             {% endif %}
                                             <strong>{{ variante.nombre }}</strong>
                                             {% if variante.codigo %}
@@ -202,8 +198,8 @@
                 </article>
             {% empty %}
                 <div class="catalog-empty">
-                    <strong>No hay productos publicados en esta categoría.</strong>
-                    <p>Prueba con otra clasificación o consulta directamente con un asesor.</p>
+                    <strong>No hay productos que coincidan con los filtros.</strong>
+                    <p>Prueba con otra búsqueda, limpia los filtros o consulta con un asesor.</p>
                     <a href="{% url 'productos' %}" class="btn">Ver todo el catálogo</a>
                 </div>
             {% endfor %}
@@ -220,6 +216,7 @@
                 {% endif %}
             </nav>
         {% endif %}
+        </div>
     </div>
 </section>
 

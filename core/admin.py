@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django import forms
 from django.utils.html import format_html
 
 from .models import (
@@ -337,8 +338,23 @@ class VarianteProductoInline(admin.TabularInline):
     )
 
 
+class ImagenProductoForm(forms.ModelForm):
+    class Meta:
+        model = ImagenProducto
+        fields = "__all__"
+
+    def clean(self):
+        cleaned = super().clean()
+        producto = cleaned.get("producto") or getattr(self.instance, "producto", None)
+        variantes = cleaned.get("variantes")
+        if producto and variantes is not None and variantes.exclude(producto=producto).exists():
+            self.add_error("variantes", "Todas las variantes deben pertenecer al producto de esta imagen.")
+        return cleaned
+
+
 class ImagenProductoInline(admin.TabularInline):
     model = ImagenProducto
+    form = ImagenProductoForm
     extra = 0
     autocomplete_fields = (
         "variantes",
@@ -518,6 +534,7 @@ class EspecificacionVarianteInline(admin.TabularInline):
 
 @admin.register(ImagenProducto)
 class ImagenProductoAdmin(admin.ModelAdmin):
+    form = ImagenProductoForm
     list_display = (
         "vista_previa",
         "texto_alternativo",

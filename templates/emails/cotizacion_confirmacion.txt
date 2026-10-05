@@ -13,5 +13,5 @@ Servicio: {{ cotizacion.servicio }}
 
 Este mensaje confirma la recepción de tu solicitud y no constituye todavía una cotización comercial.
 
-PH Servicios Electrónicos
+PH Servicios Eléctricos
 phcotizacion@phinstalaciones.cl

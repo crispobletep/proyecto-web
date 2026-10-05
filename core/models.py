@@ -70,14 +70,14 @@ class Cotizacion(models.Model):
     def clean(self):
         super().clean()
 
+        if self.variante_id and not self.producto_id:
+            self.producto_id = self.variante.producto_id
+
         if self.producto_id and self.proyecto_id:
             raise ValidationError(
                 "La cotización debe referirse a un producto o a un proyecto, "
                 "no a ambos simultáneamente."
             )
-
-        if self.variante_id and not self.producto_id:
-            self.producto_id = self.variante.producto_id
 
         if (
             self.variante_id
@@ -274,6 +274,14 @@ class Categoria(models.Model):
     @property
     def es_familia(self):
         return self.padre_id is None
+
+    def clean(self):
+        super().clean()
+        if self.padre_id:
+            if self.padre_id == self.pk or self.padre.padre_id is not None:
+                raise ValidationError({"padre": "Selecciona una familia principal distinta de esta categoría."})
+            if self.pk and self.subcategorias.exists():
+                raise ValidationError({"padre": "Una familia con subcategorías no puede convertirse en subcategoría."})
 
 
 class Marca(models.Model):

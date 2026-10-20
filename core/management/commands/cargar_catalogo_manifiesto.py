@@ -116,6 +116,8 @@ def clave_grupo(fila):
 
     if fila.familia in {"staford-enchufes", "staford-placas"}:
         codigo_base = primer_codigo.rsplit("-", 1)[0]
+        if fila.familia == "staford-enchufes" and orientacion_enchufe(fila) == "Horizontal":
+            codigo_base = f"{codigo_base}-horizontal"
         return f"{fila.familia}:{codigo_base}"
 
     if fila.familia in {
@@ -129,6 +131,16 @@ def clave_grupo(fila):
     return f"{fila.familia}:{fila.archivo}"
 
 
+def codigo_importacion(fila, codigo):
+    """Da un SKU propio a la versión en placa cuando comparte código base."""
+    if (
+        fila.familia == "staford-enchufes"
+        and orientacion_enchufe(fila) == "Horizontal"
+    ):
+        return f"{codigo}-H"
+    return codigo
+
+
 def nombre_producto(grupo):
     fila = grupo.filas[0]
 
@@ -139,13 +151,34 @@ def nombre_producto(grupo):
             fila.titulo,
             flags=re.IGNORECASE,
         )
-        return f"{nombre} STANFORD"
+        orientacion = orientacion_enchufe(fila)
+        nombre = re.sub(r"\s+(horizontal|vertical)$", "", nombre, flags=re.IGNORECASE)
+        if orientacion == "Horizontal":
+            nombre = re.sub(
+                r"\b(simple|doble|triple)\b",
+                r"\1 en placa",
+                nombre,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        else:
+            nombre = re.sub(
+                r"\bEnchufe\b",
+                "Enchufe modular",
+                nombre,
+                count=1,
+                flags=re.IGNORECASE,
+            )
+        return f"{nombre} Stanford"
 
     if fila.familia == "staford-placas":
         puestos = re.search(r"(\d+)\s+puesto", fila.titulo, re.IGNORECASE)
         cantidad = int(puestos.group(1)) if puestos else 1
         palabra = "puesto" if cantidad == 1 else "puestos"
         return f"Placa STANFORD de {cantidad} {palabra}"
+
+    if fila.familia == "staford-modulos":
+        return f"{fila.titulo} STANFORD"
 
     nombres_especiales = {
         "kalop-casquetes": "Casquetes industriales KALOP",
@@ -156,7 +189,33 @@ def nombre_producto(grupo):
     return re.sub(r"\bstaford\b", "Stanford", nombres_especiales.get(fila.familia, fila.titulo), flags=re.IGNORECASE)
 
 
+def orientacion_enchufe(fila):
+    """Clasifica la disposición de los módulos, no la forma de sus ranuras.
+
+    En las imágenes modulares STANFORD los módulos se apilan en altura. Las
+    placas antiguas ``enchufe-*`` muestran las tomas dobles/triples en línea.
+    También se aceptan etiquetas explícitas para que nuevos manifiestos no
+    dependan del nombre de archivo.
+    """
+    texto = f"{fila.titulo} {fila.archivo}".casefold()
+    if re.search(r"\bhorizontal\b", texto):
+        return "Horizontal"
+    if re.search(r"\bvertical\b", texto):
+        return "Vertical"
+
+    nombre = Path(fila.archivo).name.casefold()
+    if nombre.startswith("enchufe-"):
+        return "Horizontal"
+    return "Vertical"
+
+
 def slug_producto(grupo):
+    if (
+        grupo.filas[0].familia == "staford-enchufes"
+        and grupo.filas[0].codigos[0].startswith("STF-ET-10/16-")
+        and orientacion_enchufe(grupo.filas[0]) == "Vertical"
+    ):
+        return "enchufe-triple-vertical-1016-a-stanford"
     return f"catalogo-{slugify(grupo.clave)}"[:200].rstrip("-")
 
 
@@ -186,7 +245,11 @@ def clasificacion(fila):
 
     if fila.familia.startswith("staford-"):
         subcategorias = {
-            "staford-enchufes": ("enchufes", "Enchufes", 10),
+            "staford-enchufes": (
+                "enchufes-horizontales" if orientacion_enchufe(fila) == "Horizontal" else "enchufes-verticales",
+                "Enchufes en placa" if orientacion_enchufe(fila) == "Horizontal" else "Enchufes modulares",
+                10 if orientacion_enchufe(fila) == "Vertical" else 20,
+            ),
             "staford-modulos": ("modulos-electricos", "Módulos eléctricos", 20),
             "staford-placas": ("placas-electricas", "Placas eléctricas", 30),
         }
@@ -362,6 +425,10 @@ def especificaciones_producto(grupo):
             return [("Tipo", "Libre de halógeno", "")]
         return [("Tipo", "Conduit flexible", "")]
 
+    if fila.familia == "staford-enchufes":
+        formato = "En placa" if orientacion_enchufe(fila) == "Horizontal" else "Mecanismo modular"
+        return [("Sistema de montaje", formato, "")]
+
     if fila.familia == "tableros-cnc":
         return [("Protección", "IP65", ""), ("Montaje", "Exterior", "")]
 
@@ -408,7 +475,7 @@ class Command(BaseCommand):
         grupos = self._agrupar(filas)
         self._validar_colisiones_db(grupos)
         codigos = {
-            codigo
+            codigo_importacion(fila, codigo)
             for fila in filas
             if familia_usa_variantes(fila.familia)
             for codigo in fila.codigos
@@ -535,6 +602,7 @@ class Command(BaseCommand):
             grupo.filas.append(fila)
 
             for codigo in fila.codigos:
+                codigo = codigo_importacion(fila, codigo)
                 grupo_anterior = grupo_por_codigo.setdefault(codigo, clave)
                 if grupo_anterior != clave:
                     raise CommandError(
@@ -559,7 +627,8 @@ class Command(BaseCommand):
             for grupo in grupos.values()
             for fila in grupo.filas
             if familia_usa_variantes(fila.familia)
-            for codigo in fila.codigos
+            for codigo_original in fila.codigos
+            for codigo in [codigo_importacion(fila, codigo_original)]
         }
         existentes = (
             VarianteProducto.objects
@@ -622,7 +691,7 @@ class Command(BaseCommand):
                     "nombre": subcategoria[1],
                     "padre": familia_obj,
                     "orden": subcategoria[2],
-                    "activa": True,
+                    "activa": subcategoria[0] != "enchufes-verticales",
                 },
             )
             categorias[(familia[0], subcategoria[0])] = subcategoria_obj
@@ -689,7 +758,9 @@ class Command(BaseCommand):
         producto.imagen.name = destinos[fila_inicial.archivo]
         campos_producto = ["imagen", "actualizado"]
         if creado or publicar:
-            producto.publicado = publicar
+            producto.publicado = (
+                publicar and subcategoria[0] != "enchufes-verticales"
+            )
             campos_producto.append("publicado")
         producto.save(update_fields=campos_producto)
 
@@ -698,10 +769,13 @@ class Command(BaseCommand):
 
         variantes = {}
         fila_por_codigo = {}
+        codigo_original_por_importado = {}
         if familia_usa_variantes(fila_inicial.familia):
             for fila in grupo.filas:
                 for codigo in fila.codigos:
-                    fila_por_codigo.setdefault(codigo, fila)
+                    codigo_importado = codigo_importacion(fila, codigo)
+                    fila_por_codigo.setdefault(codigo_importado, fila)
+                    codigo_original_por_importado.setdefault(codigo_importado, codigo)
 
         variantes_obsoletas = producto.variantes.exclude(
             codigo__in=fila_por_codigo
@@ -709,7 +783,10 @@ class Command(BaseCommand):
         retirar_variantes(variantes_obsoletas)
 
         for posicion, (codigo, fila) in enumerate(fila_por_codigo.items(), start=1):
-            nombre_variante, especificaciones = datos_variante(fila, codigo)
+            nombre_variante, especificaciones = datos_variante(
+                fila,
+                codigo_original_por_importado[codigo],
+            )
             existente = VarianteProducto.objects.filter(codigo=codigo).first()
             if existente and existente.producto_id != producto.id:
                 raise CommandError(
@@ -727,7 +804,7 @@ class Command(BaseCommand):
                     "orden": posicion,
                 },
             )
-            if not variante.imagen:
+            if variante.imagen.name != destinos[fila.archivo]:
                 variante.imagen.name = destinos[fila.archivo]
                 variante.save(update_fields=("imagen",))
 
@@ -765,9 +842,9 @@ class Command(BaseCommand):
                 },
             )
             imagen.variantes.set(
-                variantes[codigo]
+                variantes[codigo_importacion(fila, codigo)]
                 for codigo in fila.codigos
-                if codigo in variantes
+                if codigo_importacion(fila, codigo) in variantes
             )
             contadores[
                 "imagenes_creadas" if creada else "imagenes_actualizadas"

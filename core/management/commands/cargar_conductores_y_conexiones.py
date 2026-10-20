@@ -122,6 +122,16 @@ for clave, origen in CABLES.items():
         f"Cable flexible libre de halógenos de {seccion_legible} mm², color {color}",
     )
 
+# 10 mm² comparte fotografías de referencia con 6 mm², pero usa claves
+# independientes para conservar galerías separadas por sección.
+for color in ("rojo", "verde", "blanco", "azul"):
+    datos_6mm = IMAGENES[f"cable-6-{color}"]
+    IMAGENES[f"cable-10-{color}"] = imagen(
+        datos_6mm["origen"],
+        datos_6mm["destino"],
+        f"Cable flexible libre de halógenos de 10 mm², color {color}",
+    )
+
 
 def variante(nombre, codigo, clave_imagen, especificaciones):
     return {
@@ -174,7 +184,7 @@ def variantes_cable():
             variante(
                 f"10 mm² · {color}",
                 f"PH-LH-10-{clave_color.upper()}",
-                f"cable-6-{clave_color}",
+                f"cable-10-{clave_color}",
                 (("Sección", "10", "mm²"), ("Color", color, "")),
             )
         )
@@ -245,27 +255,6 @@ PRODUCTOS = (
         "variantes": variantes_barra("bipolar", ("2x7", "2x11", "2x15"), "125"),
     },
     {
-        "slug": "cable-flexible-libre-halogenos",
-        "nombre": "Cable flexible libre de halógenos",
-        "categoria": "cables-libres-halogeno",
-        "subtitulo": "Conductor para instalaciones eléctricas",
-        "descripcion": (
-            "Cable flexible libre de halógenos para instalaciones eléctricas "
-            "que requieren distintas secciones y colores de identificación. "
-            "Consulte la presentación y longitud disponibles al cotizar."
-        ),
-        "imagen": "cable-1-5-negro",
-        "etiqueta": "CONDUCTORES",
-        "orden": 200,
-        "caracteristicas": (
-            "Aislación libre de halógenos",
-            "Conductor flexible para canalizaciones eléctricas",
-            "Secciones de 1,5 a 10 mm² en varios colores",
-        ),
-        "especificaciones": (("Tipo", "Cable flexible libre de halógenos", ""), ("Rango de sección", "1,5-10", "mm²")),
-        "variantes": variantes_cable(),
-    },
-    {
         "slug": "borne-paso-gris-riel-din",
         "nombre": "Borne de paso gris para riel DIN",
         "categoria": "bornes-riel-din",
@@ -322,6 +311,63 @@ PRODUCTOS = (
         ),
     },
 )
+
+
+def productos_cable_por_seccion():
+    """Mantiene cada sección de cable flexible en su propia ficha."""
+    base = {
+        "categoria": "cables-libres-halogeno",
+        "subtitulo": "Conductor para instalaciones eléctricas",
+        "etiqueta": "CONDUCTORES",
+    }
+    resultado = []
+    grupos = (("1,5", "1-5"), ("2,5", "2-5"), ("4", "4"), ("6", "6"), ("10", "10"))
+    for orden, (seccion, clave) in enumerate(grupos, start=200):
+        variantes = tuple(
+            {
+                **item,
+                "nombre": item["nombre"].split(" · ", 1)[1],
+            }
+            for item in variantes_cable()
+            if item["especificaciones"][0][1] == seccion
+        )
+        imagen_principal = next(
+            (item["imagen"] for item in variantes if item["nombre"] == "Negro"),
+            variantes[0]["imagen"],
+        )
+        resultado.append({
+            **base,
+            "slug": (
+                "cable-flexible-libre-halogenos"
+                if seccion == "1,5"
+                else f"cable-flexible-libre-halogenos-{clave}mm2"
+            ),
+            "nombre": f"Cable flexible libre de halógenos {seccion} mm²",
+            "descripcion": (
+                f"Cable flexible libre de halógenos de sección {seccion} mm² "
+                "para instalaciones eléctricas. Disponible en varios colores; "
+                "consulta la presentación y longitud al cotizar."
+            ),
+            "imagen": imagen_principal,
+            "orden": orden,
+            "caracteristicas": (
+                "Aislación libre de halógenos",
+                "Conductor flexible para canalizaciones eléctricas",
+                f"Sección nominal de {seccion} mm²",
+            ),
+            "especificaciones": (
+                ("Tipo", "Cable flexible libre de halógenos", ""),
+                ("Sección nominal", seccion, "mm²"),
+            ),
+            "variantes": variantes,
+        })
+    return tuple(resultado)
+
+
+PRODUCTOS = tuple(
+    producto for producto in PRODUCTOS
+    if producto["slug"] != "cable-flexible-libre-halogenos"
+) + productos_cable_por_seccion()
 
 
 class Command(BaseCommand):

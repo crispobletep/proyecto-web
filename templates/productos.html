@@ -143,9 +143,9 @@
                                 <p class="catalog-selection-status" role="status" aria-live="polite"></p>
                                 <div class="catalog-variant-strip" role="list">
                                     {% for variante in producto.variantes_disponibles %}
-                                        <article class="catalog-variant-card" role="listitem" data-variant-id="{{ variante.pk }}" data-variant-name="{{ variante.nombre }}" {% if variante.imagen %}data-preview-src="{{ variante.imagen.url }}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
-                                            {% if variante.imagen %}
-                                                <button type="button" class="catalog-variant-select" aria-label="Ver {{ variante.nombre }}" aria-pressed="false"><img class="catalog-variant-image" src="{{ variante.imagen.url }}" alt="" loading="lazy"></button>
+                                        <article class="catalog-variant-card" role="listitem" data-variant-id="{{ variante.pk }}" data-variant-name="{{ variante.nombre }}" {% if variante.imagen or producto.imagen %}data-preview-src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
+                                            {% if variante.imagen or producto.imagen %}
+                                                <button type="button" class="catalog-variant-select" aria-label="Ver {{ variante.nombre }}" aria-pressed="false"><img class="catalog-variant-image" src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" alt="" loading="lazy"></button>
                                             {% endif %}
                                             <strong>{{ variante.nombre }}</strong>
                                             {% if variante.codigo %}

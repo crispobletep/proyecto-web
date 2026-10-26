@@ -57,6 +57,12 @@ def recursos_led():
 
     for marca_slug, prefijo, (y1, y2) in marcas:
         for medida, titulo, montaje, (x1, x2) in presentaciones:
+            # Conservar una sola línea genérica FLS de 120 x 60 cm.
+            # Las fichas YLM duplican esa línea y dejan de importarse.
+            if marca_slug == "yellmax":
+                continue
+            if marca_slug == "fls" and medida != "12060":
+                continue
             recursos.append(
                 Recurso(
                     familia="plafones-led",
@@ -212,24 +218,22 @@ def recursos_varios():
     fotoceldas = (
         ("lexo", "Fotocelda LEXO", "LEX-FC01", (30, 143, 138, 263)),
         ("legrand", "Fotocelda Legrand", "LEG-412898", (177, 143, 285, 263)),
-        ("chint", "Fotocelda CHINT", "CHT-NY01", (326, 143, 434, 263)),
-        ("staford", "Fotocelda Staford", "STF-FC10", (473, 143, 581, 263)),
     )
     bases = (
-        ("lexo", "Base para fotocelda LEXO", "LEX-BF01", (621, 143, 731, 263)),
-        ("legrand", "Base para fotocelda Legrand", "LEG-412899", (770, 143, 879, 263)),
-        ("chint", "Base para fotocelda CHINT", "CHT-BY01", (917, 143, 1027, 263)),
-        ("staford", "Base para fotocelda Staford", "STF-BF10", (1065, 143, 1177, 263)),
+        ("base-fotocelda", "Base para fotocelda", "BASE-FC01", (621, 143, 731, 263)),
     )
     accesorios_fotocelda = (
-        ("soporte-metalico", "Soporte metálico para fotocelda", "SOP-FC01", (1217, 143, 1348, 263)),
         ("soporte-muro-poste", "Soporte muro/poste ajustable", "SOP-FC02", (1377, 143, 1514, 263)),
     )
     for slug, titulo, codigo, caja in fotoceldas + bases + accesorios_fotocelda:
         recursos.append(
             Recurso(
                 familia="fotoceldas",
-                archivo=f"{slug}-{codigo.lower()}.png",
+                archivo=(
+                    "lexo-lex-bf01.png"
+                    if codigo == "BASE-FC01"
+                    else f"{slug}-{codigo.lower()}.png"
+                ),
                 titulo=titulo,
                 fuente="varios",
                 caja=caja,

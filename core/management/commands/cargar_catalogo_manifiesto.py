@@ -180,8 +180,14 @@ def nombre_producto(grupo):
     if fila.familia == "staford-modulos":
         return f"{fila.titulo} STANFORD"
 
+    if fila.familia == "plafones-led" and fila.titulo.upper().startswith("FLS "):
+        return fila.titulo[4:]
+
+    if fila.familia == "fotoceldas" and fila.codigos[0] == "BASE-FC01":
+        return "Base para fotocelda"
+
     nombres_especiales = {
-        "kalop-casquetes": "Casquetes industriales KALOP",
+        "kalop-casquetes": "Enchufes industriales",
         "kalop-modulos": "Módulos para casquete KALOP",
         "kalop-accesorios": "Bases para casquete KALOP",
         "tableros-cnc": "Tableros eléctricos de exterior CNC IP65",
@@ -210,6 +216,11 @@ def orientacion_enchufe(fila):
 
 
 def slug_producto(grupo):
+    if (
+        grupo.filas[0].familia == "fotoceldas"
+        and grupo.filas[0].codigos[0] == "BASE-FC01"
+    ):
+        return "catalogo-fotoceldasfotoceldaslexo-lex-bf01png"
     if (
         grupo.filas[0].familia == "staford-enchufes"
         and grupo.filas[0].codigos[0].startswith("STF-ET-10/16-")
@@ -270,7 +281,7 @@ def clasificacion(fila):
 
     if fila.familia.startswith("kalop-"):
         subcategorias = {
-            "kalop-casquetes": ("casquetes-industriales", "Casquetes industriales", 10),
+            "kalop-casquetes": ("casquetes-industriales", "Enchufes industriales", 10),
             "kalop-modulos": ("modulos-industriales", "Módulos industriales", 20),
             "kalop-accesorios": ("bases-industriales", "Bases industriales", 30),
         }
@@ -295,20 +306,18 @@ def marca_fila(fila):
         prefijo = codigo.split("-", 1)[0]
         return {
             "AVC": ("avc", "AVC"),
-            "FLS": ("fls", "FLS"),
-            "YLM": ("yellmax", "Yellmax"),
         }.get(prefijo)
 
     if fila.familia.startswith("staford-"):
         return "stanford", "Stanford"
 
     if fila.familia == "fotoceldas":
+        if codigo == "BASE-FC01":
+            return None
         prefijo = codigo.split("-", 1)[0]
         return {
             "LEX": ("lexo", "LEXO"),
             "LEG": ("legrand", "Legrand"),
-            "CHT": ("chint", "CHINT"),
-            "STF": ("stanford", "Stanford"),
         }.get(prefijo)
 
     if fila.familia.startswith("kalop-"):
@@ -367,12 +376,9 @@ def datos_variante(fila, codigo):
         datos_fotocelda = {
             "LEX-FC01": (("Corriente nominal", "10", "A"), ("Protección", "IP44", ""), ("Tensión", "220", "V")),
             "LEG-412898": (("Corriente nominal", "10", "A"), ("Protección", "IP54", ""), ("Tensión", "220", "V")),
-            "CHT-NY01": (("Corriente nominal", "10", "A"), ("Protección", "IP65", ""), ("Tensión", "220", "V")),
-            "STF-FC10": (("Corriente nominal", "10", "A"), ("Protección", "IP44", ""), ("Tensión", "220", "V")),
             "LEX-BF01": (("Pines", "3", ""),),
             "LEG-412899": (("Pines", "3", ""),),
-            "CHT-BY01": (("Pines", "3", ""),),
-            "STF-BF10": (("Pines", "3", ""),),
+            "BASE-FC01": (("Pines", "3", ""),),
         }
         return "Presentación única", list(datos_fotocelda.get(codigo, ()))
 
@@ -837,7 +843,17 @@ class Command(BaseCommand):
                 defaults={
                     "producto": producto,
                     "imagen": destinos[fila.archivo],
-                    "texto_alternativo": re.sub(r"\bstaford\b", "Stanford", fila.titulo, flags=re.IGNORECASE),
+                    "texto_alternativo": (
+                        nombre
+                        if fila.familia == "plafones-led"
+                        and fila.titulo.upper().startswith("FLS ")
+                        else re.sub(
+                            r"\bstaford\b",
+                            "Stanford",
+                            fila.titulo,
+                            flags=re.IGNORECASE,
+                        )
+                    ),
                     "orden": posicion,
                 },
             )

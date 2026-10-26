@@ -4,9 +4,10 @@ from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
+from core.catalog_imports import retirar_variantes
 from core.models import (
     Categoria, EspecificacionProducto, EspecificacionVariante,
-    ImagenProducto, Marca, Producto, VarianteProducto,
+    ImagenProducto, Producto, VarianteProducto,
 )
 
 
@@ -15,7 +16,7 @@ SLUG = "contactores-stanford-220v"
 
 
 class Command(BaseCommand):
-    help = "Carga contactores Stanford de 220 V con cinco variantes y fotografías."
+    help = "Carga contactores de 220 V con cinco variantes y fotografías."
 
     def add_arguments(self, parser):
         parser.add_argument("--origen", type=Path, default=Path(settings.MEDIA_ROOT) / "productos/catalogo/contactores-stanford")
@@ -28,7 +29,7 @@ class Command(BaseCommand):
             if not ruta.is_file():
                 raise CommandError(f"Falta la imagen: {ruta}")
         for a in AMPERAJES:
-            existente = VarianteProducto.objects.filter(codigo=f"STF-CONT-{a}A-220V").first()
+            existente = VarianteProducto.objects.filter(codigo=f"CONT-{a}A-220V").first()
             if existente and existente.producto.slug != SLUG:
                 raise CommandError(f"El código {existente.codigo} ya pertenece a otro producto.")
         self.stdout.write("Plan validado: 1 producto, 5 variantes y 5 imágenes.")
@@ -49,17 +50,18 @@ class Command(BaseCommand):
                 slug="contactores",
                 defaults={"nombre": "Contactores", "padre": familia, "orden": 4, "activa": True},
             )
-            marca, _ = Marca.objects.get_or_create(slug="stanford", defaults={"nombre": "Stanford", "activa": True})
             producto, _ = Producto.objects.update_or_create(
                 slug=SLUG,
                 defaults={
-                    "nombre": "Contactores Stanford 220 V", "categoria": categoria,
-                    "marca_nueva": marca, "modelo": "KNC1", "subtitulo": "Control eléctrico · bobina de 220 V",
-                    "descripcion": "Contactores Stanford con bobina de 220 V. Selecciona la corriente nominal de 9, 12, 18, 25 o 32 A para solicitar una cotización.",
-                    "imagen": imagenes[9], "texto_alternativo": "Contactor Stanford de 9 A y 220 V",
+                    "nombre": "Contactores 220 V", "categoria": categoria,
+                    "marca_nueva": None, "modelo": "KNC1", "subtitulo": "Control eléctrico · bobina de 220 V",
+                    "descripcion": "Contactores con bobina de 220 V. Selecciona la corriente nominal de 9, 12, 18, 25 o 32 A para solicitar una cotización.",
+                    "imagen": imagenes[9], "texto_alternativo": "Contactor de 9 A y 220 V",
                     "etiqueta_visual": "CONTROL ELÉCTRICO", "publicado": True, "orden": 170,
                 },
             )
+            codigos_nuevos = {f"CONT-{a}A-220V" for a in AMPERAJES}
+            retirar_variantes(producto.variantes.exclude(codigo__in=codigos_nuevos))
             EspecificacionProducto.objects.update_or_create(
                 producto=producto, nombre="Tensión de bobina",
                 defaults={"valor": "220", "unidad": "V", "orden": 1},
@@ -67,7 +69,7 @@ class Command(BaseCommand):
             for orden, a in enumerate(AMPERAJES, 1):
                 variante, _ = VarianteProducto.objects.update_or_create(
                     producto=producto, nombre=f"{a} A · 220 V",
-                    defaults={"codigo": f"STF-CONT-{a}A-220V", "imagen": imagenes[a], "orden": orden, "disponible": True},
+                    defaults={"codigo": f"CONT-{a}A-220V", "imagen": imagenes[a], "orden": orden, "disponible": True},
                 )
                 # La foto de 18 A lleva una etiqueta D12: no se infiere el modelo.
                 for posicion, (nombre, valor, unidad) in enumerate((
@@ -80,7 +82,7 @@ class Command(BaseCommand):
                     )
                 imagen, _ = ImagenProducto.objects.update_or_create(
                     clave=f"stanford-contactor-{a}a-220v",
-                    defaults={"producto": producto, "imagen": imagenes[a], "texto_alternativo": f"Contactor Stanford de {a} A y 220 V", "orden": orden},
+                    defaults={"producto": producto, "imagen": imagenes[a], "texto_alternativo": f"Contactor de {a} A y 220 V", "orden": orden},
                 )
                 imagen.variantes.set([variante])
         self.stdout.write(self.style.SUCCESS("Carga terminada: contactores publicados con sus cinco variantes."))

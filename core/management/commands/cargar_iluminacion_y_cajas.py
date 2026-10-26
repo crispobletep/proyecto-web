@@ -31,10 +31,40 @@ IMAGENES = {
         "destino": "iluminacion/avc-panel-led-embutido-18w-6500k.png",
         "alt": "Panel LED AVC embutido de 18 W, 1440 lm y 6500 K",
     },
+    "avc-6w": {
+        "origen": "FOCO EMB 6W 6500K.png",
+        "destino": "iluminacion/avc-panel-led-embutido-6w-6500k.png",
+        "alt": "Panel LED AVC embutido de 6 W y 6500 K",
+        "preparada": True,
+    },
+    "avc-12w": {
+        "origen": "FOCO EMB 12W 6500K.png",
+        "destino": "iluminacion/avc-panel-led-embutido-12w-6500k.png",
+        "alt": "Panel LED AVC embutido de 12 W y 6500 K",
+        "preparada": True,
+    },
+    "avc-sobrepuesto-12w": {
+        "origen": "FOCO SOB 12W 6500K.png",
+        "destino": "iluminacion/avc-panel-led-sobrepuesto-12w-profesional.png",
+        "alt": "Panel LED AVC sobrepuesto de 12 W y 6500 K",
+        "preparada": True,
+    },
+    "fsl-18w": {
+        "origen": "PLAFON LED 18W FSL 6500K.png",
+        "destino": "iluminacion/fsl-plafon-led-sobrepuesto-18w-6500k.png",
+        "alt": "Plafón LED FSL sobrepuesto redondo de 18 W y 6500 K",
+        "preparada": True,
+    },
     "fsl-embutido-24w": {
         "origen": "WhatsApp Image 2026-09-24 at 08.53.44.jpeg",
         "destino": "iluminacion/fsl-panel-led-embutido-24w-profesional.png",
         "alt": "Panel LED FSL redondo embutido de 24 W y 2060 lm",
+        "preparada": True,
+    },
+    "fsl-embutido-18w": {
+        "origen": "WhatsApp Image 2026-09-24 at 08.53.45.jpeg",
+        "destino": "iluminacion/fsl-panel-led-embutido-18w-profesional.png",
+        "alt": "Panel LED FSL embutido de 18 W y 6500 K",
         "preparada": True,
     },
     "avc-sobrepuesto-18w": {
@@ -213,7 +243,10 @@ PRODUCTOS = (
             ("Índice de reproducción cromática", "≥ 80", "CRI"),
             ("Tipo de montaje", "Sobrepuesto", ""),
         ),
-        "variantes": (),
+        "variantes": (
+            variante("24 W · 6500 K", None, "fsl-24w", (("Potencia", "24", "W"), ("Temperatura de color", "6500", "K"))),
+            variante("18 W · 6500 K", None, "fsl-18w", (("Potencia", "18", "W"), ("Temperatura de color", "6500", "K"))),
+        ),
     },
     {
         "slug": "panel-led-embutido-fsl",
@@ -245,7 +278,10 @@ PRODUCTOS = (
             ("Dimerizable", "No", ""),
             ("Garantía declarada", "2", "años"),
         ),
-        "variantes": (),
+        "variantes": (
+            variante("24 W · 6500 K", None, "fsl-embutido-24w", (("Potencia", "24", "W"), ("Temperatura de color", "6500", "K"))),
+            variante("18 W · 6500 K", None, "fsl-embutido-18w", (("Potencia", "18", "W"), ("Temperatura de color", "6500", "K"))),
+        ),
     },
     {
         "slug": "panel-led-embutido-avc-6500k",
@@ -273,7 +309,11 @@ PRODUCTOS = (
             ("Forma", "Redonda", ""),
             ("Tipo de montaje", "Embutido", ""),
         ),
-        "variantes": (),
+        "variantes": (
+            variante("6 W · 6500 K", None, "avc-6w", (("Potencia", "6", "W"), ("Temperatura de color", "6500", "K"))),
+            variante("12 W · 6500 K", None, "avc-12w", (("Potencia", "12", "W"), ("Temperatura de color", "6500", "K"))),
+            variante("18 W · 6500 K", None, "avc-18w", (("Potencia", "18", "W"), ("Temperatura de color", "6500", "K"))),
+        ),
     },
     {
         "slug": "panel-led-sobrepuesto-avc-6500k",
@@ -306,7 +346,10 @@ PRODUCTOS = (
             ("Vida útil declarada", "20000", "h"),
             ("Garantía declarada", "1", "año"),
         ),
-        "variantes": (),
+        "variantes": (
+            variante("12 W · 6500 K", None, "avc-sobrepuesto-12w", (("Potencia", "12", "W"), ("Temperatura de color", "6500", "K"))),
+            variante("18 W · 6500 K", None, "avc-sobrepuesto-18w", (("Potencia", "18", "W"), ("Temperatura de color", "6500", "K"))),
+        ),
     },
     {
         "slug": "gabinetes-metalicos-una-puerta",
@@ -801,27 +844,34 @@ class Command(BaseCommand):
                 defaults={"valor": valor, "unidad": unidad, "orden": orden},
             )
 
-        codigos_vigentes = {
-            datos["codigo"] for datos in definicion["variantes"]
+        nombres_variantes_vigentes = {
+            datos["nombre"] for datos in definicion["variantes"]
         }
         variantes_obsoletas = producto.variantes.exclude(
-            codigo__in=codigos_vigentes
+            nombre__in=nombres_variantes_vigentes
         )
         retirar_variantes(variantes_obsoletas)
 
         variantes_por_imagen = {}
         for orden, datos in enumerate(definicion["variantes"], start=1):
-            variante_objeto, _ = VarianteProducto.objects.update_or_create(
-                codigo=datos["codigo"],
-                defaults={
-                    "producto": producto,
-                    "nombre": datos["nombre"],
-                    "modelo": datos["modelo"],
-                    "imagen": destinos[datos["imagen"]],
-                    "disponible": True,
-                    "orden": orden,
-                },
-            )
+            defaults_variante = {
+                "codigo": datos["codigo"],
+                "modelo": datos["modelo"],
+                "imagen": destinos[datos["imagen"]],
+                "disponible": True,
+                "orden": orden,
+            }
+            if datos["codigo"]:
+                variante_objeto, _ = VarianteProducto.objects.update_or_create(
+                    codigo=datos["codigo"],
+                    defaults={"producto": producto, "nombre": datos["nombre"], **defaults_variante},
+                )
+            else:
+                variante_objeto, _ = VarianteProducto.objects.update_or_create(
+                    producto=producto,
+                    nombre=datos["nombre"],
+                    defaults=defaults_variante,
+                )
             variantes_por_imagen.setdefault(datos["imagen"], []).append(
                 variante_objeto
             )
@@ -841,6 +891,8 @@ class Command(BaseCommand):
         claves_imagen = [definicion["imagen"]]
         claves_imagen.extend(datos["imagen"] for datos in definicion["variantes"])
         for orden, clave in enumerate(dict.fromkeys(claves_imagen), start=1):
+            if variantes_por_imagen.get(clave):
+                continue
             imagen, _ = ImagenProducto.objects.update_or_create(
                 clave=f"carga-iluminacion-cajas-{clave}",
                 defaults={

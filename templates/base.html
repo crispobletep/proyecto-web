@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#071a35">
     <title>{% block titulo %}PH Servicios Eléctricos{% endblock %}</title>
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261003-4">
+    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261102-4">
 </head>
 <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
@@ -88,6 +88,22 @@
     </section>
 
     <footer class="footer">
+        <section class="footer-brands" aria-labelledby="footer-brands-title">
+            <div class="container footer-brands-content">
+                <h2 id="footer-brands-title">Marcas con las que trabajamos</h2>
+                <ul class="footer-brand-list" aria-label="Marcas">
+                    <li class="footer-brand footer-brand-fsl">FSL</li>
+                    <li class="footer-brand footer-brand-tigre">TIGRE</li>
+                    <li class="footer-brand footer-brand-unit">UNI-T</li>
+                    <li class="footer-brand footer-brand-lexo">LEXO</li>
+                    <li class="footer-brand footer-brand-megabright">MEGABRIGHT</li>
+                    <li class="footer-brand footer-brand-bticino">bticino</li>
+                    <li class="footer-brand footer-brand-kalop">KALOP</li>
+                    <li class="footer-brand footer-brand-legrand">legrand</li>
+                    <li class="footer-brand footer-brand-stanford">STANFORD <span>ELECTRIC</span></li>
+                </ul>
+            </div>
+        </section>
         <div class="container footer-grid">
             <div class="footer-company">
                 <a href="{% url 'inicio' %}" class="logo footer-logo" aria-label="Volver al inicio">

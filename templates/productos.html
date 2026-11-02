@@ -6,12 +6,52 @@
 
 {% block contenido %}
 
-<section class="page-hero products-hero">
+<section class="page-hero products-hero products-hero-compact">
     <div class="container page-hero-content">
         <span class="section-tag section-tag-light">CATÁLOGO ELÉCTRICO</span>
         <h1>Soluciones eléctricas para cada proyecto</h1>
         <p>Productos organizados por aplicación, marca y presentación para facilitar una selección técnica clara y una cotización precisa.</p>
         <a href="#catalogo-productos" class="btn">Explorar productos</a>
+    </div>
+</section>
+
+<section class="catalog-brands" aria-labelledby="catalog-brands-title">
+    <div class="container">
+        <div class="catalog-brands-heading">
+            <span class="section-tag">NUESTRAS MARCAS</span>
+            <h2 id="catalog-brands-title">Explora el catálogo por marca</h2>
+        </div>
+        <nav class="catalog-brand-links" aria-label="Filtrar catálogo por marca">
+            {% for marca in marcas %}
+            <a class="catalog-brand-link" href="{% url 'productos' %}?marca={{ marca.pk }}#catalogo-productos" aria-label="Ver productos {{ marca.nombre }}"{% if marca_activa == marca.pk|stringformat:"s" %} aria-current="true"{% endif %}>
+                {% if marca.logo %}
+                    <img src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" loading="lazy">
+                {% elif marca.slug == "fsl" or marca.slug == "fls" %}
+                    <img src="{% static 'img/marcas/fsl.png' %}" alt="FSL" loading="lazy">
+                {% elif marca.slug == "tigre" %}
+                    <img src="{% static 'img/marcas/tigre.png' %}" alt="Tigre" loading="lazy">
+                {% elif marca.slug == "uni-t" %}
+                    <img src="{% static 'img/marcas/uni-t.png' %}" alt="UNI-T" loading="lazy">
+                {% elif marca.slug == "lexo" %}
+                    <img src="{% static 'img/marcas/lexo.png' %}" alt="Lexo" loading="lazy">
+                {% elif marca.slug == "megabright" %}
+                    <img src="{% static 'img/marcas/megabright.png' %}" alt="Megabright" loading="lazy">
+                {% elif marca.slug == "bticino" %}
+                    <img src="{% static 'img/marcas/bticino.png' %}" alt="Bticino" loading="lazy">
+                {% elif marca.slug == "kalop" %}
+                    <img src="{% static 'img/marcas/kalop.png' %}" alt="Kalop" loading="lazy">
+                {% elif marca.slug == "legrand" %}
+                    <img src="{% static 'img/marcas/legrand.png' %}" alt="Legrand" loading="lazy">
+                {% elif marca.slug == "stanford" or marca.slug == "staford" %}
+                    <img src="{% static 'img/marcas/stanford.png' %}" alt="Stanford Electric" loading="lazy">
+                {% else %}
+                    <span class="catalog-brand-wordmark">{{ marca.nombre }}</span>
+                {% endif %}
+            </a>
+            {% empty %}
+            <p class="catalog-brands-empty">Las marcas se mostrarán aquí cuando estén disponibles en el catálogo.</p>
+            {% endfor %}
+        </nav>
     </div>
 </section>
 

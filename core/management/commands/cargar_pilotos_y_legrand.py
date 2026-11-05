@@ -71,32 +71,32 @@ IMAGENES = {
     "legrand-40a": {
         "origen": "INTERRUPTOR AUT. RX3 1P 40A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c40-419844.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C40",
+        "alt": "Interruptor automático Legrand RX3 1P C40",
     },
     "legrand-32a": {
         "origen": "INTERRUPTOR AUT. RX3 1P 32A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c32-419843.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C32",
+        "alt": "Interruptor automático Legrand RX3 1P C32",
     },
     "legrand-25a": {
         "origen": "INTERRUPTOR AUT 25A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c25-419842.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C25",
+        "alt": "Interruptor automático Legrand RX3 1P C25",
     },
     "legrand-20a": {
         "origen": "INTERRUPTOR AUT. RX3 1P 20A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c20-419841.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C20",
+        "alt": "Interruptor automático Legrand RX3 1P C20",
     },
     "legrand-16a": {
         "origen": "INTERRUPTOR AUT 16A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c16-419840.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C16",
+        "alt": "Interruptor automático Legrand RX3 1P C16",
     },
     "legrand-10a": {
         "origen": "INTERRUPTOR AUT 10A 6KA C LEGRAND.png",
         "destino": "legrand/legrand-rx3-1p-c10-419838.png",
-        "alt": "Interruptor magnetotérmico Legrand RX3 1P C10",
+        "alt": "Interruptor automático Legrand RX3 1P C10",
     },
 }
 
@@ -321,14 +321,14 @@ PRODUCTOS = (
     },
     {
         "slug": "interruptores-magnetotermicos-legrand-rx3-1p",
-        "nombre": "Interruptores magnetotérmicos Legrand RX³ 1P",
+        "nombre": "Interruptores automáticos RX³ 1P",
         "categoria": "interruptores-automaticos",
         "marca": "legrand",
         "modelo": "RX³",
-        "subtitulo": "Protección termomagnética curva C",
+        "subtitulo": "Protección contra sobrecargas y cortocircuitos",
         "descripcion": (
-            "Interruptores magnetotérmicos modulares Legrand RX³ de un "
-            "polo para proteger circuitos contra sobrecargas y cortocircuitos."
+            "Interruptores automáticos modulares Legrand RX³ de un polo "
+            "para proteger circuitos frente a sobrecargas y cortocircuitos."
         ),
         "imagen": "legrand-16a",
         "orden": 110,

@@ -25,25 +25,35 @@
             {% for marca in marcas %}
             <a class="catalog-brand-link" href="{% url 'productos' %}?marca={{ marca.pk }}#catalogo-productos" aria-label="Ver productos {{ marca.nombre }}"{% if marca_activa == marca.pk|stringformat:"s" %} aria-current="true"{% endif %}>
                 {% if marca.logo %}
-                    <img src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" loading="lazy">
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--{{ marca.slug }}" src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" loading="lazy">
+                {% elif marca.slug == "chint" %}
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--chint" src="{% static 'img/marcas/chint.png' %}" alt="CHINT" loading="lazy">
+                {% elif marca.slug == "avc" %}
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--avc" src="{% static 'img/marcas/avc.jpg' %}" alt="AVC" loading="lazy">
+                {% elif marca.slug == "cnc" %}
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--cnc" src="{% static 'img/marcas/cnc.png' %}" alt="CNC" loading="lazy">
+                {% elif marca.slug == "forceman" %}
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--forceman" src="{% static 'img/marcas/forceman.png' %}" alt="Forceman" loading="lazy">
+                {% elif marca.slug == "logic" %}
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--logic" src="{% static 'img/marcas/logic.png' %}" alt="Logic World Products" loading="lazy">
                 {% elif marca.slug == "fsl" or marca.slug == "fls" %}
-                    <img src="{% static 'img/marcas/fsl.png' %}" alt="FSL" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/fsl.png' %}" alt="FSL" loading="lazy">
                 {% elif marca.slug == "tigre" %}
-                    <img src="{% static 'img/marcas/tigre.png' %}" alt="Tigre" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/tigre.png' %}" alt="Tigre" loading="lazy">
                 {% elif marca.slug == "uni-t" %}
-                    <img src="{% static 'img/marcas/uni-t.png' %}" alt="UNI-T" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/uni-t.png' %}" alt="UNI-T" loading="lazy">
                 {% elif marca.slug == "lexo" %}
-                    <img src="{% static 'img/marcas/lexo.png' %}" alt="Lexo" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/lexo.png' %}" alt="Lexo" loading="lazy">
                 {% elif marca.slug == "megabright" %}
-                    <img src="{% static 'img/marcas/megabright.png' %}" alt="Megabright" loading="lazy">
+                    <img class="catalog-brand-filter-logo catalog-brand-filter-logo--megabright" src="{% static 'img/marcas/megabright.png' %}" alt="Megabright" loading="lazy">
                 {% elif marca.slug == "bticino" %}
-                    <img src="{% static 'img/marcas/bticino.png' %}" alt="Bticino" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/bticino.png' %}" alt="Bticino" loading="lazy">
                 {% elif marca.slug == "kalop" %}
-                    <img src="{% static 'img/marcas/kalop.png' %}" alt="Kalop" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/kalop.png' %}" alt="Kalop" loading="lazy">
                 {% elif marca.slug == "legrand" %}
-                    <img src="{% static 'img/marcas/legrand.png' %}" alt="Legrand" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/legrand.png' %}" alt="Legrand" loading="lazy">
                 {% elif marca.slug == "stanford" or marca.slug == "staford" %}
-                    <img src="{% static 'img/marcas/stanford.png' %}" alt="Stanford Electric" loading="lazy">
+                    <img class="catalog-brand-filter-logo" src="{% static 'img/marcas/stanford.png' %}" alt="Stanford Electric" loading="lazy">
                 {% else %}
                     <span class="catalog-brand-wordmark">{{ marca.nombre }}</span>
                 {% endif %}
@@ -85,7 +95,7 @@
                 <a href="{% url 'productos' %}?q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if not familia_activa and not categoria_activa %} aria-current="page"{% endif %}>Todas las categorías</a>
                 {% for familia in familias %}
                 <details{% if familia_activa == familia.slug %} open{% endif %}>
-                    <summary>{{ familia.nombre }}</summary>
+                    <summary>{% if familia.slug == "proteccion-electrica" %}Interruptores{% elif familia.slug == "mecanismos-electricos" %}Enchufes y placas{% else %}{{ familia.nombre }}{% endif %}</summary>
                     <a href="?familia={{ familia.slug }}&amp;q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if familia_activa == familia.slug and not categoria_activa %} aria-current="page"{% endif %}>Ver todos</a>
                     {% for categoria in familia.subcategorias.all %}{% if categoria.activa %}
                     <a href="?familia={{ familia.slug }}&amp;categoria={{ categoria.slug }}&amp;q={{ busqueda|urlencode }}&amp;marca={{ marca_activa|urlencode }}#catalogo-productos"{% if categoria_activa == categoria.slug %} aria-current="page"{% endif %}>{{ categoria.nombre }}</a>
@@ -101,7 +111,7 @@
                 <span class="section-tag">PRODUCTOS DISPONIBLES</span>
                 <h2>{{ pagina_productos.paginator.count }} producto{{ pagina_productos.paginator.count|pluralize }}</h2>
             </div>
-            <p>Selecciona una miniatura para ver su imagen y el detalle de la variante. Desliza las presentaciones para explorar más opciones.</p>
+            <p>Explora las imágenes en las miniaturas laterales y revisa las opciones y medidas en las especificaciones técnicas.</p>
         </header>
 
         <div class="catalog-grid">
@@ -126,7 +136,7 @@
                         <div class="catalog-thumbs" aria-label="Imágenes de {{ producto.nombre }}">
                             {% for variante in producto.variantes_disponibles %}
                                 {% if variante.imagen or producto.imagen %}
-                                <button type="button" class="catalog-thumb" data-variant-id="{{ variante.pk }}" data-preview-src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}" aria-label="Ver {{ variante.nombre }}" aria-pressed="false">
+                                <button type="button" class="catalog-thumb" data-variant-id="{{ variante.pk }}" data-variant-name="{{ variante.nombre }}" data-preview-src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}" aria-label="Ver {{ variante.nombre }}" aria-pressed="false">
                                     <img src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" alt="" loading="lazy">
                                 </button>
                                 {% endif %}
@@ -158,82 +168,42 @@
                         <h2>{{ producto.nombre }}</h2>
                         <p class="catalog-description">{{ producto.descripcion }}</p>
 
-                        {% if producto.modelo or producto.codigo %}
-                            <div class="catalog-reference">
-                                {% if producto.modelo %}<span>Referencia: <strong>{{ producto.modelo }}</strong></span>{% endif %}
-                                {% if producto.codigo %}<span>Código: <strong>{{ producto.codigo }}</strong></span>{% endif %}
-                            </div>
+                        {% if producto.variantes_disponibles %}
+                            <p class="catalog-selection-status" role="status" aria-live="polite"></p>
                         {% endif %}
 
-                        {% if producto.caracteristicas.all %}
+                        {% if producto.caracteristicas_catalogo or producto.resumen_caracteristicas %}
                             <ul class="catalog-feature-list">
-                                {% for caracteristica in producto.caracteristicas.all|slice:":3" %}
+                                {% for caracteristica in producto.caracteristicas_catalogo %}
                                     <li>{{ caracteristica.texto }}</li>
                                 {% endfor %}
+                                {% if producto.resumen_caracteristicas %}<li class="catalog-feature-summary">{{ producto.resumen_caracteristicas }}</li>{% endif %}
                             </ul>
                         {% endif %}
 
-                        {% if producto.variantes_disponibles %}
-                            <section class="catalog-variants" aria-label="Variantes de {{ producto.nombre }}">
-                                <div class="catalog-variants-heading">
-                                    <h3>Presentaciones</h3>
-                                    <span>{{ producto.variantes_disponibles|length }} disponible{{ producto.variantes_disponibles|length|pluralize }}</span>
-                                </div>
-
-                                <p class="catalog-selection-status" role="status" aria-live="polite"></p>
-                                <div class="catalog-variant-strip" role="list">
-                                    {% for variante in producto.variantes_disponibles %}
-                                        <article class="catalog-variant-card" role="listitem" data-variant-id="{{ variante.pk }}" data-variant-name="{{ variante.nombre }}" {% if variante.imagen or producto.imagen %}data-preview-src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" data-preview-alt="{{ producto.nombre }} — {{ variante.nombre }}"{% endif %}>
-                                            {% if variante.imagen or producto.imagen %}
-                                                <button type="button" class="catalog-variant-select" aria-label="Ver {{ variante.nombre }}" aria-pressed="false"><img class="catalog-variant-image" src="{% if variante.imagen %}{{ variante.imagen.url }}{% else %}{{ producto.imagen.url }}{% endif %}" alt="" loading="lazy"></button>
-                                            {% endif %}
-                                            <strong>{{ variante.nombre }}</strong>
-                                            {% if variante.codigo %}
-                                                <span class="catalog-variant-code">Código {{ variante.codigo }}</span>
-                                            {% elif variante.modelo %}
-                                                <span class="catalog-variant-code">Modelo {{ variante.modelo }}</span>
-                                            {% endif %}
-
-                                            {% if variante.especificaciones.all %}
-                                                <dl class="catalog-variant-specs">
-                                                    {% for especificacion in variante.especificaciones.all|slice:":3" %}
-                                                        <div>
-                                                            <dt>{{ especificacion.nombre }}</dt>
-                                                            <dd>{{ especificacion.valor }}{% if especificacion.unidad %} {{ especificacion.unidad }}{% endif %}</dd>
-                                                        </div>
-                                                    {% endfor %}
-                                                </dl>
-                                            {% endif %}
-
-                                            <a href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}&amp;variante={{ variante.pk }}" class="catalog-variant-quote">Cotizar esta opción</a>
-                                        </article>
-                                    {% endfor %}
-                                </div>
-                            </section>
-                        {% elif producto.categoria.slug == "plafones-led" %}
+                        {% if not producto.variantes_disponibles and producto.categoria.slug == "plafones-led" %}
                             <a href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}" class="catalog-variant-quote">Cotizar este producto</a>
-                        {% else %}
-                            <p class="catalog-no-variants">Presentaciones disponibles bajo consulta.</p>
                         {% endif %}
 
-                        {% if producto.especificaciones.all %}
-                            <details class="catalog-specifications">
-                                <summary><span>Especificaciones generales</span><span aria-hidden="true">+</span></summary>
-                                <dl>
-                                    {% for especificacion in producto.especificaciones.all %}
-                                        <div>
-                                            <dt>{{ especificacion.nombre }}</dt>
-                                            <dd>{{ especificacion.valor }}{% if especificacion.unidad %} {{ especificacion.unidad }}{% endif %}</dd>
-                                        </div>
-                                    {% endfor %}
-                                </dl>
-                            </details>
-                        {% endif %}
                     </div>
+
+                    {% if producto.especificaciones_catalogo %}
+                        <details class="catalog-specifications">
+                            <summary><span>Especificaciones técnicas</span><span aria-hidden="true">+</span></summary>
+                            <dl>
+                                {% for especificacion in producto.especificaciones_catalogo %}
+                                    <div>
+                                        <dt>{{ especificacion.nombre }}</dt>
+                                        <dd>{{ especificacion.valor }}{% if especificacion.unidad %} {{ especificacion.unidad }}{% endif %}</dd>
+                                    </div>
+                                {% endfor %}
+                            </dl>
+                        </details>
+                    {% endif %}
 
                     <footer class="catalog-card-footer">
                         <span>¿Necesitas orientación técnica?</span>
-                        <a href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}">Solicitar cotización <span aria-hidden="true">→</span></a>
+                        <a class="catalog-product-quote" data-product-quote href="{% url 'contacto' %}?producto={{ producto.slug|urlencode }}">Solicitar cotización <span aria-hidden="true">→</span></a>
                     </footer>
                 </article>
             {% empty %}

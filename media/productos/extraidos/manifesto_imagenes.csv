@@ -94,5 +94,5 @@ kalop-modulos,Módulo Kalop 6 polos,kalop-modulos/kalop-modulo-6p.png,KAL-MOD-6P
 kalop-accesorios,Base de superficie Kalop,kalop-accesorios/kalop-base-superficie.png,KAL-BS,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
 kalop-accesorios,Base inclinada Kalop,kalop-accesorios/kalop-base-inclinada.png,KAL-BI,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
 kalop-accesorios,Base empotrable Kalop,kalop-accesorios/kalop-base-empotrable.png,KAL-BE,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
-tableros-cnc,Tablero exterior CNC IP65 cerrado,tableros-cnc/cnc-tablero-exterior-cerrado.png,CNC-TB-2P | CNC-TB-4P | CNC-TB-6P | CNC-TB-8P | CNC-TB-12P | CNC-TB-16P | CNC-TB-18P | CNC-TB-24P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
-tableros-cnc,Tablero exterior CNC IP65 abierto,tableros-cnc/cnc-tablero-exterior-abierto.png,CNC-TB-2P | CNC-TB-4P | CNC-TB-6P | CNC-TB-8P | CNC-TB-12P | CNC-TB-16P | CNC-TB-18P | CNC-TB-24P,secundaria,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+tableros-cnc,Tablero exterior CNC IP65 cerrado,tableros-cnc/cnc-tablero-exterior-cerrado.png,CNC-TB-2P | CNC-TB-5P | CNC-TB-8P | CNC-TB-12P | CNC-TB-15P | CNC-TB-18P | CNC-TB-24P,principal,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png
+tableros-cnc,Tablero exterior CNC IP65 abierto,tableros-cnc/cnc-tablero-exterior-abierto.png,CNC-TB-2P | CNC-TB-5P | CNC-TB-8P | CNC-TB-12P | CNC-TB-15P | CNC-TB-18P | CNC-TB-24P,secundaria,Imagen_de_Codex_13_sept_2026_05_20_35_p.m..png

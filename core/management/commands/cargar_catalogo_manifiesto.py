@@ -234,7 +234,7 @@ def clasificacion(fila):
     if fila.familia == "plafones-led":
         return (
             ("iluminacion", "Iluminación", 20),
-            ("plafones-led", "Plafones LED", 10),
+            ("plafones-led", "Paneles y plafones", 10),
         )
 
     if fila.familia == "canalizacion-electrica":
@@ -267,7 +267,7 @@ def clasificacion(fila):
         return (
             (
                 "mecanismos-electricos",
-                "Interruptores, enchufes y accesorios",
+                "Enchufes y placas",
                 40,
             ),
             subcategorias[fila.familia],
@@ -697,7 +697,11 @@ class Command(BaseCommand):
                     "nombre": subcategoria[1],
                     "padre": familia_obj,
                     "orden": subcategoria[2],
-                    "activa": subcategoria[0] != "enchufes-verticales",
+                    "activa": subcategoria[0] not in {
+                        "enchufes-verticales",
+                        "modulos-industriales",
+                        "bases-industriales",
+                    },
                 },
             )
             categorias[(familia[0], subcategoria[0])] = subcategoria_obj

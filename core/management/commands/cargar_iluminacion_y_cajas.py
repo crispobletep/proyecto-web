@@ -773,7 +773,7 @@ class Command(BaseCommand):
             },
         )
         definiciones = (
-            ("plafones-led", "Plafones LED", iluminacion, 3),
+            ("plafones-led", "Paneles y plafones", iluminacion, 3),
             ("gabinetes-metalicos", "Gabinetes metálicos", tableros, 2),
             ("cajas-estancas", "Cajas estancas", tableros, 3),
             ("cajas-metalicas", "Cajas metálicas", tableros, 4),

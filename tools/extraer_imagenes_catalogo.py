@@ -272,7 +272,7 @@ def recursos_varios():
         )
 
     codigos_cnc = tuple(
-        f"CNC-TB-{polos}P" for polos in (2, 4, 6, 8, 12, 16, 18, 24)
+        f"CNC-TB-{polos}P" for polos in (2, 5, 8, 12, 15, 18, 24)
     )
     recursos.extend(
         (

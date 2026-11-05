@@ -156,10 +156,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!mainImage) return;
 
         const thumbnails = [...card.querySelectorAll(".catalog-thumb")];
-        const variants = [...card.querySelectorAll(".catalog-variant-card")];
-        const strip = card.querySelector(".catalog-variant-strip");
         const rail = card.querySelector(".catalog-thumbs");
         const status = card.querySelector(".catalog-selection-status");
+        const quoteLink = card.querySelector("[data-product-quote]");
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
         let selectedSrc = mainImage.getAttribute("src");
         let selectedAlt = mainImage.alt;
@@ -185,40 +184,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 behavior: reduceMotion.matches ? "instant" : "smooth",
             });
         }
-        function select(trigger, variant) {
+        function select(trigger) {
             selectedSrc = trigger.dataset.previewSrc || selectedSrc;
             selectedAlt = trigger.dataset.previewAlt || selectedAlt;
             showImage(selectedSrc, selectedAlt);
-            variants.forEach(item => {
-                const active = item === variant;
-                item.classList.toggle("selected", active);
-                item.querySelector(".catalog-variant-select")?.setAttribute("aria-pressed", String(active));
-            });
-            let matched;
+            const variantId = trigger.dataset.variantId || "";
+            const variantName = trigger.dataset.variantName || "";
             thumbnails.forEach(item => {
-                const active = variant ? item.dataset.variantId === variant.dataset.variantId : item === trigger;
+                const active = item === trigger;
                 item.classList.toggle("active", active);
                 item.setAttribute("aria-pressed", String(active));
-                if (active) matched = item;
             });
-            if (status) status.textContent = variant ? `Variante seleccionada: ${variant.dataset.variantName}` : "Imagen del producto";
-            reveal(strip, variant, true);
-            reveal(rail, matched, rail && getComputedStyle(rail).flexDirection === "row");
+            if (status) status.textContent = variantName ? `Presentación seleccionada: ${variantName}` : "";
+            if (quoteLink) {
+                const quoteUrl = new URL(quoteLink.href, window.location.href);
+                if (variantId) quoteUrl.searchParams.set("variante", variantId);
+                else quoteUrl.searchParams.delete("variante");
+                quoteLink.href = quoteUrl.toString();
+                const label = variantId ? "Cotizar esta presentación " : "Solicitar cotización ";
+                if (quoteLink.firstChild?.nodeType === Node.TEXT_NODE) quoteLink.firstChild.nodeValue = label;
+            }
+            reveal(rail, trigger, rail && getComputedStyle(rail).flexDirection === "row");
         }
         thumbnails.forEach(thumbnail => {
-            thumbnail.addEventListener("click", () => select(thumbnail,
-                variants.find(item => item.dataset.variantId === thumbnail.dataset.variantId)));
-        });
-        variants.forEach(variant => {
-            variant.querySelector(".catalog-variant-select")?.addEventListener("click", () => select(variant, variant));
+            thumbnail.addEventListener("click", () => select(thumbnail));
         });
         // La previsualización al pasar el cursor no cambia la selección confirmada.
-        card.querySelectorAll(".catalog-thumb, .catalog-variant-select").forEach(trigger => {
-            const source = trigger.matches(".catalog-thumb") ? trigger : trigger.closest(".catalog-variant-card");
-            trigger.addEventListener("pointerenter", event => {
-                if (event.pointerType === "mouse") showImage(source.dataset.previewSrc, source.dataset.previewAlt);
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener("pointerenter", event => {
+                if (event.pointerType === "mouse") showImage(thumbnail.dataset.previewSrc, thumbnail.dataset.previewAlt);
             });
-            trigger.addEventListener("pointerleave", () => showImage(selectedSrc, selectedAlt));
+            thumbnail.addEventListener("pointerleave", () => showImage(selectedSrc, selectedAlt));
         });
     });
 

@@ -451,7 +451,7 @@ class Command(BaseCommand):
                 defaults={"nombre": nombre, "padre": padre, "orden": orden, "activa": True},
             )
         Categoria.objects.filter(slug="mecanismos-electricos").update(
-            nombre="Interruptores, enchufes y accesorios"
+            nombre="Enchufes y placas"
         )
         return categorias
 

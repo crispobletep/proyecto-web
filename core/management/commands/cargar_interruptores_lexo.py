@@ -55,7 +55,7 @@ PRODUCTOS = (
         "nombre": "Interruptores automáticos LEXO 1P",
         "subcategoria": "interruptores-automaticos",
         "modelo": "EBS6BN",
-        "subtitulo": "Protección termomagnética monofásica",
+        "subtitulo": "Protección para circuitos monofásicos",
         "descripcion": (
             "Interruptores automáticos modulares de un polo para la "
             "protección de circuitos contra sobrecargas y cortocircuitos."
@@ -90,7 +90,7 @@ PRODUCTOS = (
         "nombre": "Interruptores automáticos LEXO 1P+N",
         "subcategoria": "interruptores-automaticos",
         "modelo": "EBS6BN",
-        "subtitulo": "Protección termomagnética fase más neutro",
+        "subtitulo": "Protección de fase y neutro",
         "descripcion": (
             "Interruptores automáticos modulares 1P+N con corte simultáneo "
             "de fase y neutro para circuitos monofásicos."
@@ -121,7 +121,7 @@ PRODUCTOS = (
         "nombre": "Interruptores automáticos trifásicos LEXO 3P",
         "subcategoria": "interruptores-automaticos",
         "modelo": "EBS6BN",
-        "subtitulo": "Protección termomagnética trifásica",
+        "subtitulo": "Protección para circuitos trifásicos",
         "descripcion": (
             "Interruptores automáticos tripolares para protección y "
             "seccionamiento conjunto de circuitos trifásicos."

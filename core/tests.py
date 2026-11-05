@@ -259,7 +259,7 @@ class CargarPilotosYLegrandTests(TestCase):
         )
         self.assertContains(
             respuesta,
-            "Interruptores magnetotérmicos Legrand RX³ 1P",
+            "Interruptores automáticos RX³ 1P",
         )
         self.assertContains(
             respuesta,
@@ -331,7 +331,7 @@ class CargarConductoresYConexionesTests(TestCase):
         )
         self.assertEqual(
             Categoria.objects.get(slug="mecanismos-electricos").nombre,
-            "Interruptores, enchufes y accesorios",
+            "Enchufes y placas",
         )
 
         cable = Producto.objects.get(slug="cable-flexible-libre-halogenos")

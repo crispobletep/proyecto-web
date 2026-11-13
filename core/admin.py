@@ -9,6 +9,7 @@ from .models import (
     EspecificacionProducto,
     EspecificacionVariante,
     ImagenProducto,
+    ImagenProyecto,
     Marca,
     Producto,
     Proyecto,
@@ -96,6 +97,13 @@ class CotizacionAdmin(admin.ModelAdmin):
         return f"COT-{cotizacion.pk:06d}"
 
 
+class ImagenProyectoInline(admin.TabularInline):
+    model = ImagenProyecto
+    extra = 0
+    fields = ("imagen", "texto_alternativo", "orden")
+    ordering = ("orden", "pk")
+
+
 @admin.register(Proyecto)
 class ProyectoAdmin(admin.ModelAdmin):
     list_display = (
@@ -120,6 +128,7 @@ class ProyectoAdmin(admin.ModelAdmin):
     )
     prepopulated_fields = {"slug": ("nombre",)}
     readonly_fields = ("vista_previa", "creado", "actualizado")
+    inlines = [ImagenProyectoInline]
     save_on_top = True
     fieldsets = (
         (

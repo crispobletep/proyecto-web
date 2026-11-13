@@ -636,7 +636,7 @@ Inicio | PH Servicios Eléctricos
 
         <div class="projects-grid">
             {% for proyecto in proyectos_destacados %}
-            <article class="project-card">
+            <article class="project-card project-card-home-featured">
                 <div class="project-image">
                     {% if proyecto.imagen %}
                     <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.alt_imagen }}" loading="lazy">

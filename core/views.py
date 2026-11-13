@@ -387,20 +387,19 @@ def identificador_valido(valor):
 
 
 def inicio(request):
-    proyectos_destacados = list(
-        Proyecto.objects.filter(publicado=True, destacado=True)[:4]
+    proyecto_destacado = (
+        Proyecto.objects.filter(
+            publicado=True,
+            slug="edificio-froilan-lagos",
+        ).first()
+        or Proyecto.objects.filter(publicado=True, destacado=True).first()
+        or Proyecto.objects.filter(publicado=True).first()
     )
-    if len(proyectos_destacados) < 4:
-        ids_destacados = [proyecto.pk for proyecto in proyectos_destacados]
-        proyectos_destacados.extend(
-            Proyecto.objects.filter(publicado=True)
-            .exclude(pk__in=ids_destacados)[: 4 - len(proyectos_destacados)]
-        )
     return render(
         request,
         "index.html",
         {
-            "proyectos_destacados": proyectos_destacados,
+            "proyectos_destacados": [proyecto_destacado] if proyecto_destacado else [],
             "proyecto_portada": (
                 Proyecto.objects.filter(publicado=True, estado="finalizado")
                 .exclude(imagen="").order_by("-destacado", "orden", "nombre").first()
@@ -419,7 +418,7 @@ def servicios(request):
 
 
 def proyectos(request):
-    proyectos_publicados = Proyecto.objects.filter(publicado=True)
+    proyectos_publicados = Proyecto.objects.filter(publicado=True).prefetch_related("imagenes")
     sectores_publicados = set(
         proyectos_publicados.values_list("sector", flat=True)
     )
@@ -520,7 +519,13 @@ def productos(request):
             padre__isnull=True,
             activa=True,
         )
-        .prefetch_related("subcategorias")
+        .prefetch_related(
+            Prefetch(
+                "subcategorias",
+                queryset=Categoria.objects.filter(activa=True).order_by("nombre"),
+            )
+        )
+        .order_by("nombre")
     )
 
     paginador = Paginator(productos_catalogo, 8)

@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#071a35">
     <title>{% block titulo %}PH Servicios Eléctricos{% endblock %}</title>
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261102-4">
+    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261113-2">
 </head>
 <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
@@ -33,7 +33,7 @@
     <header class="header">
         <div class="container nav">
             <a href="{% url 'inicio' %}" class="logo" aria-label="PH Servicios Eléctricos, inicio">
-                <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="85" height="45">
+                <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="132" height="60">
             </a>
 
             <button type="button" class="menu-toggle" aria-label="Abrir menú" aria-controls="main-navigation" aria-expanded="false">
@@ -107,22 +107,29 @@
         <div class="container footer-grid">
             <div class="footer-company">
                 <a href="{% url 'inicio' %}" class="logo footer-logo" aria-label="Volver al inicio">
-                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="85" height="45">
+                    <img src="{% static 'img/logo.png' %}" alt="PH Servicios Eléctricos" width="174" height="78">
                 </a>
                 <p class="footer-activity">{{ empresa_info.actividad }}</p>
             </div>
 
             <div>
-                <h3>Construcciones</h3>
+                <h3>Navegación</h3>
                 <ul class="footer-links">
+                    <li><a href="{% url 'inicio' %}">Inicio</a></li>
                     <li><a href="{% url 'empresa' %}">Empresa</a></li>
                     <li><a href="{% url 'servicios' %}">Servicios</a></li>
                     <li><a href="{% url 'proyectos' %}">Proyectos</a></li>
-                    <li><a href="{% url 'contacto' %}">Contacto</a></li>
-                </ul>
-                <h3>Productos</h3>
-                <ul class="footer-links">
                     <li><a href="{% url 'productos' %}">Catálogo de productos</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h3>Servicios</h3>
+                <ul class="footer-links">
+                    <li><a href="{% url 'servicios' %}">Instalaciones eléctricas</a></li>
+                    <li><a href="{% url 'servicios' %}">Mantenimiento eléctrico</a></li>
+                    <li><a href="{% url 'servicios' %}">Tableros y canalizaciones</a></li>
+                    <li><a href="{% url 'proyectos' %}">Proyectos e infraestructura</a></li>
                     <li><a href="{% url 'contacto' %}?servicio=Productos#formulario-cotizacion">Cotizar productos</a></li>
                 </ul>
             </div>

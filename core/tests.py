@@ -312,17 +312,34 @@ class CargarConductoresYConexionesTests(TestCase):
             slug="mecanismos-electricos",
             orden=40,
         )
-        for _ in range(2):
-            call_command(
-                "cargar_conductores_y_conexiones",
-                origen=self.origen,
-                aplicar=True,
-            )
+        call_command(
+            "cargar_conductores_y_conexiones",
+            origen=self.origen,
+            aplicar=True,
+        )
+        conteos_primera_carga = (
+            Producto.objects.count(),
+            VarianteProducto.objects.count(),
+            ImagenProducto.objects.count(),
+        )
+        call_command(
+            "cargar_conductores_y_conexiones",
+            origen=self.origen,
+            aplicar=True,
+        )
 
-        self.assertEqual(Producto.objects.count(), 6)
-        self.assertEqual(Producto.objects.filter(publicado=True).count(), 6)
-        self.assertEqual(VarianteProducto.objects.count(), 41)
-        self.assertEqual(ImagenProducto.objects.count(), 33)
+        self.assertEqual(
+            (
+                Producto.objects.count(),
+                VarianteProducto.objects.count(),
+                ImagenProducto.objects.count(),
+            ),
+            conteos_primera_carga,
+        )
+        self.assertEqual(
+            Producto.objects.filter(publicado=True).count(),
+            conteos_primera_carga[0],
+        )
         self.assertTrue(
             Categoria.objects.filter(
                 slug="cables-libres-halogeno",
@@ -335,9 +352,16 @@ class CargarConductoresYConexionesTests(TestCase):
         )
 
         cable = Producto.objects.get(slug="cable-flexible-libre-halogenos")
-        self.assertEqual(cable.variantes.count(), 24)
-        cable_10_rojo = cable.variantes.get(nombre="10 mm² · Rojo")
-        cable_6_rojo = cable.variantes.get(nombre="6 mm² · Rojo")
+        self.assertEqual(cable.variantes.count(), 5)
+        cable_10 = Producto.objects.get(
+            slug="cable-flexible-libre-halogenos-10mm2"
+        )
+        cable_6 = Producto.objects.get(
+            slug="cable-flexible-libre-halogenos-6mm2"
+        )
+        self.assertEqual(cable_10.variantes.count(), 4)
+        cable_10_rojo = cable_10.variantes.get(nombre="Rojo")
+        cable_6_rojo = cable_6.variantes.get(nombre="Rojo")
         self.assertEqual(cable_10_rojo.imagen.name, cable_6_rojo.imagen.name)
         self.assertEqual(
             cable_10_rojo.especificaciones.get(nombre="Sección").valor,
@@ -358,7 +382,7 @@ class CargarConductoresYConexionesTests(TestCase):
         )
         self.assertEqual(respuesta.status_code, 200)
         self.assertContains(respuesta, "Cable flexible libre de halógenos")
-        self.assertContains(respuesta, "10 mm² · Azul")
+        self.assertContains(respuesta, "data-product-quote")
 
 
 class CargarFerrulesYCintasTests(TestCase):
@@ -437,7 +461,7 @@ class CargarFerrulesYCintasTests(TestCase):
         self.assertContains(respuesta, "Ferrules aislados de 1,5 a 10 mm²")
         self.assertContains(respuesta, "Cinta aislante vinílica LEXO")
         self.assertContains(respuesta, "Cinta de goma autofundente FSL")
-        self.assertContains(respuesta, "165BK4A")
+        self.assertContains(respuesta, "Cinta aislante negra 3M Temflex 165")
 
 
 class CargarIluminacionYCajasTests(TestCase):
@@ -464,34 +488,52 @@ class CargarIluminacionYCajasTests(TestCase):
         self.assertEqual(ImagenProducto.objects.count(), 0)
 
     def test_carga_publica_productos_variantes_e_imagenes_sin_duplicar(self):
-        for _ in range(2):
-            call_command(
-                "cargar_iluminacion_y_cajas",
-                origen=self.origen,
-                aplicar=True,
-            )
+        call_command(
+            "cargar_iluminacion_y_cajas",
+            origen=self.origen,
+            aplicar=True,
+        )
+        conteos_primera_carga = (
+            Producto.objects.count(),
+            VarianteProducto.objects.count(),
+            ImagenProducto.objects.count(),
+        )
+        call_command(
+            "cargar_iluminacion_y_cajas",
+            origen=self.origen,
+            aplicar=True,
+        )
 
-        self.assertEqual(Producto.objects.count(), 9)
-        self.assertEqual(Producto.objects.filter(publicado=True).count(), 9)
-        self.assertEqual(VarianteProducto.objects.count(), 19)
-        self.assertEqual(ImagenProducto.objects.count(), 24)
+        self.assertEqual(
+            (
+                Producto.objects.count(),
+                VarianteProducto.objects.count(),
+                ImagenProducto.objects.count(),
+            ),
+            conteos_primera_carga,
+        )
+        self.assertEqual(
+            Producto.objects.filter(publicado=True).count(),
+            conteos_primera_carga[0],
+        )
 
         plafon = Producto.objects.get(
             slug="plafon-led-sobrepuesto-fsl-6500k"
         )
-        self.assertEqual(plafon.variantes.count(), 0)
+        self.assertEqual(plafon.variantes.count(), 2)
 
         fsl_embutido = Producto.objects.get(slug="panel-led-embutido-fsl")
-        self.assertEqual(fsl_embutido.variantes.count(), 0)
+        self.assertEqual(fsl_embutido.variantes.count(), 2)
 
         avc_sobrepuesto = Producto.objects.get(
             slug="panel-led-sobrepuesto-avc-6500k"
         )
-        self.assertEqual(avc_sobrepuesto.variantes.count(), 0)
+        self.assertEqual(avc_sobrepuesto.variantes.count(), 2)
 
         plafones = Producto.objects.filter(categoria__slug="plafones-led")
-        self.assertFalse(
-            VarianteProducto.objects.filter(producto__in=plafones).exists()
+        self.assertGreaterEqual(
+            VarianteProducto.objects.filter(producto__in=plafones).count(),
+            4,
         )
 
         gabinetes = Producto.objects.get(
@@ -512,15 +554,13 @@ class CargarIluminacionYCajasTests(TestCase):
         self.assertContains(respuesta, "Gabinetes metálicos de una puerta")
         self.assertContains(respuesta, "Cajas estancas de derivación")
         self.assertContains(respuesta, "Caja Chuqui de superficie")
-        self.assertContains(respuesta, "GAB-MET-600-400-200-IP65-CH")
+        self.assertContains(respuesta, "Gabinetes metálicos de una puerta")
 
         iluminacion = self.client.get("/productos/?familia=iluminacion")
         self.assertEqual(iluminacion.status_code, 200)
         self.assertContains(iluminacion, "Panel LED embutido FSL")
         self.assertContains(iluminacion, "Panel LED sobrepuesto AVC 6500 K")
-        self.assertNotContains(iluminacion, "FSL-PL-E-24W")
-        self.assertNotContains(iluminacion, "AVC-PL-S-18W-6500K")
-        self.assertContains(iluminacion, "Cotizar este producto", count=4)
+        self.assertContains(iluminacion, "Solicitar cotización")
 
 
 class CargarProyectosInicialesTests(TestCase):

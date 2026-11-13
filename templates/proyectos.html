@@ -94,6 +94,11 @@
                         {% endif %}
                     </dl>
                     <div class="project-actions">
+                        {% if proyecto.imagenes.all %}
+                        <button type="button" class="project-gallery-open" data-gallery-open aria-label="Ver galería de {{ proyecto.nombre }}">
+                            Ver galería <span aria-hidden="true">({{ proyecto.imagenes.count|add:1 }} fotos)</span>
+                        </button>
+                        {% endif %}
                         <a href="{% url 'contacto' %}?proyecto={{ proyecto.slug|urlencode }}">Cotizar un proyecto similar <span aria-hidden="true">→</span></a>
                         {% if proyecto.url_referencia %}
                         <a href="{{ proyecto.url_referencia }}" target="_blank" rel="noopener noreferrer">Ver referencia oficial <span aria-hidden="true">↗</span></a>
@@ -103,6 +108,14 @@
                         {% endif %}
                     </div>
                 </div>
+                {% if proyecto.imagenes.all %}
+                <div class="project-gallery-data" hidden>
+                    {% if proyecto.imagen %}<span data-gallery-item data-src="{{ proyecto.imagen.url }}" data-alt="{{ proyecto.alt_imagen }}"></span>{% endif %}
+                    {% for imagen in proyecto.imagenes.all %}
+                    <span data-gallery-item data-src="{{ imagen.imagen.url }}" data-alt="{{ imagen.texto_alternativo|default:proyecto.nombre }}"></span>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </article>
             {% empty %}
             <div class="projects-empty-state">
@@ -114,6 +127,30 @@
         </div>
     </div>
 </section>
+
+<dialog class="project-gallery-dialog" aria-labelledby="project-gallery-title">
+    <div class="project-gallery-shell">
+        <header class="project-gallery-header">
+            <div>
+                <p class="section-tag">GALERÍA DEL PROYECTO</p>
+                <h2 id="project-gallery-title"></h2>
+            </div>
+            <button type="button" class="project-gallery-close" data-gallery-close aria-label="Cerrar galería">×</button>
+        </header>
+        <div class="project-gallery-viewer">
+            <button type="button" class="project-gallery-arrow" data-gallery-previous aria-label="Ver imagen anterior">‹</button>
+            <figure>
+                <img data-gallery-image alt="">
+                <figcaption data-gallery-caption></figcaption>
+            </figure>
+            <button type="button" class="project-gallery-arrow" data-gallery-next aria-label="Ver imagen siguiente">›</button>
+        </div>
+        <footer class="project-gallery-footer">
+            <span data-gallery-count aria-live="polite"></span>
+            <span class="project-gallery-hint">Usa las flechas para recorrer las imágenes</span>
+        </footer>
+    </div>
+</dialog>
 
 <section class="featured-project project-guidance">
     <div class="container featured-project-grid">

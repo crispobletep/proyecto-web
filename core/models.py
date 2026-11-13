@@ -208,6 +208,25 @@ class Proyecto(models.Model):
         )
 
 
+class ImagenProyecto(models.Model):
+    proyecto = models.ForeignKey(
+        Proyecto,
+        on_delete=models.CASCADE,
+        related_name="imagenes",
+    )
+    imagen = models.ImageField(upload_to="proyectos/galeria/")
+    texto_alternativo = models.CharField(max_length=180, blank=True)
+    orden = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["orden", "pk"]
+        verbose_name = "Imagen de proyecto"
+        verbose_name_plural = "Imágenes de proyectos"
+
+    def __str__(self):
+        return f"{self.proyecto.nombre} · imagen {self.orden}"
+
+
 class Categoria(models.Model):
     nombre = models.CharField(
         "Nombre de la categoría",

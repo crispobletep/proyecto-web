@@ -235,6 +235,65 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    const galleryDialog = document.querySelector(".project-gallery-dialog");
+    if (galleryDialog) {
+        const galleryImage = galleryDialog.querySelector("[data-gallery-image]");
+        const galleryTitle = galleryDialog.querySelector("#project-gallery-title");
+        const galleryCaption = galleryDialog.querySelector("[data-gallery-caption]");
+        const galleryCount = galleryDialog.querySelector("[data-gallery-count]");
+        let galleryItems = [];
+        let galleryIndex = 0;
+        let galleryOpener = null;
+
+        function showGalleryImage() {
+            const item = galleryItems[galleryIndex];
+            if (!item) return;
+            galleryImage.src = item.src;
+            galleryImage.alt = item.alt;
+            galleryCaption.textContent = item.alt;
+            galleryCount.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
+        }
+
+        function moveGallery(direction) {
+            if (!galleryItems.length) return;
+            galleryIndex = (galleryIndex + direction + galleryItems.length) % galleryItems.length;
+            showGalleryImage();
+        }
+
+        document.querySelectorAll("[data-gallery-open]").forEach((button) => {
+            button.addEventListener("click", () => {
+                const card = button.closest(".project-card-catalog");
+                galleryItems = [...(card?.querySelectorAll("[data-gallery-item]") || [])]
+                    .map((item) => ({ src: item.dataset.src, alt: item.dataset.alt }))
+                    .filter((item) => item.src);
+                if (!galleryItems.length) return;
+                galleryIndex = 0;
+                galleryOpener = button;
+                galleryTitle.textContent = card.querySelector("h3")?.textContent.trim() || "Galería del proyecto";
+                showGalleryImage();
+                galleryDialog.showModal();
+                galleryDialog.querySelector("[data-gallery-close]").focus();
+            });
+        });
+
+        galleryDialog.querySelector("[data-gallery-close]").addEventListener("click", () => galleryDialog.close());
+        galleryDialog.querySelector("[data-gallery-previous]").addEventListener("click", () => moveGallery(-1));
+        galleryDialog.querySelector("[data-gallery-next]").addEventListener("click", () => moveGallery(1));
+        galleryDialog.addEventListener("click", (event) => {
+            if (event.target === galleryDialog) galleryDialog.close();
+        });
+        galleryDialog.addEventListener("close", () => {
+            galleryImage.removeAttribute("src");
+            galleryOpener?.focus();
+            galleryOpener = null;
+        });
+        document.addEventListener("keydown", (event) => {
+            if (!galleryDialog.open) return;
+            if (event.key === "ArrowLeft") moveGallery(-1);
+            if (event.key === "ArrowRight") moveGallery(1);
+        });
+    }
+
     function loadMapPreview(trigger) {
         const frame = trigger?.querySelector("[data-map-src]");
         if (!frame || frame.dataset.mapLoaded === "true") return;

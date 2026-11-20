@@ -8,7 +8,7 @@
     <meta name="theme-color" content="#071a35">
     <title>{% block titulo %}PH Servicios Eléctricos{% endblock %}</title>
     <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png">
-    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261113-2">
+    <link rel="stylesheet" href="{% static 'css/hola.css' %}?v=20261118-1">
 </head>
 <body>
     <a class="skip-link" href="#contenido-principal">Saltar al contenido principal</a>
@@ -83,7 +83,7 @@
                 <h2 id="cta-title">Hablemos de tu próximo proyecto.</h2>
                 <p>Cuéntanos tus necesidades y revisaremos contigo la mejor alternativa.</p>
             </div>
-            <a href="{% url 'contacto' %}" class="btn btn-light">Solicitar cotización</a>
+            <a href="{% url 'contacto' %}" class="btn btn-light"><span aria-hidden="true">⚡</span> Cotizar proyecto</a>
         </div>
     </section>
 
@@ -151,6 +151,6 @@
         </div>
     </footer>
 
-    <script src="{% static 'js/main.js' %}?v=20261003-4"></script>
+    <script src="{% static 'js/main.js' %}?v=20261118-1"></script>
 </body>
 </html>

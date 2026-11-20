@@ -274,6 +274,22 @@ Inicio | PH Servicios Eléctricos
             </div>
         </div>
 
+        <div class="hero-value">
+            <span>⚡</span>
+            <div>
+                <strong>+50 obras</strong>
+                <p>Construidas</p>
+            </div>
+        </div>
+
+        <div class="hero-value">
+            <span>◷</span>
+            <div>
+                <strong>+20 años</strong>
+                <p>De experiencia</p>
+            </div>
+        </div>
+
     </div>
 
 </section>
@@ -284,81 +300,6 @@ Inicio | PH Servicios Eléctricos
 ====================================================== -->
 
 
-
-
-<!-- =====================================================
-     QUIÉNES SOMOS
-====================================================== -->
-
-<section class="about">
-
-    <div class="container about-grid">
-
-
-        <div class="about-text">
-
-            <span class="section-tag">
-                QUIÉNES SOMOS
-            </span>
-
-            <h2>
-                Ingeniería eléctrica
-                que impulsa grandes proyectos
-            </h2>
-
-            <p>
-                {{ empresa_info.nombre_comercial }} desarrolla
-                soluciones eléctricas y de montaje
-                para proyectos comerciales, corporativos
-                y de infraestructura.
-            </p>
-
-            <p>
-                Nuestro trabajo combina planificación,
-                ejecución y compromiso para entregar
-                soluciones seguras, eficientes y
-                adaptadas a cada cliente.
-            </p>
-
-            <a
-                href="{% url 'empresa' %}"
-                class="text-link">
-
-                Conoce nuestra empresa →
-
-            </a>
-
-        </div>
-
-
-        <div class="about-gallery">
-
-            <img
-                src="https://images.unsplash.com/photo-1558008258-3256797b43f3?auto=format&fit=crop&w=700&q=80"
-                alt="Instalaciones eléctricas"
-                width="700"
-                height="830"
-                loading="lazy">
-
-            <img
-                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=700&q=80"
-                alt="Profesional trabajando"
-                width="700"
-                height="410"
-                loading="lazy">
-
-            <img
-                src="{% static 'img/infraestructura-industrial.jpg' %}"
-                alt="Infraestructura eléctrica industrial"
-                width="700"
-                height="410"
-                loading="lazy">
-
-        </div> <!-- about-gallery -->
-
-    </div> <!-- container about-grid -->
-
-</section>
 
 
 <!-- =====================================================
@@ -543,6 +484,81 @@ Inicio | PH Servicios Eléctricos
 
 
 <!-- =====================================================
+     QUIÉNES SOMOS
+====================================================== -->
+
+<section class="about">
+
+    <div class="container about-grid">
+
+
+        <div class="about-text">
+
+            <span class="section-tag">
+                QUIÉNES SOMOS
+            </span>
+
+            <h2>
+                Ingeniería eléctrica
+                que impulsa grandes proyectos
+            </h2>
+
+            <p>
+                {{ empresa_info.nombre_comercial }} desarrolla
+                soluciones eléctricas y de montaje
+                para proyectos comerciales, corporativos
+                y de infraestructura.
+            </p>
+
+            <p>
+                Nuestro trabajo combina planificación,
+                ejecución y compromiso para entregar
+                soluciones seguras, eficientes y
+                adaptadas a cada cliente.
+            </p>
+
+            <a
+                href="{% url 'empresa' %}"
+                class="text-link">
+
+                Conoce nuestra empresa →
+
+            </a>
+
+        </div>
+
+
+        <div class="about-gallery">
+
+            <img
+                src="https://images.unsplash.com/photo-1558008258-3256797b43f3?auto=format&fit=crop&w=700&q=80"
+                alt="Instalaciones eléctricas"
+                width="700"
+                height="830"
+                loading="lazy">
+
+            <img
+                src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=700&q=80"
+                alt="Profesional trabajando"
+                width="700"
+                height="410"
+                loading="lazy">
+
+            <img
+                src="{% static 'img/infraestructura-industrial.jpg' %}"
+                alt="Infraestructura eléctrica industrial"
+                width="700"
+                height="410"
+                loading="lazy">
+
+        </div> <!-- about-gallery -->
+
+    </div> <!-- container about-grid -->
+
+</section>
+
+
+<!-- =====================================================
      MERCADOS
 ====================================================== -->
 
@@ -634,9 +650,10 @@ Inicio | PH Servicios Eléctricos
         </div>
 
 
-        <div class="projects-grid">
+        <div class="projects-grid project-carousel" data-project-carousel role="region" aria-label="Proyectos destacados" aria-roledescription="carrusel">
+            <div class="project-carousel-track">
             {% for proyecto in proyectos_destacados %}
-            <article class="project-card project-card-home-featured">
+            <article class="project-card project-card-home-featured{% if forloop.first %} is-active{% endif %}" role="group" aria-roledescription="diapositiva" aria-label="Proyecto {{ forloop.counter }} de {{ forloop.length }}">
                 <div class="project-image">
                     {% if proyecto.imagen %}
                     <img src="{{ proyecto.imagen.url }}" alt="{{ proyecto.alt_imagen }}" loading="lazy">
@@ -660,6 +677,18 @@ Inicio | PH Servicios Eléctricos
                 <a href="{% url 'contacto' %}" class="text-link">Consultar por un proyecto →</a>
             </div>
             {% endfor %}
+            </div>
+            {% if proyectos_destacados|length > 1 %}
+            <div class="project-carousel-controls">
+                <button class="project-carousel-arrow" type="button" data-project-prev aria-label="Ver proyecto anterior">‹</button>
+                <div class="project-carousel-dots" role="group" aria-label="Elegir proyecto">
+                    {% for proyecto in proyectos_destacados %}
+                    <button class="project-carousel-dot{% if forloop.first %} is-active{% endif %}" type="button" data-project-dot="{{ forloop.counter0 }}" aria-label="Ver proyecto {{ forloop.counter }}"{% if forloop.first %} aria-current="true"{% endif %}></button>
+                    {% endfor %}
+                </div>
+                <button class="project-carousel-arrow" type="button" data-project-next aria-label="Ver proyecto siguiente">›</button>
+            </div>
+            {% endif %}
         </div>
 
     </div>

@@ -151,6 +151,76 @@ document.addEventListener("DOMContentLoaded", () => {
         startAutoplay();
     }
 
+    const projectCarousel = document.querySelector("[data-project-carousel]");
+    if (projectCarousel) {
+        const projectSlides = [...projectCarousel.querySelectorAll(".project-card-home-featured")];
+        const projectDots = [...projectCarousel.querySelectorAll("[data-project-dot]")];
+        const projectPrev = projectCarousel.querySelector("[data-project-prev]");
+        const projectNext = projectCarousel.querySelector("[data-project-next]");
+
+        if (projectSlides.length > 1) {
+            let currentProject = 0;
+            let projectTimer = null;
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+            function showProject(index) {
+                currentProject = (index + projectSlides.length) % projectSlides.length;
+                projectSlides.forEach((slide, slideIndex) => {
+                    const active = slideIndex === currentProject;
+                    slide.classList.toggle("is-active", active);
+                    slide.setAttribute("aria-hidden", active ? "false" : "true");
+                    slide.inert = !active;
+                });
+                projectDots.forEach((dot, dotIndex) => {
+                    const active = dotIndex === currentProject;
+                    dot.classList.toggle("is-active", active);
+                    if (active) dot.setAttribute("aria-current", "true");
+                    else dot.removeAttribute("aria-current");
+                });
+            }
+
+            function stopProjectAutoplay() {
+                if (projectTimer) window.clearInterval(projectTimer);
+                projectTimer = null;
+            }
+
+            function startProjectAutoplay() {
+                stopProjectAutoplay();
+                if (reduceMotion.matches || document.hidden
+                    || projectCarousel.matches(":hover")
+                    || projectCarousel.contains(document.activeElement)) return;
+                projectTimer = window.setInterval(() => {
+                    showProject(currentProject + 1);
+                }, 7000);
+            }
+
+            projectPrev?.addEventListener("click", () => {
+                showProject(currentProject - 1);
+                startProjectAutoplay();
+            });
+            projectNext?.addEventListener("click", () => {
+                showProject(currentProject + 1);
+                startProjectAutoplay();
+            });
+            projectDots.forEach((dot) => {
+                dot.addEventListener("click", () => {
+                    showProject(Number(dot.dataset.projectDot));
+                    startProjectAutoplay();
+                });
+            });
+
+            projectCarousel.classList.add("is-enhanced");
+            projectCarousel.addEventListener("mouseenter", stopProjectAutoplay);
+            projectCarousel.addEventListener("mouseleave", startProjectAutoplay);
+            projectCarousel.addEventListener("focusin", stopProjectAutoplay);
+            projectCarousel.addEventListener("focusout", () => window.setTimeout(startProjectAutoplay, 0));
+            document.addEventListener("visibilitychange", startProjectAutoplay);
+            reduceMotion.addEventListener?.("change", startProjectAutoplay);
+            showProject(0);
+            startProjectAutoplay();
+        }
+    }
+
     document.querySelectorAll(".catalog-card").forEach((card) => {
         const mainImage = card.querySelector(".catalog-main-image");
         if (!mainImage) return;

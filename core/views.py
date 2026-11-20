@@ -387,19 +387,25 @@ def identificador_valido(valor):
 
 
 def inicio(request):
+    proyectos_publicados = Proyecto.objects.filter(publicado=True).order_by(
+        "-destacado", "orden", "nombre"
+    ).prefetch_related("imagenes")
     proyecto_destacado = (
-        Proyecto.objects.filter(
-            publicado=True,
-            slug="edificio-froilan-lagos",
-        ).first()
-        or Proyecto.objects.filter(publicado=True, destacado=True).first()
-        or Proyecto.objects.filter(publicado=True).first()
+        proyectos_publicados.filter(slug="edificio-froilan-lagos").first()
+        or proyectos_publicados.filter(destacado=True).first()
+        or proyectos_publicados.first()
     )
+    lista_proyectos = list(proyectos_publicados)
+    if proyecto_destacado:
+        lista_proyectos = [proyecto_destacado] + [
+            proyecto for proyecto in lista_proyectos
+            if proyecto.pk != proyecto_destacado.pk
+        ]
     return render(
         request,
         "index.html",
         {
-            "proyectos_destacados": [proyecto_destacado] if proyecto_destacado else [],
+            "proyectos_destacados": lista_proyectos,
             "proyecto_portada": (
                 Proyecto.objects.filter(publicado=True, estado="finalizado")
                 .exclude(imagen="").order_by("-destacado", "orden", "nombre").first()

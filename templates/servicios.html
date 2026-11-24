@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Servicios eléctricos | PH Servicios Eléctricos{% endblock %}
-{% block meta_description %}Servicios de instalaciones, montajes, mantención, tableros y canalizaciones eléctricas para proyectos comerciales e industriales.{% endblock %}
+{% block meta_description %}Servicios de instalaciones, montajes, mantención, tableros, canalizaciones, postventa y diagnóstico eléctrico para proyectos comerciales e industriales.{% endblock %}
 
 {% block contenido %}
 <section class="page-hero services-hero">
@@ -62,6 +62,13 @@
                 <h3>Materiales eléctricos</h3>
                 <p>Venta y cotización de productos para protección, señalización, canalización y montaje.</p>
                 <a href="{% url 'productos' %}">Revisar catálogo →</a>
+            </article>
+
+            <article class="service-card service-card-postventa">
+                <div class="service-icon" aria-hidden="true">☷</div>
+                <h3>Postventa e informes técnicos</h3>
+                <p>Diagnóstico y solución de fallas eléctricas en proyectos realizados, con elaboración de informes técnicos.</p>
+                <a href="{% url 'contacto' %}?servicio=Postventa%20y%20diagn%C3%B3stico%20el%C3%A9ctrico">Cotizar este servicio →</a>
             </article>
         </div>
     </div>

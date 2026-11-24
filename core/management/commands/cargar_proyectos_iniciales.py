@@ -6,7 +6,7 @@ from django.core.files.storage import default_storage
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 
-from core.models import Proyecto
+from core.models import ImagenProyecto, Proyecto
 
 
 PROYECTOS = (
@@ -124,6 +124,66 @@ PROYECTOS = (
             "Vista exterior del Edificio Martín de Zamora en Las Condes"
         ),
     },
+    {
+        "slug": "torres-de-vicuna-mackenna-1-y-2",
+        "nombre": "Torres de Vicuña Mackenna 1 y 2",
+        "sector": "residencial",
+        "descripcion": (
+            "Conjunto residencial de dos torres en Vicuña Mackenna. "
+            "El registro fotográfico muestra sus espacios comunes, "
+            "equipamiento y departamentos."
+        ),
+        "estado": "finalizado",
+        "periodo": "Proyecto finalizado",
+        "direccion": "Avenida Vicuña Mackenna, Santiago",
+        "orden": 6,
+        "imagen_origen": "WhatsApp Image 2026-11-23 at 10.35.16.jpeg",
+        "imagen_destino": "proyectos/torres-vicuna-mackenna-1-y-2/portada.jpeg",
+        "texto_alternativo": (
+            "Fachada de las Torres de Vicuña Mackenna 1 y 2"
+        ),
+        "galeria": (
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.39.jpeg",
+                "Acceso y recepción del edificio",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.38.jpeg",
+                "Sala de estar común",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.37.jpeg",
+                "Espacio de cowork",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.36.jpeg",
+                "Sala de estar y terraza",
+            ),
+            ("WhatsApp Image 2026-11-23 at 10.35.35.jpeg", "Comedor común"),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.34.jpeg",
+                "Lavandería equipada",
+            ),
+            ("WhatsApp Image 2026-11-23 at 10.35.33.jpeg", "Gimnasio"),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.32.jpeg",
+                "Área de máquinas del gimnasio",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.31.jpeg",
+                "Terraza con quincho y vista a la ciudad",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.30.jpeg",
+                "Interior de departamento",
+            ),
+            (
+                "WhatsApp Image 2026-11-23 at 10.35.29.jpeg",
+                "Cocina integrada y estar",
+            ),
+            ("WhatsApp Image 2026-11-23 at 10.35.28.jpeg", "Cocina equipada"),
+        ),
+    },
 )
 
 
@@ -145,21 +205,42 @@ class Command(BaseCommand):
             action="store_true",
             help="Guarda los proyectos y copia sus imágenes.",
         )
+        parser.add_argument(
+            "--slug",
+            help="Limita la carga a un proyecto específico.",
+        )
 
     def handle(self, *args, **options):
         origen = options["origen"].expanduser().resolve()
+        proyectos = [
+            datos
+            for datos in PROYECTOS
+            if not options["slug"] or datos["slug"] == options["slug"]
+        ]
+        if options["slug"] and not proyectos:
+            raise CommandError(
+                f"No existe un proyecto inicial con slug {options['slug']!r}."
+            )
         faltantes = []
 
-        for datos in PROYECTOS:
+        for datos in proyectos:
             nombre_archivo = datos.get("imagen_origen")
             destino = datos.get("imagen_destino")
-            if not destino or default_storage.exists(destino):
-                continue
-            if not nombre_archivo or not (origen / nombre_archivo).is_file():
-                if not nombre_archivo:
-                    faltantes.append(str(Path(settings.MEDIA_ROOT) / destino))
-                    continue
-                faltantes.append(str(origen / nombre_archivo))
+            if destino and not default_storage.exists(destino):
+                if not nombre_archivo or not (origen / nombre_archivo).is_file():
+                    if not nombre_archivo:
+                        faltantes.append(str(Path(settings.MEDIA_ROOT) / destino))
+                    else:
+                        faltantes.append(str(origen / nombre_archivo))
+            for orden, (nombre, _) in enumerate(datos.get("galeria", ()), 1):
+                destino_galeria = (
+                    f"proyectos/{datos['slug']}/galeria-{orden:02}.jpeg"
+                )
+                if (
+                    not default_storage.exists(destino_galeria)
+                    and not (origen / nombre).is_file()
+                ):
+                    faltantes.append(str(origen / nombre))
 
         if faltantes:
             detalle = "\n".join(f"- {ruta}" for ruta in faltantes)
@@ -168,19 +249,20 @@ class Command(BaseCommand):
         if not options["aplicar"]:
             self.stdout.write(
                 self.style.WARNING(
-                    "Validación correcta: se prepararían 5 proyectos y 5 imágenes. "
+                    f"Validación correcta: se prepararían {len(proyectos)} proyectos "
+                    "y sus imágenes. "
                     "Ejecute nuevamente con --aplicar para guardar los cambios."
                 )
             )
             return
 
         with transaction.atomic():
-            for datos in PROYECTOS:
+            for datos in proyectos:
                 valores = {
                     clave: valor
                     for clave, valor in datos.items()
                     if clave
-                    not in {"slug", "imagen_origen", "imagen_destino"}
+                    not in {"slug", "imagen_origen", "imagen_destino", "galeria"}
                 }
                 valores["publicado"] = True
                 destino = datos.get("imagen_destino")
@@ -202,8 +284,30 @@ class Command(BaseCommand):
                 accion = "Creado" if creado else "Actualizado"
                 self.stdout.write(f"{accion}: {proyecto.nombre}")
 
+                for orden, (nombre, alt) in enumerate(datos.get("galeria", ()), 1):
+                    destino_galeria = (
+                        f"proyectos/{datos['slug']}/galeria-{orden:02}.jpeg"
+                    )
+                    if not default_storage.exists(destino_galeria):
+                        with (origen / nombre).open("rb") as archivo:
+                            destino_galeria = default_storage.save(
+                                destino_galeria,
+                                File(
+                                    archivo,
+                                    name=PurePosixPath(destino_galeria).name,
+                                ),
+                            )
+                    ImagenProyecto.objects.update_or_create(
+                        proyecto=proyecto,
+                        orden=orden,
+                        defaults={
+                            "imagen": destino_galeria,
+                            "texto_alternativo": alt,
+                        },
+                    )
+
         self.stdout.write(
             self.style.SUCCESS(
-                "Carga terminada: 5 proyectos publicados y administrables."
+                f"Carga terminada: {len(proyectos)} proyectos publicados y administrables."
             )
         )

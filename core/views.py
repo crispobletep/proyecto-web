@@ -496,6 +496,7 @@ def productos(request):
         Q(pk__in=productos_catalogo.values_list("marca_nueva_id", flat=True))
         | Q(slug="megabright")
     ).exclude(slug="3m").order_by("nombre")
+    marcas_logos = marcas.exclude(slug__in=("wellmax", "vkb", "bekam"))
     if marca_id and not marcas.filter(pk=marca_id).exists():
         marca_id = ""
 
@@ -560,6 +561,7 @@ def productos(request):
         "categoria_activa": categoria_slug,
         "busqueda": busqueda,
         "marcas": marcas,
+        "marcas_logos": marcas_logos,
         "marca_activa": marca_id,
     }
 

@@ -11,6 +11,7 @@ SERVICIOS = (
     ("Soluciones electrónicas", "Soluciones electrónicas"),
     ("Infraestructura", "Infraestructura"),
     ("Mantención", "Mantención"),
+    ("Postventa y diagnóstico eléctrico", "Postventa y diagnóstico eléctrico"),
     ("Productos", "Productos"),
     ("Proyecto especial / Otro", "Proyecto especial / Otro"),
 )

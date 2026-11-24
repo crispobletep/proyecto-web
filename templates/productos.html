@@ -22,7 +22,7 @@
             <h2 id="catalog-brands-title">Explora el catálogo por marca</h2>
         </div>
         <nav class="catalog-brand-links" aria-label="Filtrar catálogo por marca">
-            {% for marca in marcas %}
+            {% for marca in marcas_logos %}
             <a class="catalog-brand-link" href="{% url 'productos' %}?marca={{ marca.pk }}#catalogo-productos" aria-label="Ver productos {{ marca.nombre }}"{% if marca_activa == marca.pk|stringformat:"s" %} aria-current="true"{% endif %}>
                 {% if marca.logo %}
                     <img class="catalog-brand-filter-logo catalog-brand-filter-logo--{{ marca.slug }}" src="{{ marca.logo.url }}" alt="{{ marca.nombre }}" loading="lazy">

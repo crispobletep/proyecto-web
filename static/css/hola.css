@@ -4025,6 +4025,16 @@ a {
     box-shadow: 0 16px 34px rgba(7, 26, 53, .12);
 }
 
+.services .service-card.service-card-postventa {
+    background: #eff7ff;
+    border: 1px solid #3984bd;
+    border-top: 3px solid #3984bd;
+}
+
+.services .service-card.service-card-postventa:hover {
+    border-color: #17659e;
+}
+
 .service-icon {
     width: 62px;
     height: 62px;

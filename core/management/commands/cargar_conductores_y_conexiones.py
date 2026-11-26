@@ -42,25 +42,10 @@ IMAGENES = {
         "barras/barra-conexion-bronce-12p-riel-din.png",
         "Barra de conexión de bronce aislada de 12 polos para riel DIN",
     ),
-    "barra-tetrapolar-4x4": imagen(
-        "BARRA REPARTIDORA TETRAPOLAR 4X4 125A.png",
-        "barras/barra-repartidora-tetrapolar-4x4-125a.png",
-        "Barra repartidora tetrapolar 4 por 4 de 125 amperios",
-    ),
-    "barra-tetrapolar-4x7": imagen(
-        "BARRA REPARTIDORA TETRAPOLAR 4X7 125A.png",
-        "barras/barra-repartidora-tetrapolar-4x7-125a.png",
-        "Barra repartidora tetrapolar 4 por 7 de 125 amperios",
-    ),
-    "barra-tetrapolar-4x11": imagen(
-        "BARRA REPARTIDORA TETRAPOLAR 4X11 125A.png",
-        "barras/barra-repartidora-tetrapolar-4x11-125a.png",
-        "Barra repartidora tetrapolar 4 por 11 de 125 amperios",
-    ),
-    "barra-tetrapolar-4x15": imagen(
-        "BARRA REPARTIDORA TETRAPOLAR 4X15 125A.png",
-        "barras/barra-repartidora-tetrapolar-4x15-125a.png",
-        "Barra repartidora tetrapolar 4 por 15 de 125 amperios",
+    "barra-tetrapolar": imagen(
+        "WhatsApp Image 2026-11-25 at 13.49.13.jpeg",
+        "barras/repartidor-tetrapolar-125-400a.jpeg",
+        "Repartidores tetrapolares de cobre con cubierta aislante",
     ),
     "barra-bipolar-2x7": imagen(
         "Barra Repartidora Regleta Bipolar 2x7 Polos 125 Amperios.png",
@@ -215,25 +200,68 @@ PRODUCTOS = (
     },
     {
         "slug": "barra-repartidora-tetrapolar-125a",
-        "nombre": "Barra repartidora tetrapolar 125 A",
+        "nombre": "Repartidor tetrapolar 125 A",
         "categoria": "barras-distribucion",
         "subtitulo": "Distribución tetrapolar para tableros",
         "descripcion": (
-            "Barra repartidora tetrapolar con cubierta aislante para distribuir "
-            "alimentación en tableros eléctricos y mantener las conexiones "
-            "agrupadas y protegidas."
+            "Repartidor tetrapolar de cobre con cubierta aislante para distribuir "
+            "alimentación en tableros eléctricos. Capacidad nominal de 125 A."
         ),
-        "imagen": "barra-tetrapolar-4x4",
+        "imagen": "barra-tetrapolar",
         "etiqueta": "DISTRIBUCIÓN",
         "orden": 180,
         "caracteristicas": (
             "Configuración tetrapolar",
             "Cubierta aislante transparente",
-            "Cuatro capacidades de distribución",
+            "Corriente nominal de 125 A",
         ),
         "especificaciones": (("Polos", "4", ""), ("Corriente nominal", "125", "A")),
-        "variantes": variantes_barra("tetrapolar", ("4x4", "4x7", "4x11", "4x15"), "125"),
+        "variantes": (
+            variante(
+                "125 A",
+                "PH-TETRAPOLAR-125A",
+                "barra-tetrapolar",
+                (("Polos", "4", ""), ("Corriente nominal", "125", "A")),
+            ),
+        ),
     },
+    *(
+        {
+            "slug": f"repartidor-tetrapolar-{amperaje}a",
+            "nombre": f"Repartidor tetrapolar {amperaje} A",
+            "categoria": "barras-distribucion",
+            "subtitulo": "Distribución tetrapolar para tableros",
+            "descripcion": (
+                "Repartidor tetrapolar de cobre con cubierta aislante para "
+                f"distribuir alimentación en tableros eléctricos. Capacidad "
+                f"nominal de {amperaje} A."
+            ),
+            "imagen": "barra-tetrapolar",
+            "etiqueta": "DISTRIBUCIÓN",
+            "orden": 180 + posicion,
+            "caracteristicas": (
+                "Configuración tetrapolar",
+                "Cubierta aislante transparente",
+                f"Corriente nominal de {amperaje} A",
+            ),
+            "especificaciones": (
+                ("Polos", "4", ""),
+                ("Corriente nominal", str(amperaje), "A"),
+            ),
+            "variantes": (
+                variante(
+                    f"{amperaje} A",
+                    f"PH-TETRAPOLAR-{amperaje}A",
+                    "barra-tetrapolar",
+                    (
+                        ("Polos", "4", ""),
+                        ("Corriente nominal", str(amperaje), "A"),
+                    ),
+                ),
+            ),
+        }
+        for posicion, amperaje in enumerate((160, 200, 250, 400), start=1)
+    ),
     {
         "slug": "barra-repartidora-bipolar-125a",
         "nombre": "Barra repartidora bipolar 125 A",

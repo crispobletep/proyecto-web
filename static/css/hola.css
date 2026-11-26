@@ -3117,6 +3117,10 @@ a {
     text-align: center;
 }
 
+.catalog-brands-tag {
+    font-size: .9rem;
+}
+
 .catalog-brands-heading h2 {
     margin-top: 7px;
     color: var(--blue-dark);

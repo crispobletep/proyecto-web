@@ -496,7 +496,7 @@ def productos(request):
         Q(pk__in=productos_catalogo.values_list("marca_nueva_id", flat=True))
         | Q(slug="megabright")
     ).exclude(slug="3m").order_by("nombre")
-    marcas_logos = marcas.exclude(slug__in=("wellmax", "vkb", "bekam"))
+    marcas_logos = marcas.exclude(slug__in=("wellmax", "vkb", "bekam", "luzica", "same"))
     if marca_id and not marcas.filter(pk=marca_id).exists():
         marca_id = ""
 
@@ -519,6 +519,16 @@ def productos(request):
 
     if marca_id:
         productos_catalogo = productos_catalogo.filter(marca_nueva_id=marca_id)
+
+    # Agrupa las fichas por familia y subcategoría para evitar que productos
+    # de tipos distintos se intercalen al recorrer el catálogo paginado.
+    productos_catalogo = productos_catalogo.order_by(
+        "categoria__padre__nombre",
+        "categoria__nombre",
+        "orden",
+        "nombre",
+        "pk",
+    )
 
     familias = (
         Categoria.objects
